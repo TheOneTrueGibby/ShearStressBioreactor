@@ -63,141 +63,60 @@ void ThingSpeak::init()
     pinMode(LED_BUILTIN, OUTPUT); // Built-in blue LED on the ESP32 (using this to confirm system ON/OFF)
 }
 
-// Send Wi-Fi signal strength data to ThingSpeak (update field 1)
 void ThingSpeak::sendToThingSpeak_field1(int32_t rssi)
 {
-    Serial.println("Sending data to ThingSpeak...");
-
-    if (client.connect(host, 80))
-    {
-        String url1 = "/update?api_key=QXK1OGL1BSWQ4LPP&field1=" + String(rssi); // Write to field 1 Wi-Fi signal strength, remember to replace with your ThingSpeak API key
-        Serial.print("Requesting URL 1: ");
-        Serial.println(url1);
-        client.print(String("GET ") + url1 + " HTTP/1.1\r\n" + "Host: " + host + "\r\n" + "Connection: close\r\n\r\n");
-        lastConnectionTime = millis();
-    } 
-    else
-    { Serial.println("Connection to ThingSpeak failed"); }
+    Serial.println("Sending data to serial monitor...");
+    Serial.print("Wi-Fi Signal Strength (RSSI): ");
+    Serial.println(rssi);
 }
 
-// Send LED status to ThingSpeak (update field 2)
 void ThingSpeak::sendToThingSpeak_field2(int ledStatus)
 {
-    Serial.println("Sending data to ThingSpeak...");
-
-    if (client.connect(host, 80))
-    {
-        String url2 = "/update?api_key=QXK1OGL1BSWQ4LPP&field2=" + String(ledStatus); // Write to field 2 LED status, remember to replace with your ThingSpeak API key
-        Serial.print("Requesting URL 2: ");
-        Serial.println(url2);
-        client.print(String("GET ") + url2 + " HTTP/1.1\r\n" + "Host: " + host + "\r\n" + "Connection: close\r\n\r\n");
-        lastConnectionTime = millis();
-    }
-    else
-    { Serial.println("Connection to ThingSpeak failed"); }
+    Serial.println("Sending data to serial monitor...");
+    Serial.print("LED Status: ");
+    Serial.println(ledStatus);
 }
 
-
-// Send Actual Flow Rate status to ThingSpeak (update field 3)
 void ThingSpeak::sendToThingSpeak_field3(double actualFlow)
 {
-    Serial.println("Sending data to ThingSpeak...");
-
-    if (client.connect(host, 80))
-    {
-        String url3 = "/update?api_key=QXK1OGL1BSWQ4LPP&field3=" + String(actualFlow); // Write to field 3 actual flow rate, remember to replace with your ThingSpeak API key
-        Serial.print("Requesting URL 3: ");
-        Serial.println(url3);
-        client.print(String("GET ") + url3 + " HTTP/1.1\r\n" + "Host: " + host + "\r\n" + "Connection: close\r\n\r\n");
-        lastConnectionTime = millis();
-    }
-    else
-    { Serial.println("Connection to ThingSpeak failed"); }
+    Serial.println("Sending data to serial monitor...");
+    Serial.print("Actual Flow Rate: ");
+    Serial.println(actualFlow);
 }
 
-// Send Target Flow Rate status to ThingSpeak (update field 4)
 void ThingSpeak::sendToThingSpeak_field4(double targetFlow)
 {
-    Serial.println("Sending data to ThingSpeak...");
-
-    if (client.connect(host, 80))
-    {
-        String url4 = "/update?api_key=QXK1OGL1BSWQ4LPP&field4=" + String(targetFlow); // Write to field 4 target flow rate, remember to replace with your ThingSpeak API key
-        Serial.print("Requesting URL 4: ");
-        Serial.println(url4);
-        client.print(String("GET ") + url4 + " HTTP/1.1\r\n" + "Host: " + host + "\r\n" + "Connection: close\r\n\r\n");
-        lastConnectionTime = millis();
-    }
-    else
-    { Serial.println("Connection to ThingSpeak failed"); }
+    Serial.println("Sending data to serial monitor...");
+    Serial.print("Target Flow Rate: ");
+    Serial.println(targetFlow);
 }
 
-// Send Pump Flow Rate status to ThingSpeak (update field 5)
 void ThingSpeak::sendToThingSpeak_field5(double pumpFlow)
 {
-    Serial.println("Sending data to ThingSpeak...");
-
-    if (client.connect(host, 80))
-    {
-        String url5 = "/update?api_key=QXK1OGL1BSWQ4LPP&field5=" + String(pumpFlow); // Write to field 5 pump flow rate, remember to replace with your ThingSpeak API key
-        Serial.print("Requesting URL 5: ");
-        Serial.println(url5);
-        client.print(String("GET ") + url5 + " HTTP/1.1\r\n" + "Host: " + host + "\r\n" + "Connection: close\r\n\r\n");
-        lastConnectionTime = millis();
-    }
-    else
-    { Serial.println("Connection to ThingSpeak failed"); }
+    Serial.println("Sending data to serial monitor...");
+    Serial.print("Pump Flow Rate: ");
+    Serial.println(pumpFlow);
 }
 
-// Send Estimated Shear status to ThingSpeak (update field 6)
 void ThingSpeak::sendToThingSpeak_field6(double shearStress)
 {
-    Serial.println("Sending data to ThingSpeak...");
-
-    if (client.connect(host, 80))
-    {
-        String url6 = "/update?api_key=QXK1OGL1BSWQ4LPP&field6=" + String(shearStress); // Write to field 6 estimated shear stress, remember to replace with your ThingSpeak API key
-        Serial.print("Requesting URL 6: ");
-        Serial.println(url6);
-        client.print(String("GET ") + url6 + " HTTP/1.1\r\n" + "Host: " + host + "\r\n" + "Connection: close\r\n\r\n");
-        lastConnectionTime = millis();
-    }
-    else
-    { Serial.println("Connection to ThingSpeak failed"); }
+    Serial.println("Sending data to serial monitor...");
+    Serial.print("Estimated Shear Stress: ");
+    Serial.println(shearStress);
 }
 
-// Send Runtime status to ThingSpeak (update field 7)
 void ThingSpeak::sendToThingSpeak_field7(long runTime)
 {
-    Serial.println("Sending data to ThingSpeak...");
-
-    if (client.connect(host, 80))
-    {
-        String url7 = "/update?api_key=QXK1OGL1BSWQ4LPP&field7=" + String(runTime); // Write to field 7 system runtime, remember to replace with your ThingSpeak API key
-        Serial.print("Requesting URL 7: ");
-        Serial.println(url7);
-        client.print(String("GET ") + url7 + " HTTP/1.1\r\n" + "Host: " + host + "\r\n" + "Connection: close\r\n\r\n");
-        lastConnectionTime = millis();
-    }
-    else
-    { Serial.println("Connection to ThingSpeak failed"); }
+    Serial.println("Sending data to serial monitor...");
+    Serial.print("System Runtime (ms): ");
+    Serial.println(runTime);
 }
 
-// Send Calculated Reynold's number status to ThingSpeak (update field 8)
 void ThingSpeak::sendToThingSpeak_field8(double calculatedR)
 {
-    Serial.println("Sending data to ThingSpeak...");
-
-    if (client.connect(host, 80))
-    {
-        String url8 = "/update?api_key=QXK1OGL1BSWQ4LPP&field8=" + String(calculatedR); // Write to field 8 calculated Reynold's number, remember to replace with your ThingSpeak API key
-        Serial.print("Requesting URL 8: ");
-        Serial.println(url8);
-        client.print(String("GET ") + url8 + " HTTP/1.1\r\n" + "Host: " + host + "\r\n" + "Connection: close\r\n\r\n");
-        lastConnectionTime = millis();
-    }
-    else
-    { Serial.println("Connection to ThingSpeak failed"); }
+    Serial.println("Sending data to serial monitor...");
+    Serial.print("Calculated Reynold's Number: ");
+    Serial.println(calculatedR);
 }
 
 void ThingSpeak::getWifiAndLed()
