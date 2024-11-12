@@ -6,11 +6,10 @@
 
 
 #include <Arduino.h>
-#include <Wire.h>
-#include "routineManager.hpp"
-#include "utils.hpp"
 #include <TaskScheduler.h>
 #include <Wire.h>
+#include <stdint.h>
+#include "utils.hpp"
 
 // Pin Definitions
 #define FLOW_SENSOR_1_PIN 12
@@ -30,8 +29,52 @@ const int MODBUS_ENABLE = 18; // automatically set to high when writing, low oth
 const int PUMP_ADDRESS = 0xEF; // Modbus address of pump controller
 const int MODBUS_TIMEOUT = 500; // timeout in ms for Modbus command responses
 
-extern YAAJ_ModbusMaster controller;
 
-static FlowManager* f;
-static Pump* p;
-static Event* head;
+//flow sensor commands
+int SensorAddress = (0x08);
+int Reset = (0x06);
+int StartWaterMeasurement = (0x3608);
+int StartIPAMeasurement = (0x3616);
+int StopMeasurement = (0x3FF9);
+int LOW_ADDRESS = 0;
+int HIGH_ADDRESS = 1;
+
+void initFlowSensors(){
+    int check = 1;
+    Wire.begin();
+    while (check != 1) {
+        Wire.beginTransmission(LOW_ADDRESS);
+        Wire.write(Reset);
+        check = Wire.endTransmission();
+        if (check != 0) {
+            Serial.printf("Low flow did not reset");
+        }
+    }
+
+    int check = 1;
+    Wire.begin();
+    while (check != 1) {
+        Wire.beginTransmission(HIGH_ADDRESS);
+        Wire.write(Reset);
+        check = Wire.endTransmission();
+        if (check != 0) {
+            Serial.printf("High flow did not reset");
+        }
+    }
+}
+
+void initPump(){
+
+}
+
+void initStepperMotor(){ 
+
+}
+
+void initAllComponets(){
+
+}
+
+int main() {
+    void initFlowSensors();
+}
