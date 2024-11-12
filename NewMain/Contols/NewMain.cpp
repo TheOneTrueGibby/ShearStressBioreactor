@@ -31,36 +31,46 @@ const int MODBUS_TIMEOUT = 500; // timeout in ms for Modbus command responses
 
 
 //flow sensor commands
-int SensorAddress = (0x08);
 int Reset = (0x06);
-int StartWaterMeasurement = (0x3608);
-int StartIPAMeasurement = (0x3616);
-int StopMeasurement = (0x3FF9);
 int LOW_ADDRESS = 0;
 int HIGH_ADDRESS = 1;
 
+int TCA_ADDR = 0x70;
+
 void initFlowSensors(){
     int check = 1;
-    Wire.begin();
+
+    //Wire.begin();
+    ///Wire.beginTransmission(TCA_ADDR);
+    //Wire.write(1 << LOW_ADDRESS);
+    //Wire.endTransmission();
+    
     while (check != 1) {
-        Wire.beginTransmission(LOW_ADDRESS);
-        Wire.write(Reset);
+        Wire.beginTransmission(0x3F);
+        Wire.write(0x06);
         check = Wire.endTransmission();
         if (check != 0) {
             Serial.printf("Low flow did not reset");
         }
     }
 
+    /*
     int check = 1;
+
     Wire.begin();
+    Wire.beginTransmission(TCA_ADDR);
+    Wire.write(1 << HIGH_ADDRESS);
+    Wire.endTransmission();
+
     while (check != 1) {
-        Wire.beginTransmission(HIGH_ADDRESS);
+        Wire.beginTransmission(0x00);
         Wire.write(Reset);
         check = Wire.endTransmission();
         if (check != 0) {
             Serial.printf("High flow did not reset");
         }
     }
+    */
 }
 
 void initPump(){
@@ -76,5 +86,5 @@ void initAllComponets(){
 }
 
 int main() {
-    void initFlowSensors();
+    //void initFlowSensors();
 }
