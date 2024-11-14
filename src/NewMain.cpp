@@ -126,6 +126,6 @@ void loop() {
     float flowRate = readFlowSensor();
     Serial.print("Flow Rate: ");
     Serial.print(flowRate);
-    Serial.println(" ml/min");\
+    Serial.println(" ml/min");
     delay(1000);
 }
