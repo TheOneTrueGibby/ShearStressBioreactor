@@ -9,15 +9,15 @@
 #include <Wire.h>
 
 //Other includes older code used
-#include "WiFi.h"
-#include <PIDController.h>
-#include <stdint.h>
-#include <HardwareSerial.h>
-#include <TaskScheduler.h>
-#include <WiFi.h>
-#include <WiFiClient.h>
-#include <WiFiServer.h>
-#include <YAAJ_ModbusMaster.h>
+//#include "WiFi.h"
+//#include <PIDController.h>
+//#include <stdint.h>
+//#include <HardwareSerial.h>
+//#include <TaskScheduler.h>
+//#include <WiFi.h>
+//#include <WiFiClient.h>
+//#include <WiFiServer.h>
+//#include <YAAJ_ModbusMaster.h>
 
 
 
@@ -27,8 +27,8 @@ static const float   SLF3X_SCALE_FACTOR_TEMP = 200.0;
 static const uint8_t SENSOR_I2C_ADDRESS = 0x08;
 static const uint8_t  SOFT_RESET_I2C_ADDRESS = 0x0;
 static const uint8_t  CMD_SOFT_RESET = 0x06 ;
-static const uint8_t  CMD_START_MESUREMENT = 0x3608;
-static const uint8_t  CMD_READ_MESUREMENT = 0xEFC8;
+static const uint16_t  CMD_START_MESUREMENT = 0x3608;
+static const uint16_t  CMD_READ_MESUREMENT = 0xEFC8;
 static const uint8_t  SOFT_RESET_MAX_TRIES = 10;
 static const uint8_t  CHIP_RESET_DELAY = 100;
 static const uint16_t CHIP_RESET_RETRY_DELAY = 500;
