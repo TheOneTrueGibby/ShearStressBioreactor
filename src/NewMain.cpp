@@ -14,7 +14,7 @@
 //#include <stdint.h>
 //#include <HardwareSerial.h>
 //#include <TaskScheduler.h>
-//#include <WiFi.h>
+#include <WiFi.h>
 //#include <WiFiClient.h>
 //#include <WiFiServer.h>
 //#include <YAAJ_ModbusMaster.h>
@@ -28,12 +28,13 @@ static const uint8_t SENSOR_I2C_ADDRESS = 0x08;
 static const uint8_t  SOFT_RESET_I2C_ADDRESS = 0x0;
 static const uint8_t  CMD_SOFT_RESET = 0x06 ;
 static const uint16_t  CMD_START_MESUREMENT = 0x3608;
+static const uint16_t  CMD_STOP_MESUREMENT = 0x3FF9;
 static const uint16_t  CMD_READ_MESUREMENT = 0xEFC8;
 static const uint8_t  SOFT_RESET_MAX_TRIES = 10;
 static const uint8_t  CHIP_RESET_DELAY = 100;
 static const uint16_t CHIP_RESET_RETRY_DELAY = 500;
 
-int softResetFlowSensor() {
+void softResetFlowSensor() {
     int ret = 1;
     int failures = 0;
     
@@ -44,34 +45,62 @@ int softResetFlowSensor() {
 
         if (ret != 0) {
             if (failures > CHIP_RESET_RETRY_DELAY) {
-                return ret;
+                return;
             }
 
             Serial.printf("Error while soft reseting flow sensor");
             failures++;
             delay(CHIP_RESET_DELAY);
+        } else {
+            Serial.printf("Soft reset successful");
         }
     }
 }
 
 void startMesuremntFlowSensor() {
+    int check = 1;
+
     Wire.beginTransmission(SENSOR_I2C_ADDRESS);
     Wire.write(CMD_START_MESUREMENT);
-    Wire.endTransmission();
+    check = Wire.endTransmission();
+    if (check != 0) {
+        Serial.printf("Error while starting measurement");
+    }
+}
+
+void stopMesuremntFlowSensor() {
+    Wire.beginTransmission(SENSOR_I2C_ADDRESS);
+    Wire.write(CMD_STOP_MESUREMENT);
+    
+    int check = Wire.endTransmission();
+    if (check != 0) {
+        Serial.printf("Error while stoping measurement");
+    }
 }
 
 int readFlowSensor() {
+    int check = 1;
+
     Wire.beginTransmission(SENSOR_I2C_ADDRESS);
     Wire.write(CMD_READ_MESUREMENT);
-    Wire.endTransmission();
+    check = Wire.endTransmission();
+    if (check != 0) {
+        Serial.printf("Error while reading sensor");
+    }
     
-    Wire.requestFrom(SENSOR_I2C_ADDRESS, 6);
+    Wire.requestFrom((uint8_t)SENSOR_I2C_ADDRESS, (uint8_t)9);
+
+    if (Wire.available() < 9) {
+        Serial.printf("Error while reading flow measurement");
+    }
     
     uint16_t flowData = (Wire.read() << 8); 
     flowData |= Wire.read();
     uint8_t crcFlow = Wire.read();
+
+    stopMesuremntFlowSensor();
     
-    float flowRate = (float)flowData * 1000;
+    int16_t flowRate = (int16_t) flowData;
     
     return flowRate;
 }
