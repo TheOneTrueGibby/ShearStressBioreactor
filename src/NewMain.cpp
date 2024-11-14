@@ -6,28 +6,17 @@
 
 
 #include <Arduino.h>
-#include <TaskScheduler.h>
-#include <Wire.h>
+#include "WiFi.h"
+#include <PIDController.h>
 #include <stdint.h>
-#include "utils.hpp"
+#include <Wire.h>
+#include <HardwareSerial.h>
+#include <TaskScheduler.h>
+#include <WiFi.h>
+#include <WiFiClient.h>
+#include <WiFiServer.h>
+#include <YAAJ_ModbusMaster.h>
 
-// Pin Definitions
-#define FLOW_SENSOR_1_PIN 12
-#define FLOW_SENSOR_2_PIN 13
-#define PUMP_PIN 14
-#define STEPPER_STEP_PIN 15
-#define STEPPER_DIR_PIN 16
-
-// Used for sending and receiving Modbus commands
-HardwareSerial ModbusSerial(1);
-
-// Receive and transmit pins for the MAX485
-const int MODBUS_RX = 16;
-const int MODBUS_TX = 17;
-const int MODBUS_ENABLE = 18; // automatically set to high when writing, low otherwise to receive
-
-const int PUMP_ADDRESS = 0xEF; // Modbus address of pump controller
-const int MODBUS_TIMEOUT = 500; // timeout in ms for Modbus command responses
 
 
 //flow sensor commands
@@ -73,6 +62,7 @@ void initFlowSensors(){
     */
 }
 
+/*
 void initPump(){
 
 }
@@ -84,7 +74,14 @@ void initStepperMotor(){
 void initAllComponets(){
 
 }
+*/
 
-int main() {
+void setup() {
+    Serial.begin(115200);
+    //controller.begin(ModbusSerial, 9600, SERIAL_8N1, MODBUS_RX, MODBUS_TX, PUMP_ADDRESS, MODBUS_ENABLE, MODBUS_TIMEOUT);
+
+}
+
+void loop() {
     //void initFlowSensors();
 }
