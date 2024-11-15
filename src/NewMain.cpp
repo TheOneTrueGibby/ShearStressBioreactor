@@ -48,11 +48,11 @@ void softResetFlowSensor() {
                 return;
             }
 
-            Serial.printf("Error while soft reseting flow sensor");
+            Serial.printf("Error while soft reseting flow sensor\n");
             failures++;
             delay(CHIP_RESET_DELAY);
         } else {
-            Serial.printf("Soft reset successful");
+            Serial.printf("Soft reset successful\n");
         }
     }
 }
@@ -61,10 +61,12 @@ void startMesuremntFlowSensor() {
     int check = 1;
 
     Wire.beginTransmission(SENSOR_I2C_ADDRESS);
+    Wire.write(0x36); //tell sensor its water
+    Wire.write(0x08);
     Wire.write(CMD_START_MESUREMENT);
     check = Wire.endTransmission();
     if (check != 0) {
-        Serial.printf("Error while starting measurement");
+        Serial.printf("Error while starting measurement\n");
     }
 }
 
@@ -74,29 +76,39 @@ void stopMesuremntFlowSensor() {
     
     int check = Wire.endTransmission();
     if (check != 0) {
-        Serial.printf("Error while stoping measurement");
+        Serial.printf("Error while stoping measurement\n");
     }
 }
 
+/**
+ * Reads the flow rate from the flow sensor.
+ * 
+ * This function sends a command to the flow sensor to read the current flow measurement,
+ * retrieves the raw flow data, and converts it to a flow rate in ml/min.
+ * 
+ * @return The current flow rate in ml/min.
+ */
 int readFlowSensor() {
     int check = 1;
 
-    Wire.beginTransmission(SENSOR_I2C_ADDRESS);
-    Wire.write(CMD_READ_MESUREMENT);
-    check = Wire.endTransmission();
-    if (check != 0) {
-        Serial.printf("Error while reading sensor");
-    }
+    //Wire.beginTransmission(SENSOR_I2C_ADDRESS);
+    //Wire.write(CMD_READ_MESUREMENT);
+    //check = Wire.endTransmission();
+    //if (check != 0) {
+        //Serial.printf("Error while reading sensor\n");
+    //}
     
-    Wire.requestFrom((uint8_t)SENSOR_I2C_ADDRESS, (uint8_t)9);
+    int i = 9;
+    Wire.requestFrom((uint8_t)SENSOR_I2C_ADDRESS, (uint8_t)i);
+    //Wire.requestFrom(0x08, i);
 
-    if (Wire.available() < 9) {
-        Serial.printf("Error while reading flow measurement");
+    if (Wire.available() < i) {
+        Serial.printf("Error while reading flow measurement\n");
     }
     
     uint16_t flowData = (Wire.read() << 8); 
     flowData |= Wire.read();
-    uint8_t crcFlow = Wire.read();
+    byte crcFlow = Wire.read();
 
     stopMesuremntFlowSensor();
     
@@ -115,17 +127,17 @@ void initFlowSensor() {
 //Start Running
 void setup() {
     Serial.begin(115200);
-
+    Wire.begin();
+    
     initFlowSensor();
-    Serial.println("Measurement started.");
+    Serial.println("Measurement started.\n");
     delay(100);
-
 }
 
 void loop() {
     float flowRate = readFlowSensor();
     Serial.print("Flow Rate: ");
     Serial.print(flowRate);
-    Serial.println(" ml/min");
+    Serial.println(" ml/min\n");
     delay(1000);
 }
