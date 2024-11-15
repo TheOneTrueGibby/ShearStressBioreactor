@@ -80,14 +80,7 @@ void stopMesuremntFlowSensor() {
     }
 }
 
-/**
- * Reads the flow rate from the flow sensor.
- * 
- * This function sends a command to the flow sensor to read the current flow measurement,
- * retrieves the raw flow data, and converts it to a flow rate in ml/min.
- * 
- * @return The current flow rate in ml/min.
- */
+
 int readFlowSensor() {
     int check = 1;
 
