@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 
-//Code for talking to flow sensor
+//Define all commands and scaling values
 static const float   SLF3X_SCALE_FACTOR_FLOW = 500.0;
 static const float   SLF3X_SCALE_FACTOR_TEMP = 200.0;
 static const uint8_t SENSOR_I2C_ADDRESS = 0x08;
@@ -43,6 +43,8 @@ void startMesuremntFlowSensor() {
     Wire.beginTransmission(SENSOR_I2C_ADDRESS);
     Wire.write(0x36); //tell sensor its water
     Wire.write(0x08);
+
+    //tells flow sensor to start mesuring flow rate
     Wire.write(CMD_START_MESUREMENT);
     check = Wire.endTransmission();
     if (check != 0) {
@@ -63,17 +65,9 @@ void stopMesuremntFlowSensor() {
 
 int readFlowSensor() {
     int check = 1;
-
-    //Wire.beginTransmission(SENSOR_I2C_ADDRESS);
-    //Wire.write(CMD_READ_MESUREMENT);
-    //check = Wire.endTransmission();
-    //if (check != 0) {
-        //Serial.printf("Error while reading sensor\n");
-    //}
     
     int i = 9;
     Wire.requestFrom((uint8_t)SENSOR_I2C_ADDRESS, (uint8_t)i);
-    //Wire.requestFrom(0x08, i);
 
     if (Wire.available() < i) {
         Serial.printf("Error while reading flow measurement\n");
