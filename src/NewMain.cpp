@@ -8,8 +8,10 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <WiFi.h>
+
 #include "FlowSensor.hpp"
 #include "StepperMotor.hpp"
+#include "BioreactorVaribiles.hpp"
 
 //Other includes older code used
 //#include "WiFi.h"
@@ -40,7 +42,7 @@ void loop() {
     //Loop to read and print flow rate from flow sensor
     float flowRate = readFlowSensor();
     Serial.print("Flow Rate: ");
-    Serial.print(flowRate);
+    Serial.print(flowRateCalc(flowRate));
     Serial.println(" ml/min\n");
     delay(1000);
 }
