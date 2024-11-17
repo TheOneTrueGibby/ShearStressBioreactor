@@ -9,6 +9,7 @@
 #include <Wire.h>
 #include <WiFi.h>
 #include "FlowSensor.hpp"
+#include "StepperMotor.hpp"
 
 //Other includes older code used
 //#include "WiFi.h"
@@ -20,18 +21,6 @@
 //#include <WiFiServer.h>
 //#include <YAAJ_ModbusMaster.h>
 
-int lowMotorDirPin = 13;
-int lowMotorStepPin = 12;
-int lowMotorEnaPin = 14;
-
-int highMotorDirPin = 27;
-int highMotorStepPin = 26;
-int highMotorEnaPin = 25;
-
-void initStepperMotor (int dir, int step, int ena) {
-
-}
-
 //Start Running
 void setup() {
     //Start Serial Communication
@@ -42,6 +31,9 @@ void setup() {
     initFlowSensor();
     Serial.println("Measurement started.\n");
     delay(100);
+
+    //Initlize both stepper motors
+    initAllStepperMotors(lowMotorDirPin, lowMotorStepPin, lowMotorEnaPin, highMotorDirPin, highMotorStepPin, highMotorEnaPin);
 }
 
 void loop() {
