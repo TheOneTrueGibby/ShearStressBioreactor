@@ -20,6 +20,17 @@
 //#include <WiFiServer.h>
 //#include <YAAJ_ModbusMaster.h>
 
+int lowMotorDirPin = 13;
+int lowMotorStepPin = 12;
+int lowMotorEnaPin = 14;
+
+int highMotorDirPin = 27;
+int highMotorStepPin = 26;
+int highMotorEnaPin = 25;
+
+void initStepperMotor (int dir, int step, int ena) {
+
+}
 
 //Start Running
 void setup() {
