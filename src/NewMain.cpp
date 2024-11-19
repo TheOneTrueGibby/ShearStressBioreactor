@@ -40,8 +40,9 @@ void setup() {
     //Initlize both stepper motors
     initAllStepperMotors(lowMotorDirPin, lowMotorStepPin, lowMotorEnaPin, highMotorDirPin, highMotorStepPin, highMotorEnaPin);
 
-    //check motor state
+    //check motor state and set speed
     checkPump(controller);
+    setPumpSpeed(200, controller);
 }
 
 void loop() {
