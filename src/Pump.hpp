@@ -4,6 +4,7 @@
 
 int pumpState = 0;
 
+//checks if pump is on or off
 void checkPump(YAAJ_ModbusMaster controller) {
     if (controller.F1_ReadCoils(0x1001, 1) == 0) {
         uint16_t state = controller.getRxBuf(0);
@@ -15,6 +16,7 @@ void checkPump(YAAJ_ModbusMaster controller) {
     }
 }
 
+//switches current state of pump, on to off or off to on
 void togglePump(YAAJ_ModbusMaster controller) {
     if(pumpState == 0) {
         uint16_t result = controller.F5_WriteSingleCoil(0x1001, 0xFF);
@@ -33,6 +35,6 @@ void togglePump(YAAJ_ModbusMaster controller) {
     }
 }
 
-void setPumpSpeed() {
-    
+void setPumpSpeed(int flowSpeed) {
+
 }
