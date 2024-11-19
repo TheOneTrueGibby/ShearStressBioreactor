@@ -8,10 +8,12 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <WiFi.h>
+#include <YAAJ_ModbusMaster.h>
 
 #include "FlowSensor.hpp"
 #include "StepperMotor.hpp"
 #include "BioreactorVaribiles.hpp"
+#include "Pump.hpp"
 
 //Other includes older code used
 //#include "WiFi.h"
@@ -21,7 +23,8 @@
 //#include <TaskScheduler.h>
 //#include <WiFiClient.h>
 //#include <WiFiServer.h>
-//#include <YAAJ_ModbusMaster.h>
+
+YAAJ_ModbusMaster controller;
 
 //Start Running
 void setup() {
@@ -36,6 +39,9 @@ void setup() {
 
     //Initlize both stepper motors
     initAllStepperMotors(lowMotorDirPin, lowMotorStepPin, lowMotorEnaPin, highMotorDirPin, highMotorStepPin, highMotorEnaPin);
+
+    //check motor state
+    checkPump(controller);
 }
 
 void loop() {
