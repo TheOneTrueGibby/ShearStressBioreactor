@@ -1,7 +1,7 @@
 /*****************************************************************************************************
 * NewMain.cpp
 * 
-* Function to keep bare neceties of the program running. For testing and to be eventually built out
+* Where all commands/routines are executed
 /*****************************************************************************************************/
 
 
@@ -14,15 +14,6 @@
 #include "StepperMotor.hpp"
 #include "BioreactorVaribiles.hpp"
 #include "Pump.hpp"
-
-//Other includes older code used
-//#include "WiFi.h"
-//#include <PIDController.h>
-//#include <stdint.h>
-//#include <HardwareSerial.h>
-//#include <TaskScheduler.h>
-//#include <WiFiClient.h>
-//#include <WiFiServer.h>
 
 YAAJ_ModbusMaster controller;
 
@@ -39,15 +30,20 @@ void setup() {
 
     //Initlize both stepper motors
     initAllStepperMotors(lowMotorDirPin, lowMotorStepPin, lowMotorEnaPin, highMotorDirPin, highMotorStepPin, highMotorEnaPin);
+    openStepperMotor(2, lowMotorDirPin);
+    closeStepperMotor(2, lowMotorDirPin);
 
     //check motor state and set speed
-    checkPump(controller);
-    setPumpSpeed(200, controller);
+    //checkPump(controller);
+    //setPumpSpeed(100, controller);
 }
 
 void loop() {
     //Loop to read and print flow rate from flow sensor
     float flowRate = readFlowSensor();
+    Serial.print("Flow Rate Unfiltered: ");
+    Serial.print(flowRate);
+    Serial.print("\n");
     Serial.print("Flow Rate: ");
     Serial.print(flowRateCalc(flowRate));
     Serial.println(" ml/min\n");

@@ -21,6 +21,7 @@ void initStepperMotor(int dirPin, int stepPin, int enaPin) {
 void initAllStepperMotors(int lowDirPin, int lowStepPin, int lowEnaPin, int highDirPin, int highStepPin, int highEnaPin) {
     initStepperMotor(lowDirPin, lowStepPin, lowEnaPin);
     initStepperMotor(highDirPin, highStepPin, highEnaPin);
+    Serial.print("Stepper Motors Intilized.\n");
 }
 
 void openStepperMotor(int numTicks, int dirPin) {
@@ -28,6 +29,7 @@ void openStepperMotor(int numTicks, int dirPin) {
     for (i = 0; i < numTicks; i++) {
         digitalWrite(dirPin, LOW);
     }
+    Serial.print("Stepper Motor Opened.\n");
 }
 
 void closeStepperMotor(int numTicks, int dirPin) {
@@ -35,4 +37,5 @@ void closeStepperMotor(int numTicks, int dirPin) {
     for (i = 0; i < numTicks; i++) {
         digitalWrite(dirPin, HIGH);
     }
+    Serial.print("Stepper Motor Closed.\n");
 }
