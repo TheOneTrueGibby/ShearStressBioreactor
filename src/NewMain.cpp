@@ -30,8 +30,11 @@ void setup() {
 
     //Initlize both stepper motors
     initAllStepperMotors(lowMotorDirPin, lowMotorStepPin, lowMotorEnaPin, highMotorDirPin, highMotorStepPin, highMotorEnaPin);
-    openStepperMotor(2, lowMotorDirPin);
-    closeStepperMotor(2, lowMotorDirPin);
+    //test opening and closing each stepper motor
+    openStepperMotor(1, lowMotorDirPin);
+    closeStepperMotor(1, lowMotorDirPin);
+    openStepperMotor(1, highMotorDirPin);
+    closeStepperMotor(1, highMotorDirPin);
 
     //check motor state and set speed
     initPump(controller);
