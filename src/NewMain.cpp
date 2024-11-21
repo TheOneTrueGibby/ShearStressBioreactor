@@ -35,7 +35,7 @@ void setup() {
 
     //check motor state and set speed
     initPump(controller);
-    //checkPump(controller);
+    checkPump(controller);
     //setPumpSpeed(100, controller);
 }
 

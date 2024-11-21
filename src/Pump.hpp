@@ -2,8 +2,21 @@
 
 //YAAJ_ModbusMaster controller;
 
+// Used for sending and receiving Modbus commands
+HardwareSerial ModbusSerial(1);
+
+// Receive and transmit pins for the MAX485
+const int MODBUS_RX = 16;
+const int MODBUS_TX = 17;
+const int MODBUS_ENABLE = 18; // automatically set to high when writing, low otherwise to receive
+
+const int PUMP_ADDRESS = 0xEF; // Modbus address of pump controller
+const int MODBUS_TIMEOUT = 500; // timeout in ms for Modbus command responses
+
+//varible to save wheather pump is on or off so we don't have to constantly check
 int pumpState = 0;
 
+//Varibiles to help set the pump speed
 const int STEP_0 = 8;
 const int STEP_1 = 16;
 const int STEP_2 = 32;
@@ -25,17 +38,6 @@ const int RATE_2 = 4;
 const int RATE_3 = 2;       
 const int RATE_4 = 1;       
 const double RATE_5 = 0.5;
-
-// Used for sending and receiving Modbus commands
-HardwareSerial ModbusSerial(1);
-
-// Receive and transmit pins for the MAX485
-const int MODBUS_RX = 16;
-const int MODBUS_TX = 17;
-const int MODBUS_ENABLE = 18; // automatically set to high when writing, low otherwise to receive
-
-const int PUMP_ADDRESS = 0xEF; // Modbus address of pump controller
-const int MODBUS_TIMEOUT = 500; // timeout in ms for Modbus command responses
 
 void initPump(YAAJ_ModbusMaster controller) {
     // Serial connection for sending RS485 commands
