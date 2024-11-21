@@ -34,6 +34,7 @@ void setup() {
     closeStepperMotor(2, lowMotorDirPin);
 
     //check motor state and set speed
+    initPump(controller);
     //checkPump(controller);
     //setPumpSpeed(100, controller);
 }
