@@ -42,7 +42,7 @@ void setup() {
 void loop() {
     //Loop to read and print flow rate from flow sensor
     float flowRate = readFlowSensor();
-    Serial.print("Flow Rate Unfiltered: ");
+    Serial.print("Flow Rate Unchanged: ");
     Serial.print(flowRate);
     Serial.print("\n");
     Serial.print("Flow Rate: ");

@@ -73,9 +73,17 @@ int readFlowSensor() {
         Serial.printf("Error while reading flow measurement\n");
     }
     
-    uint16_t flowData = (Wire.read() << 8); 
-    flowData |= Wire.read();
+    uint16_t flowData = (Wire.read() << 8); //read the MSB from the sensor
+    flowData |= Wire.read(); //read the LSB from the sensor
     byte crcFlow = Wire.read();
+
+    uint16_t tempValue = Wire.read() << 8; //read the MSB from the sensor
+    tempValue |= Wire.read(); //read the LSB from the sensor
+    byte tempCRC = Wire.read();
+
+    uint16_t auxValue = Wire.read() << 8; //read the MSB from the sensor
+    auxValue |= Wire.read(); //read the LSB from the sensor
+    byte auxCRC = Wire.read();
 
     stopMesuremntFlowSensor();
     
