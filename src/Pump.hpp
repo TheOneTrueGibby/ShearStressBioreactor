@@ -42,6 +42,7 @@ void initPump(YAAJ_ModbusMaster controller) {
     // Serial connection for sending RS485 commands
     controller.begin(ModbusSerial, 9600, SERIAL_8N1, MODBUS_RX, MODBUS_TX, PUMP_ADDRESS, MODBUS_ENABLE, MODBUS_TIMEOUT);
     while (!Serial || !ModbusSerial) {} // wait until connections are ready
+    Serial.print("Pump Intilizied");
 }
 
 

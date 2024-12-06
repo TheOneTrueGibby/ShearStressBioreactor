@@ -24,32 +24,34 @@ void setup() {
     Wire.begin();
     
     //Initlize Flow Sensor
-    initFlowSensor();
-    Serial.println("Measurement started.\n");
-    delay(100);
+    // initFlowSensor();
+    // Serial.println("Measurement started.\n");
+    // delay(100);
 
     //Initlize both stepper motors
     initAllStepperMotors(lowMotorDirPin, lowMotorStepPin, lowMotorEnaPin, highMotorDirPin, highMotorStepPin, highMotorEnaPin);
     //test opening and closing each stepper motor
-    openStepperMotor(1, lowMotorDirPin);
-    closeStepperMotor(1, lowMotorDirPin);
-    openStepperMotor(1, highMotorDirPin);
-    closeStepperMotor(1, highMotorDirPin);
+    //openStepperMotor(23, lowMotorDirPin);
+    //closeStepperMotor(23, lowMotorDirPin);
+
+
+    openStepperMotor(23, 27);
+    //closeStepperMotor(23, 27);
 
     //check motor state and set speed
     initPump(controller);
-    checkPump(controller);
+    //checkPump(controller);
     //setPumpSpeed(100, controller);
 }
 
 void loop() {
     //Loop to read and print flow rate from flow sensor
-    float flowRate = readFlowSensor();
-    Serial.print("Flow Rate Unchanged: ");
-    Serial.print(flowRate);
-    Serial.print("\n");
-    Serial.print("Flow Rate: ");
-    Serial.print(flowRateCalc(flowRate));
-    Serial.println(" ml/min\n");
+    // float flowRate = readFlowSensor();
+    // Serial.print("Flow Rate Unchanged: ");
+    // Serial.print(flowRate);
+    // Serial.print("\n");
+    // Serial.print("Flow Rate: ");
+    // Serial.print(flowRateCalc(flowRate));
+    // Serial.println(" ml/min\n");
     delay(1000);
 }

@@ -10,16 +10,16 @@ int highMotorStepPin = 26;
 int highMotorEnaPin = 25;
 
 void initStepperMotor(int dirPin, int stepPin, int enaPin) {
+    //set motor to on
+    digitalWrite(enaPin, LOW);
+    
     pinMode(stepPin, OUTPUT);
     pinMode(dirPin, OUTPUT);
     pinMode(enaPin, OUTPUT);
-
-    //set motor to on
-    digitalWrite(enaPin, LOW);
 }
 
 void initAllStepperMotors(int lowDirPin, int lowStepPin, int lowEnaPin, int highDirPin, int highStepPin, int highEnaPin) {
-    initStepperMotor(lowDirPin, lowStepPin, lowEnaPin);
+    //initStepperMotor(lowDirPin, lowStepPin, lowEnaPin);
     initStepperMotor(highDirPin, highStepPin, highEnaPin);
     Serial.print("Stepper Motors Intilized.\n");
 }
