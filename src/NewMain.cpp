@@ -24,22 +24,23 @@ void setup() {
     Wire.begin();
     
     //Initlize Flow Sensor
-    // initFlowSensor();
-    // Serial.println("Measurement started.\n");
-    // delay(100);
+    //initFlowSensor();
+    Serial.println("Measurement started.\n");
+    delay(100);
 
     //Initlize both stepper motors
-    initAllStepperMotors(lowMotorDirPin, lowMotorStepPin, lowMotorEnaPin, highMotorDirPin, highMotorStepPin, highMotorEnaPin);
+    //initAllStepperMotors(lowMotorDirPin, lowMotorStepPin, lowMotorEnaPin, highMotorDirPin, highMotorStepPin, highMotorEnaPin);
+    //initStepperMotor(highMotorDirPin, highMotorStepPin, highMotorEnaPin);
     //test opening and closing each stepper motor
     //openStepperMotor(23, lowMotorDirPin);
     //closeStepperMotor(23, lowMotorDirPin);
 
 
-    openStepperMotor(23, 27);
+    //openStepperMotor(23, 27);
     //closeStepperMotor(23, 27);
 
     //check motor state and set speed
-    initPump(controller);
+    //initPump(controller);
     //checkPump(controller);
     //setPumpSpeed(100, controller);
 }
