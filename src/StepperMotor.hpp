@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <Wire.h>
+#include <Stepper.h>
 
 int lowMotorDirPin = 13;
 int lowMotorStepPin = 12;

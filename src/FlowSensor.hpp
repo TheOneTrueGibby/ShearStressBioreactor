@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <Wire.h>
+#include "sensirion-lf.h"
 
 //Define all commands and scaling values
 static const float   SLF3X_SCALE_FACTOR_FLOW = 500.0;
