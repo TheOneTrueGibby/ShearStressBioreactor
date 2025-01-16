@@ -10,13 +10,16 @@ int highMotorDirPin = 27;
 int highMotorStepPin = 26;
 int highMotorEnaPin = 25;
 
-void initStepperMotor(int dirPin, int stepPin, int enaPin) {
-    //set motor to on
-    digitalWrite(enaPin, LOW);
+// void initStepperMotor(int dirPin, int stepPin, int enaPin) {
+//     //set motor to on
+//     digitalWrite(enaPin, LOW);
     
-    pinMode(stepPin, OUTPUT);
-    pinMode(dirPin, OUTPUT);
-    pinMode(enaPin, OUTPUT);
+//     pinMode(stepPin, OUTPUT);
+//     pinMode(dirPin, OUTPUT);
+//     pinMode(enaPin, OUTPUT);
+// }
+void initStepperMotor(int dirPin, int stepPin, int enaPin) {
+    
 }
 
 void initAllStepperMotors(int lowDirPin, int lowStepPin, int lowEnaPin, int highDirPin, int highStepPin, int highEnaPin) {
