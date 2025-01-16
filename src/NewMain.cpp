@@ -24,7 +24,7 @@ int lowMotorEnaPin = 14;
 int highMotorDirPin = 27;
 int highMotorStepPin = 26;
 int highMotorEnaPin = 25;
-#define stepsPerRevolution 200
+#define stepsPerRevolution 5
 
 YAAJ_ModbusMaster controller;
 SensirionLF flowSensor(SLF3X_SCALE_FACTOR_FLOW, SLF3X_SCALE_FACTOR_TEMP, SLF3X_I2C_ADDRESS);
@@ -58,8 +58,8 @@ void setup() {
     //openStepperMotor(23, lowMotorDirPin);
     //closeStepperMotor(23, lowMotorDirPin);
 
-
-
+    lowStepper.setSpeed(60);
+    lowStepper.step(stepsPerRevolution);
 
     //openStepperMotor(23, 27);
     //closeStepperMotor(23, 27);
