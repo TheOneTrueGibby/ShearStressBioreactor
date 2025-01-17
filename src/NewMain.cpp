@@ -9,7 +9,7 @@
 #include <Wire.h>
 #include <WiFi.h>
 #include <YAAJ_ModbusMaster.h>
-#include <Stepper.h>
+//#include <Stepper.h>
 
 //#include "FlowSensor.hpp"
 //#include "StepperMotor.hpp"
@@ -17,6 +17,8 @@
 #include "Pump.hpp"
 #include "sensirion-lf.h"
 #include "sensirion-lf.cpp"
+#include "ESP_FlexyStepper.cpp"
+
 
 int lowMotorDirPin = 13;
 int lowMotorStepPin = 12;
@@ -28,7 +30,8 @@ int highMotorEnaPin = 25;
 
 YAAJ_ModbusMaster controller;
 SensirionLF flowSensor(SLF3X_SCALE_FACTOR_FLOW, SLF3X_SCALE_FACTOR_TEMP, SLF3X_I2C_ADDRESS);
-Stepper lowStepper(stepsPerRevolution, 13, 12, 14, 15);
+//Stepper lowStepper(stepsPerRevolution, 13, 12, 14, 15);
+ESP_FlexyStepper stepper;
 
 //Start Running
 void setup() {
@@ -58,8 +61,7 @@ void setup() {
     //openStepperMotor(23, lowMotorDirPin);
     //closeStepperMotor(23, lowMotorDirPin);
 
-    //lowStepper.setSpeed(60);
-    //lowStepper.step(stepsPerRevolution);
+    stepper.connectToPins(highMotorStepPin, highMotorDirPin);
 
 
     //openStepperMotor(23, 27);
