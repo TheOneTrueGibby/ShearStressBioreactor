@@ -58,8 +58,9 @@ void setup() {
     //openStepperMotor(23, lowMotorDirPin);
     //closeStepperMotor(23, lowMotorDirPin);
 
-    lowStepper.setSpeed(60);
-    lowStepper.step(stepsPerRevolution);
+    //lowStepper.setSpeed(60);
+    //lowStepper.step(stepsPerRevolution);
+
 
     //openStepperMotor(23, 27);
     //closeStepperMotor(23, 27);
@@ -72,6 +73,9 @@ void setup() {
 
 void loop() {
     int ret = flowSensor.readSample();
+    if (SLF3X.isAirInLineDetected()) {
+      Serial.print(" [Air in Line Detected]");
+    }
     if (ret == 0) {
         Serial.print("Flow: ");
         Serial.print(flowSensor.getFlow(), 2);
