@@ -9,7 +9,6 @@
 #include <Wire.h>
 #include <WiFi.h>
 #include <YAAJ_ModbusMaster.h>
-//#include <Stepper.h>
 
 //#include "FlowSensor.hpp"
 //#include "StepperMotor.hpp"
@@ -20,18 +19,22 @@
 #include "ESP_FlexyStepper.cpp"
 
 
-int lowMotorDirPin = 13;
-int lowMotorStepPin = 12;
-int lowMotorEnaPin = 14;
-int highMotorDirPin = 27;
-int highMotorStepPin = 26;
-int highMotorEnaPin = 25;
-#define stepsPerRevolution 5
+
+int HIGH_MOTOR_DIRPIN = 27;
+int HIGH_MOTOR_STEPPIN = 26;
+int HIGH_MOTOR_ENAPIN = 25;
+//#define stepsPerRevolution 5
 
 YAAJ_ModbusMaster controller;
 SensirionLF flowSensor(SLF3X_SCALE_FACTOR_FLOW, SLF3X_SCALE_FACTOR_TEMP, SLF3X_I2C_ADDRESS);
+
 //Stepper lowStepper(stepsPerRevolution, 13, 12, 14, 15);
 ESP_FlexyStepper stepper;
+const float STEPS_PER_REV = 200.0;
+const float DISTANCE_PER_REV = 1.0;
+const float MAX_SPEED = 1000.0;
+const float ACCELERATION = 500.0;
+const float MOVE_DISTANCE = 10.0; 
 
 //Start Running
 void setup() {
@@ -61,7 +64,13 @@ void setup() {
     //openStepperMotor(23, lowMotorDirPin);
     //closeStepperMotor(23, lowMotorDirPin);
 
-    stepper.connectToPins(highMotorStepPin, highMotorDirPin);
+    stepper.connectToPins(HIGH_MOTOR_DIRPIN, HIGH_MOTOR_STEPPIN);
+
+    stepper.setStepsPerMillimeter(STEPS_PER_REV / DISTANCE_PER_REV);
+    stepper.setSpeedInStepsPerSecond(MAX_SPEED);
+    stepper.setAccelerationInStepsPerSecondPerSecond(ACCELERATION);
+
+    stepper.setCurrentPositionInMillimeters(0.0);
 
 
     //openStepperMotor(23, 27);
@@ -100,4 +109,15 @@ void loop() {
     // Serial.print(flowRateCalc(flowRate));
     // Serial.println(" ml/min\n");
     delay(1000);
+
+    stepper.moveRelativeInMillimeters(MOVE_DISTANCE);
+    while (!stepper.motionComplete()) {
+        //Do Nothing
+    }
+
+    stepper.moveRelativeInMillimeters(-MOVE_DISTANCE);
+    while (!stepper.motionComplete()) {
+        //Do Nothing
+    }
+    Serial.print("Moved Stepper Motor\n");
 }
