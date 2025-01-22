@@ -56,14 +56,10 @@ void setup() {
     wifiManager.autoConnect("ESPBio");
     initWebServer();
 
-
+    //begin communication
     Wire.begin();
     
-    // Initlize Flow Sensor
-    // initFlowSensor();
-    // Serial.println("Measurement started.\n");
-    // delay(100);
-
+    //Set up Flow Sensor
     uint16_t reset = flowSensor.init();
     if (reset != 0) {
         Serial.print("Error initializing the flow sensor: ");
@@ -74,13 +70,7 @@ void setup() {
 
     delay(100);
 
-    //Initlize both stepper motors
-    //initAllStepperMotors(lowMotorDirPin, lowMotorStepPin, lowMotorEnaPin, highMotorDirPin, highMotorStepPin, highMotorEnaPin);
-    //initStepperMotor(highMotorDirPin, highMotorStepPin, highMotorEnaPin);
-    //test opening and closing each stepper motor
-    //openStepperMotor(23, lowMotorDirPin);
-    //closeStepperMotor(23, lowMotorDirPin);
-
+    //Setup Stepper Motor Paramaters
     stepper.connectToPins(HIGH_MOTOR_STEPPIN, HIGH_MOTOR_DIRPIN);
 
     stepper.setStepsPerMillimeter(STEPS_PER_REV / DISTANCE_PER_REV);
@@ -89,15 +79,6 @@ void setup() {
 
     stepper.setCurrentPositionInMillimeters(0.0);
     stepper.startAsService(1);
-
-
-    //openStepperMotor(23, 27);
-    //closeStepperMotor(23, 27);
-
-    //check motor state and set speed
-    //initPump(controller);
-    //checkPump(controller);
-    //setPumpSpeed(100, controller);
 }
 
 void loop() {
@@ -117,15 +98,6 @@ void loop() {
         Serial.print("Error in flowsensor.readSample(): ");
         Serial.println(ret);
     }
-
-    //Loop to read and print flow rate from flow sensor
-    // float flowRate = readFlowSensor();
-    // Serial.print("Flow Rate Unchanged: ");
-    // Serial.print(flowRate);
-    // Serial.print("\n");
-    // Serial.print("Flow Rate: ");
-    // Serial.print(flowRateCalc(flowRate));
-    // Serial.println(" ml/min\n");
     delay(1000);
 
     stepper.moveRelativeInMillimeters(MOVE_DISTANCE);
