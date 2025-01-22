@@ -21,18 +21,22 @@
 #include "sensirion-lf.cpp"
 #include "ESP_FlexyStepper.cpp"
 
+//Setup Wifi Manager and Server
 WiFiManager wifiManager;
 AsyncWebServer server(80);
 
+//Pins for Stepper Motor
 int HIGH_MOTOR_DIRPIN = 27;
 int HIGH_MOTOR_STEPPIN = 26;
 int HIGH_MOTOR_ENAPIN = 25;
-//#define stepsPerRevolution 5
 
+//Set up Pump controller
 YAAJ_ModbusMaster controller;
+
+//Set up Flow Sensor
 SensirionLF flowSensor(SLF3X_SCALE_FACTOR_FLOW, SLF3X_SCALE_FACTOR_TEMP, SLF3X_I2C_ADDRESS);
 
-//Stepper lowStepper(stepsPerRevolution, 13, 12, 14, 15);
+//Set up Stepper Motor varibiles
 ESP_FlexyStepper stepper;
 const float STEPS_PER_REV = 200;
 const float DISTANCE_PER_REV = 1;
@@ -40,6 +44,7 @@ const float MAX_SPEED = 1000;
 const float ACCELERATION = 200;
 const float MOVE_DISTANCE = 1; 
 
+//Declare Functions
 void initSPIFFS();
 void initWebServer();
 
