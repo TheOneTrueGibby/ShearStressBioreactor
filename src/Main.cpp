@@ -41,8 +41,8 @@ ESP_FlexyStepper stepper;
 const float STEPS_PER_REV = 200;
 const float DISTANCE_PER_REV = 1;
 const float MAX_SPEED = 1000;
-const float ACCELERATION = 200;
-const float MOVE_DISTANCE = 1; 
+const float ACCELERATION = 500;
+const float MOVE_DISTANCE = 5; 
 
 //Declare Functions
 void initSPIFFS();
@@ -81,11 +81,12 @@ void setup() {
     stepper.setSpeedInStepsPerSecond(MAX_SPEED);
     stepper.setAccelerationInStepsPerSecondPerSecond(ACCELERATION);
 
-    stepper.setCurrentPositionInMillimeters(0.0);
+    //stepper.setCurrentPositionInMillimeters(0.0);
     stepper.startAsService(1);
 }
 
 void loop() {
+    //Collect Flow Sensor Data
     int ret = flowSensor.readSample();
     if (SLF3X.isAirInLineDetected()) {
       Serial.print(" [Air in Line Detected]");
