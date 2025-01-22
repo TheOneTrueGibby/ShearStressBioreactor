@@ -4,7 +4,7 @@
 * Where all commands/routines are executed
 /*****************************************************************************************************/
 
-
+//All library includes
 #include <Arduino.h>
 #include <Wire.h>
 #include <WiFi.h>
@@ -14,8 +14,7 @@
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h>
 
-//#include "FlowSensor.hpp"
-//#include "StepperMotor.hpp"
+//all file includes
 #include "BioreactorVaribiles.hpp"
 #include "Pump.hpp"
 #include "sensirion-lf.h"
