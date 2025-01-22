@@ -9,6 +9,10 @@
 #include <Wire.h>
 #include <WiFi.h>
 #include <YAAJ_ModbusMaster.h>
+#include <WiFiManager.h>
+#include <SPIFFS.h>
+#include <WiFi.h>
+#include <ESPAsyncWebServer.h>
 
 //#include "FlowSensor.hpp"
 //#include "StepperMotor.hpp"
@@ -18,7 +22,8 @@
 #include "sensirion-lf.cpp"
 #include "ESP_FlexyStepper.cpp"
 
-
+WiFiManager wifiManager;
+AsyncWebServer server(80);
 
 int HIGH_MOTOR_DIRPIN = 27;
 int HIGH_MOTOR_STEPPIN = 26;
@@ -30,16 +35,28 @@ SensirionLF flowSensor(SLF3X_SCALE_FACTOR_FLOW, SLF3X_SCALE_FACTOR_TEMP, SLF3X_I
 
 //Stepper lowStepper(stepsPerRevolution, 13, 12, 14, 15);
 ESP_FlexyStepper stepper;
-const float STEPS_PER_REV = 200.0;
-const float DISTANCE_PER_REV = 1.0;
-const float MAX_SPEED = 1000.0;
-const float ACCELERATION = 500.0;
-const float MOVE_DISTANCE = 10.0; 
+const float STEPS_PER_REV = 200;
+const float DISTANCE_PER_REV = 1;
+const float MAX_SPEED = 1000;
+const float ACCELERATION = 200;
+const float MOVE_DISTANCE = 1; 
+
+void initSPIFFS();
+void initWebServer();
 
 //Start Running
 void setup() {
+
     //Start Serial Communication
     Serial.begin(115200);
+
+    //WIFI
+    //first parameter is name of access point, second is the password (if used)
+    initSPIFFS();
+    wifiManager.autoConnect("ESPBio");
+    initWebServer();
+
+
     Wire.begin();
     
     // Initlize Flow Sensor
@@ -64,13 +81,14 @@ void setup() {
     //openStepperMotor(23, lowMotorDirPin);
     //closeStepperMotor(23, lowMotorDirPin);
 
-    stepper.connectToPins(HIGH_MOTOR_DIRPIN, HIGH_MOTOR_STEPPIN);
+    stepper.connectToPins(HIGH_MOTOR_STEPPIN, HIGH_MOTOR_DIRPIN);
 
     stepper.setStepsPerMillimeter(STEPS_PER_REV / DISTANCE_PER_REV);
     stepper.setSpeedInStepsPerSecond(MAX_SPEED);
     stepper.setAccelerationInStepsPerSecondPerSecond(ACCELERATION);
 
     stepper.setCurrentPositionInMillimeters(0.0);
+    stepper.startAsService(1);
 
 
     //openStepperMotor(23, 27);
@@ -120,4 +138,21 @@ void loop() {
         //Do Nothing
     }
     Serial.print("Moved Stepper Motor\n");
+}
+
+//https://m1cr0lab-esp32.github.io/remote-control-with-websocket/web-server-setup/
+void initSPIFFS() {
+  if (!SPIFFS.begin()) {
+    Serial.println("Cannot mount SPIFFS volume...");
+  }
+}
+
+void onRootRequest(AsyncWebServerRequest *request) {
+  request->send(SPIFFS, "/index.html", "text/html", false);
+}
+
+void initWebServer() {
+    server.on("/", onRootRequest);
+    server.serveStatic("/", SPIFFS, "/");
+    server.begin();
 }
