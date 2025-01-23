@@ -47,6 +47,7 @@ const float MOVE_DISTANCE = 5;
 //Declare Functions
 void initSPIFFS();
 void initWebServer();
+void initWebServer();
 
 //Start Running
 void setup() {
@@ -103,7 +104,7 @@ void loop() {
         Serial.print("Error in flowsensor.readSample(): ");
         Serial.println(ret);
     }
-    delay(1000);
+    delay(100);
 
     stepper.moveRelativeInMillimeters(MOVE_DISTANCE);
     while (!stepper.motionComplete()) {
