@@ -31,7 +31,7 @@ int HIGH_MOTOR_STEPPIN = 26;
 int HIGH_MOTOR_ENAPIN = 25;
 
 //Set up Pump controller
-Pump pumpController;
+//Pump pumpController;
 
 //Set up Flow Sensor
 SensirionLF flowSensor(SLF3X_SCALE_FACTOR_FLOW, SLF3X_SCALE_FACTOR_TEMP, SLF3X_I2C_ADDRESS);
@@ -141,22 +141,22 @@ void initWebServer() {
 }
 
 void initWebSocket() {
-  //ws.onEvent(onEvent);
+  ws.onEvent(onEvent);
   server.addHandler(&ws);
 }
 
-// void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
+void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
 
-//   switch (type) {
-//     case WS_EVT_CONNECT:
-//         Serial.printf("WebSocket client #%u connected from %s\n", client->id(), client->remoteIP().toString().c_str());
-//         break;
-//     case WS_EVT_DISCONNECT:
-//         Serial.printf("WebSocket client #%u disconnected\n", client->id());
-//         break;
-//     case WS_EVT_DATA:
-//     case WS_EVT_PONG:
-//     case WS_EVT_ERROR:
-//         break;
-//   }
-// }
+  switch (type) {
+    case WS_EVT_CONNECT:
+        Serial.printf("WebSocket client #%u connected from %s\n", client->id(), client->remoteIP().toString().c_str());
+        break;
+    case WS_EVT_DISCONNECT:
+        Serial.printf("WebSocket client #%u disconnected\n", client->id());
+        break;
+    case WS_EVT_DATA:
+    case WS_EVT_PONG:
+    case WS_EVT_ERROR:
+        break;
+  }
+}
