@@ -25,16 +25,21 @@ WiFiManager wifiManager;
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
 
+//Set up Pump controller
+HardwareSerial ModbusSerial(1);
+const int PUMP_ADDRESS = 0xEF; // Modbus address of pump controller
+const int MODBUS_TIMEOUT = 500; // timeout in ms for Modbus command responses
+// extern YAAJ_ModbusMaster controller;
+// static Pump* pump;
+// pump = Pump(controller);
+
+//Set up Flow Sensor
+SensirionLF flowSensor(SLF3X_SCALE_FACTOR_FLOW, SLF3X_SCALE_FACTOR_TEMP, SLF3X_I2C_ADDRESS);
+
 //Pins for Stepper Motor
 int HIGH_MOTOR_DIRPIN = 27;
 int HIGH_MOTOR_STEPPIN = 26;
 int HIGH_MOTOR_ENAPIN = 25;
-
-//Set up Pump controller
-//Pump pumpController;
-
-//Set up Flow Sensor
-SensirionLF flowSensor(SLF3X_SCALE_FACTOR_FLOW, SLF3X_SCALE_FACTOR_TEMP, SLF3X_I2C_ADDRESS);
 
 //Set up Stepper Motor varibiles
 ESP_FlexyStepper stepper;
@@ -93,23 +98,37 @@ void loop() {
 
   //Collect Flow Sensor Data
   int ret = flowSensor.readSample();
-  if (SLF3X.isAirInLineDetected()) {
-    Serial.print(" [Air in Line Detected]");
-  }
+  // if (SLF3X.isAirInLineDetected()) {
+  //   Serial.print(" [Air in Line Detected]");
+  // }
+  String flowData = "";
   if (ret == 0) {
-      Serial.print("Flow: ");
-      Serial.print(flowSensor.getFlow(), 2);
-      Serial.print(" ml/min");
+    //Print flow to terminal
+    Serial.print("Flow: ");
+    Serial.print(flowSensor.getFlow(), 2);
+    Serial.print(" ml/min");
 
-      Serial.print(" | Temp: ");
-      Serial.print(flowSensor.getTemp(), 1);
-      Serial.print(" deg C\n");
+    //Put flow data to webserver
+    flowData += "Flow: ";
+    flowData += String(flowSensor.getFlow(), 2) + " ml/min";
+
+    //Print temp to terminal
+    Serial.print(" | Temp: ");
+    Serial.print(flowSensor.getTemp(), 1);
+    Serial.print(" deg C\n");
+
+    //Put temp data to webserver
+    flowData += " | Temp: ";
+    flowData += String(flowSensor.getTemp(), 1) + " deg C";
   } else {
-      Serial.print("Error in flowsensor.readSample(): ");
-      Serial.println(ret);
+    Serial.print("Error in flowsensor.readSample(): ");
+    Serial.println(ret);
+    flowData = "Error in flowsensor.readSample(): " + String(ret);
   }
+  ws.textAll(flowData);
   delay(100);
 
+  //Move stepper motor
   stepper.moveRelativeInMillimeters(MOVE_DISTANCE);
   while (!stepper.motionComplete()) {
       //Do Nothing

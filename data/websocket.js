@@ -39,3 +39,8 @@ function onClose(event) {
     console.log('Connection closed');
     setTimeout(initWebSocket, 2000);
 }
+
+function onMessage(event) {
+    console.log('Received: ', event.data);
+    document.getElementById('flowData').innerText = event.data; // Update webpage
+}
