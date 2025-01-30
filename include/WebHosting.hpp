@@ -1,20 +1,25 @@
+//set up to host website and data exchange
+//used this tutorial: https://m1cr0lab-esp32.github.io/remote-control-with-websocket/web-server-setup/
+
+//all necessary library includes
 #include <WiFi.h>
 #include <WiFiManager.h>
 #include <SPIFFS.h>
 #include <ESPAsyncWebServer.h>
 
+//set up server hosting on esp32
 WiFiManager wifiManager;
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
 
+//function delcerations
 void initSPIFFS();
 void initWebServer();
 void initWebServer();
 void initWebSocket();
 void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len);
 
-//set up to host website
-//https://m1cr0lab-esp32.github.io/remote-control-with-websocket/web-server-setup/
+//function definitions
 void initSPIFFS() {
   if (!SPIFFS.begin()) {
     Serial.println("Cannot mount SPIFFS volume...");
