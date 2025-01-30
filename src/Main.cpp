@@ -8,13 +8,13 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <YAAJ_ModbusMaster.h>
+#include <ESP_FlexyStepper.h>
 
 //all file includes
 #include "BioreactorVaribiles.hpp"
 #include "Pump.hpp"
 #include "sensirion-lf.h"
 #include "sensirion-lf.cpp"
-#include "ESP_FlexyStepper.cpp"
 #include "WebHosting.hpp"
 
 //Set up Pump controller
