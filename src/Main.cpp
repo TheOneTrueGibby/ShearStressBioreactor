@@ -19,11 +19,14 @@
 
 //Set up Pump controller
 HardwareSerial ModbusSerial(1);
+// Receive and transmit pins for the MAX485
+const int MODBUS_RX = 16;
+const int MODBUS_TX = 17;
+const int MODBUS_ENABLE = 18; // automatically set to high when writing, low otherwise to receive
 const int PUMP_ADDRESS = 0xEF; // Modbus address of pump controller
 const int MODBUS_TIMEOUT = 500; // timeout in ms for Modbus command responses
-// extern YAAJ_ModbusMaster controller;
-// static Pump* pump;
-// pump = Pump(controller);
+YAAJ_ModbusMaster controller;
+Pump pump(controller);
 
 //Set up Flow Sensor
 SensirionLF flowSensor(SLF3X_SCALE_FACTOR_FLOW, SLF3X_SCALE_FACTOR_TEMP, SLF3X_I2C_ADDRESS);
@@ -55,6 +58,16 @@ void setup() {
 
   //begin communication
   Wire.begin();
+
+  //Initialize Modbus communication for the pump
+  controller.begin(ModbusSerial, 9600, SERIAL_8N1, MODBUS_RX, MODBUS_TX, PUMP_ADDRESS, MODBUS_ENABLE, MODBUS_TIMEOUT);
+
+  //Set up Pump
+  if (pump.checkStatus()) {
+    Serial.println("Pump initialized and currently running.");
+  } else {
+    Serial.println("Pump initialized and currently stopped.");
+  }
   
   //Set up Flow Sensor
   uint16_t reset = flowSensor.init();
@@ -80,6 +93,19 @@ void setup() {
 
 void loop() {
   ws.cleanupClients();
+
+  //Set pump speed example
+  if (!pump.checkStatus()) { // Ensure the pump is off before setting speed
+    if (pump.setSpeed(100)) { // Set to 100 ml/min
+      Serial.println("Pump speed set to 100 ml/min.");
+    } else {
+      Serial.println("Failed to set pump speed.");
+    }
+  }
+
+  if(!pump.checkStatus()) {
+    pump.togglePump();
+  }
 
   //Collect Flow Sensor Data
   int ret = flowSensor.readSample();
