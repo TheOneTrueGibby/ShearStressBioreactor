@@ -25,7 +25,7 @@ const int MODBUS_ENABLE = 18; // automatically set to high when writing, low oth
 const int PUMP_ADDRESS = 0xEF; // Modbus address of pump controller
 const int MODBUS_TIMEOUT = 500; // timeout in ms for Modbus command responses
 //YAAJ_ModbusMaster controller;
-//Pump pump(controller);
+//Pump pump(pump.controller);
 
 //Set up Flow Sensor
 SensirionLF flowSensor(SLF3X_SCALE_FACTOR_FLOW, SLF3X_SCALE_FACTOR_TEMP, SLF3X_I2C_ADDRESS);
@@ -49,9 +49,10 @@ void setup() {
   Serial.begin(115200);
 
   //WIFI
-  //first parameter is name of access point, second is the password (if used)
   initSPIFFS();
-  wifiManager.autoConnect("ESPBio");
+  //wifiManager.startConfigPortal(); //used to force setup page if needing change wifi
+  wifiManager.setSTAStaticIPConfig(IPAddress(192,168,1,141), IPAddress(192,168,1,142), IPAddress(255,255,255,0));
+  wifiManager.autoConnect("BioCapstoneESP"); //first parameter is name of access point, second is the password (if used) for the autoconnect feild
   initWebSocket();
   initWebServer();
 

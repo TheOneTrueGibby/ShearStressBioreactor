@@ -20,10 +20,11 @@ class Pump {
         bool setSpeed(int flow, bool force = false);
         bool isPumpOn();
         int32_t getSpeed(bool print);
+        YAAJ_ModbusMaster controller;
     private:
         bool pumpOn; // state of the pump
 
-        YAAJ_ModbusMaster controller;
+        //YAAJ_ModbusMaster controller;
 
         // Pump speeds in ml/min above which the precision of the pump decreases by a factor of 2
         const int STEP_0 = 8;
