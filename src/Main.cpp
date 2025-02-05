@@ -139,15 +139,15 @@ void loop() {
   ws.textAll(flowData);
   delay(100);
 
-  //Move stepper motor
-  stepper.moveRelativeInMillimeters(MOVE_DISTANCE);
-  while (!stepper.motionComplete()) {
-      //Do Nothing
-  }
+  //Move stepper motor (works)
+  // stepper.moveRelativeInMillimeters(MOVE_DISTANCE);
+  // while (!stepper.motionComplete()) {
+  //     //Do Nothing
+  // }
 
-  stepper.moveRelativeInMillimeters(-MOVE_DISTANCE);
-  while (!stepper.motionComplete()) {
-      //Do Nothing
-  }
-  Serial.print("Moved Stepper Motor\n");
+  // stepper.moveRelativeInMillimeters(-MOVE_DISTANCE);
+  // while (!stepper.motionComplete()) {
+  //     //Do Nothing
+  // }
+  // Serial.print("Moved Stepper Motor\n");
 }
