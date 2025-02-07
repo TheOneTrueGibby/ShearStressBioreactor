@@ -24,8 +24,8 @@ const int MODBUS_TX = 17;
 const int MODBUS_ENABLE = 18; // automatically set to high when writing, low otherwise to receive
 const int PUMP_ADDRESS = 0xEF; // Modbus address of pump controller
 const int MODBUS_TIMEOUT = 500; // timeout in ms for Modbus command responses
-//YAAJ_ModbusMaster controller;
-//Pump pump(pump.controller);
+YAAJ_ModbusMaster controller;
+//Pump pump(controller);
 
 //Set up Flow Sensor
 SensirionLF flowSensor(SLF3X_SCALE_FACTOR_FLOW, SLF3X_SCALE_FACTOR_TEMP, SLF3X_I2C_ADDRESS);
@@ -137,7 +137,7 @@ void loop() {
     flowData = "Error in flowsensor.readSample(): " + String(ret);
   }
   ws.textAll(flowData);
-  delay(100);
+  delay(250);
 
   //Move stepper motor (works)
   // stepper.moveRelativeInMillimeters(MOVE_DISTANCE);
