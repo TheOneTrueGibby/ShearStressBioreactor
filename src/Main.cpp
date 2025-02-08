@@ -58,6 +58,9 @@ void setup() {
   //Start Serial Communication
   Serial.begin(115200);
 
+  RTUutils::prepareHardwareSerial(Serial2);
+  Serial2.begin(19200, SERIAL_8N1);
+
   initWebSetup();
 
   //begin communication
