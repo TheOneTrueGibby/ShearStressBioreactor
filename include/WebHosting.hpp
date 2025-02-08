@@ -20,6 +20,15 @@ void initWebSocket();
 void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len);
 
 //function definitions
+void initWebSetup() {
+  initSPIFFS();
+  //wifiManager.startConfigPortal(); //used to force setup page if needing change wifi
+  wifiManager.setSTAStaticIPConfig(IPAddress(192,168,1,141), IPAddress(192,168,1,142), IPAddress(255,255,255,0));
+  wifiManager.autoConnect("BioCapstoneESP"); //first parameter is name of access point, second is the password (if used) for the autoconnect feild
+  initWebSocket();
+  initWebServer();
+}
+
 void initSPIFFS() {
   if (!SPIFFS.begin()) {
     Serial.println("Cannot mount SPIFFS volume...");

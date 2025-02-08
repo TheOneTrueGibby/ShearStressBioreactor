@@ -7,19 +7,17 @@
 //All library includes
 #include <Arduino.h>
 #include <SPI.h>
-#include <WiFi.h>
-#include <Update.h>
 #include <WebServer.h>
 #include <DNSServer.h>
+#include <Update.h>
 #include <Wire.h>
 
 //all file includes
 #include "BioreactorVaribiles.hpp"
 #include "ESP_FlexyStepper.h"
-#include "sensirion-lf.h"
-#include "sensirion-lf.cpp"
 #include "WebHosting.hpp"
 #include "ModbusClientRTU.h"
+#include "FlowSensor.hpp"
 
 // Set up Pump controller
 const int MODBUS_RX = 16;
@@ -60,13 +58,7 @@ void setup() {
   //Start Serial Communication
   Serial.begin(115200);
 
-  //WIFI
-  initSPIFFS();
-  //wifiManager.startConfigPortal(); //used to force setup page if needing change wifi
-  wifiManager.setSTAStaticIPConfig(IPAddress(192,168,1,141), IPAddress(192,168,1,142), IPAddress(255,255,255,0));
-  wifiManager.autoConnect("BioCapstoneESP"); //first parameter is name of access point, second is the password (if used) for the autoconnect feild
-  initWebSocket();
-  initWebServer();
+  initWebSetup();
 
   //begin communication
   Wire.begin();
@@ -82,13 +74,7 @@ void setup() {
   // }
   
   //Set up Flow Sensor
-  uint16_t reset = flowSensor.init();
-  if (reset != 0) {
-      Serial.print("Error initializing the flow sensor: ");
-      Serial.println(reset);
-      return;
-  }
-  Serial.println("Flow sensor initialized.");
+  flowSensorSetup(flowSensor); //Function in FlowSensor.hpp
 
   delay(100);
 
@@ -119,36 +105,8 @@ void loop() {
   //   pump.togglePump();
   // }
 
-  //Collect Flow Sensor Data
-  int ret = flowSensor.readSample();
-  // if (SLF3X.isAirInLineDetected()) {
-  //   Serial.print(" [Air in Line Detected]");
-  // }
-  String flowData = "";
-  if (ret == 0) {
-    //Print flow to terminal
-    Serial.print("Flow: ");
-    Serial.print(flowSensor.getFlow(), 2);
-    Serial.print(" ml/min");
-
-    //Put flow data to webserver
-    flowData += "Flow: ";
-    flowData += String(flowSensor.getFlow(), 2) + " ml/min";
-
-    //Print temp to terminal
-    Serial.print(" | Temp: ");
-    Serial.print(flowSensor.getTemp(), 1);
-    Serial.print(" deg C\n");
-
-    //Put temp data to webserver
-    flowData += " | Temp: ";
-    flowData += String(flowSensor.getTemp(), 1) + " deg C";
-  } else {
-    Serial.print("Error in flowsensor.readSample(): ");
-    Serial.println(ret);
-    flowData = "Error in flowsensor.readSample(): " + String(ret);
-  }
-  ws.textAll(flowData);
+  String flowData = readFlowSensor(flowSensor); //Function in FlowSensor.hpp
+  ws.textAll(flowData); //Send data to be handled by webscoket
   delay(250);
 
   //Move stepper motor (works)
