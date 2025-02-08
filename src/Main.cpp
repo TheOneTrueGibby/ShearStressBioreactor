@@ -6,26 +6,38 @@
 
 //All library includes
 #include <Arduino.h>
+#include <SPI.h>
+#include <WiFi.h>
+#include <Update.h>
+#include <WebServer.h>
+#include <DNSServer.h>
 #include <Wire.h>
-#include <YAAJ_ModbusMaster.h>
-#include <ESP_FlexyStepper.h>
 
 //all file includes
 #include "BioreactorVaribiles.hpp"
-#include "Pump.hpp"
+#include "ESP_FlexyStepper.h"
 #include "sensirion-lf.h"
 #include "sensirion-lf.cpp"
 #include "WebHosting.hpp"
+#include "ModbusClientRTU.h"
 
-//Set up Pump controller
-HardwareSerial ModbusSerial(1);
+// Set up Pump controller
 const int MODBUS_RX = 16;
 const int MODBUS_TX = 17;
 const int MODBUS_ENABLE = 18; // automatically set to high when writing, low otherwise to receive
 const int PUMP_ADDRESS = 0xEF; // Modbus address of pump controller
 const int MODBUS_TIMEOUT = 500; // timeout in ms for Modbus command responses
-YAAJ_ModbusMaster controller;
-//Pump pump(controller);
+/*******************************************************************************
+ * Modbus client (AKA "master") is the ESP device reading and controlling the  *
+ * peripheral pump. This communication is established using Modbus RTU; the    *
+ * traditional serial-based Modbus communication strategy. Communicating over  *
+ * 2-wire RS485 which will only allow one "side" to "talk" at any single       *
+ * moment in time. This is commonly referred to as "half-duplex" because each  *
+ * side must wait to talk until the other side is finished speaking.           *
+ * See more information:    https://bit.ly/4jTW2X1                             *
+ * Connection information:  https://github.com/eModbus/eModbus/discussions/388 *
+ ******************************************************************************/
+ModbusClientRTU RS485();   // for auto half-duplex
 
 //Set up Flow Sensor
 SensirionLF flowSensor(SLF3X_SCALE_FACTOR_FLOW, SLF3X_SCALE_FACTOR_TEMP, SLF3X_I2C_ADDRESS);
