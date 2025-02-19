@@ -12,6 +12,39 @@ var websocket;
         <script src="websocket.js"></script>
     </head>
     <body>
-        <h1>Flow Sensor Data:<div id="flowData">Waiting for data...</div></h1>
+        <h1>Bioreactor Website</h1>
+        
+        <!-- Project Running Time -->
+        <section>
+            <h2>Status & Data</h2>
+            <div id="status">Status: Running</div>
+            <div id="runningTime">Total Time: 00:00:00</div>
+            <div id="flowData">Waiting for flow data...</div></h1>
+            <div id="status">Curent Shear Stress: 0</div>
+        </section>
+    
+        <!-- Break Time and Run Time -->
+        <section>
+            <h2>Running Paramaters</h2>
+            <div>
+                <label for="shearStress">Shear Stress: </label>
+                <input type="number" id="shearStressValue" placeholder="Shear Stress Value">
+            </div>
+            <div>
+                <label for="breakTime">Break Time: </label>
+                <input type="text" id="breakTime" placeholder="Enter break time (HH:MM:SS)">
+            </div>
+            <div>
+                <label for="runTime">Run Time: </label>
+                <input type="text" id="runTime" placeholder="Enter run time (HH:MM:SS)">
+            </div>
+            <div>
+                <label for="runTime">Number of cycles: </label>
+                <input type="number" id="repeation" placeholder="Enter Repeation Amount">
+            </div>
+            <div>
+                <button id="submitButton">Submit</button>
+            </div>
+        </section>
     </body>
 </hhtml>
