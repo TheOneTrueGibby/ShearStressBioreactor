@@ -15,9 +15,9 @@
 
 //all file includes
 #include "WebHosting.hpp"
-//#include "ModbusClientRTU.h"
 #include "FlowSensor.hpp"
 #include "Pump.hpp"
+#include "BioreactorVaribiles.hpp"
 
 // Set up Pump controller
 const int MODBUS_RX = 16;
@@ -54,8 +54,12 @@ void setup() {
   //begin communication
   Wire.begin();
 
-  bool pumpState = checkStatus();
-  Serial.printf("Pump is: %d", pumpState);
+  pumpOn = checkStatus();
+  Serial.printf("Pump is: %d", pumpOn);
+
+  if (pumpOn == 2) {
+    setPump(1);
+  }
   
   //Set up Flow Sensor
   flowSensorSetup(flowSensor); //Function in FlowSensor.hpp
