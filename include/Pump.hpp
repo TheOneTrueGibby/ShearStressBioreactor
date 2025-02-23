@@ -2,6 +2,15 @@
 
 ModbusMaster node;
 
+// Set up Pump controller
+const int MODBUS_RX2 = 17;
+const int MODBUS_TX2 = 5;
+const int MODBUS_DE = 19;
+const int MODBUS_RE = 19;
+const int MODBUS_ENABLE = 19; // automatically set to high when writing, low otherwise to receive
+const int PUMP_ADDRESS = 0xEF; // Modbus address of pump controller
+const int MODBUS_TIMEOUT = 500; // timeout in ms for Modbus command responses
+
 // Pump speeds in ml/min above which the precision of the pump decreases by a factor of 2
 const int STEP_0 = 8;
 const int STEP_1 = 16;
@@ -28,6 +37,18 @@ const int RATE_4 = 1;       // 1 / 1
 const double RATE_5 = 0.5;  // 1 / 2
 
 bool pumpOn;
+
+void preTransmission()
+{
+  digitalWrite(MODBUS_RE, 1);
+  digitalWrite(MODBUS_DE, 1);
+}
+
+void postTransmission()
+{
+  digitalWrite(MODBUS_RE, 0);
+  digitalWrite(MODBUS_DE, 0);
+}
 
 bool checkStatus() {
     if (node.readCoils(0x1001, 1) == 0) { 
