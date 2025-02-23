@@ -20,9 +20,9 @@
 #include "BioreactorVaribiles.hpp"
 
 // Set up Pump controller
-const int MODBUS_RX = 16;
+const int MODBUS_RX = 5;
 const int MODBUS_TX = 17;
-const int MODBUS_ENABLE = 18; // automatically set to high when writing, low otherwise to receive
+const int MODBUS_ENABLE = 19; // automatically set to high when writing, low otherwise to receive
 const int PUMP_ADDRESS = 0xEF; // Modbus address of pump controller
 const int MODBUS_TIMEOUT = 500; // timeout in ms for Modbus command responses
 
@@ -46,8 +46,19 @@ const float MOVE_DISTANCE = 5;
 void setup() {
   //Start Serial Communication
   Serial.begin(115200);
-  node.begin(2, Serial);
 
+  pinMode(19, OUTPUT);
+  digitalWrite(19, LOW);  // Set the DE/RE pin to LOW initially (to receive)
+
+  // Initialize ModbusMaster with proper pins for TX, RX, and DE/RE
+  node.begin(PUMP_ADDRESS, Serial);
+
+  // Setup RS485 communication
+  pinMode(MODBUS_TX, OUTPUT);
+  pinMode(MODBUS_RX, INPUT);
+  pinMode(MODBUS_ENABLE, OUTPUT);
+  digitalWrite(MODBUS_ENABLE, LOW);
+  
   //set up web server
   initWebSetup();
 
@@ -55,11 +66,11 @@ void setup() {
   Wire.begin();
 
   pumpOn = checkStatus();
-  Serial.printf("Pump is: %d", pumpOn);
+  Serial.printf("Pump is: %d\n", pumpOn);
 
-  if (pumpOn == 2) {
-    setPump(1);
-  }
+  // if (pumpOn == 0) {
+  //   setPump(1);
+  // }
   
   //Set up Flow Sensor
   flowSensorSetup(flowSensor); //Function in FlowSensor.hpp
@@ -80,9 +91,9 @@ void setup() {
 void loop() {
   ws.cleanupClients();
 
-  String flowData = readFlowSensor(flowSensor); //Function in FlowSensor.hpp
-  ws.textAll(flowData); //Send data to be handled by webscoket
-  delay(250);
+  // String flowData = readFlowSensor(flowSensor); //Function in FlowSensor.hpp
+  // ws.textAll(flowData); //Send data to be handled by webscoket
+  // delay(250);
 
   //Move stepper motor (works)
   // stepper.moveRelativeInMillimeters(MOVE_DISTANCE);

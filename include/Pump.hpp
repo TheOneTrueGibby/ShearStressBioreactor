@@ -30,14 +30,14 @@ const double RATE_5 = 0.5;  // 1 / 2
 bool pumpOn;
 
 bool checkStatus() {
-  if (node.readCoils(0x1001, 1) == 0) { 
-    uint16_t state = node.getResponseBuffer(0);  // Get the state of the coil from the received buffer
-    Serial.printf("Pump status: %d\n", state);
-    pumpOn = state != 0;  // If state is not 0, the pump is on
-  } else {
-    Serial.println("Error: Unable to read pump state!");
-  }
-  return pumpOn;
+    if (node.readCoils(0x1001, 1) == 0) { 
+        uint16_t state = node.getResponseBuffer(0);  // Get the state of the coil from the received buffer
+        Serial.printf("Pump status: %d\n", state);
+        pumpOn = state != 0;  // If state is not 0, the pump is on
+    } else {
+        Serial.println("Error: Unable to read pump state!");
+    }
+    return pumpOn;
 }
 
 bool setPump(bool option) {
