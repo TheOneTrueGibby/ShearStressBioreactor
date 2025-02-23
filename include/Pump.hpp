@@ -41,16 +41,16 @@ bool checkStatus() {
 }
 
 bool setPump(bool option) {
-  if (pumpOn != option) {
-    pumpOn = option;
+    if (pumpOn != option) {
+        pumpOn = option;
 
-    uint16_t result = node.writeSingleCoil(0x1001, pumpOn ? 0xFF : 0x00);
-    if (result != 0) {
-      Serial.printf("Unable to switch pump state! Error code: %d\n", result);
-      pumpOn = !option;
+        uint16_t result = node.writeSingleCoil(0x1001, pumpOn ? 0xFF : 0x00);
+        if (result != 0) {
+            Serial.printf("Unable to switch pump state! Error code: %d\n", result);
+            pumpOn = !option;
+        }
     }
-  }
-  return pumpOn;
+    return pumpOn;
 }
 
 bool setSpeed(uint16_t high, uint16_t low, bool start/* = false*/) {
@@ -72,53 +72,53 @@ bool setSpeed(uint16_t high, uint16_t low, bool start/* = false*/) {
 }
 
 bool setSpeed(int flow, bool force) {
-  // The pump will ignore speed commands when running
-  if (pumpOn) {
-      if (force) {
-          setPump(false);
-      }
-      else {
-          Serial.println("Error: Attempt to set pump speed while running.");
-          return false;
-      }
-  }
+    // The pump will ignore speed commands when running
+    if (pumpOn) {
+        if (force) {
+            setPump(false);
+        }
+        else {
+            Serial.println("Error: Attempt to set pump speed while running.");
+            return false;
+        }
+    }
 
-  // Constrain values to within the pump range (although the pump controller does this as well for 0.1-420ish ml/min)
-  if (flow < 8) {
-      flow = 8;
-  }
-  else if (flow > 400) {
-      flow = 400;
-  }
+    // Constrain values to within the pump range (although the pump controller does this as well for 0.1-420ish ml/min)
+    if (flow < 8) {
+        flow = 8;
+    }
+    else if (flow > 400) {
+        flow = 400;
+    }
 
-  uint16_t low = 0;
-  uint16_t high = 0;
+    uint16_t low = 0;
+    uint16_t high = 0;
 
-  // TODO: currently only integer flow rates are possible, but the high bytes can be used to 
-  // achieve decimal values, following the calculations done for flow rates over 256 ml/min
+    // TODO: currently only integer flow rates are possible, but the high bytes can be used to 
+    // achieve decimal values, following the calculations done for flow rates over 256 ml/min
 
-  // Start with the known register value at the edge of the precision level, then add the needed steps
-  if (flow <= STEP_1) {
-      low = STEP_0_CMD + ((flow - STEP_0) * RATE_0);
-  }
-  else if (flow > STEP_1 && flow <= STEP_2) {
-      low = STEP_1_CMD + ((flow - STEP_1) * RATE_1);
-  }
-  else if (flow > STEP_2 && flow <= STEP_3) {
-      low = STEP_2_CMD + ((flow - STEP_2) * RATE_2);
-  }
-  else if (flow > STEP_3 && flow <= STEP_4) {
-      low = STEP_3_CMD + ((flow - STEP_3) * RATE_3);
-  }
-  else if (flow > STEP_4 && flow <= STEP_5) {
-      low = STEP_4_CMD + ((flow - STEP_4) * RATE_4);
-  }
-  else if (flow > STEP_5) {
-      low = STEP_5_CMD + (int) ((flow - STEP_5) * RATE_5);
-      high = (flow % 2) * (0x8000); // add half of a step to achieve odd numbers
-  }
+    // Start with the known register value at the edge of the precision level, then add the needed steps
+    if (flow <= STEP_1) {
+        low = STEP_0_CMD + ((flow - STEP_0) * RATE_0);
+    }
+    else if (flow > STEP_1 && flow <= STEP_2) {
+        low = STEP_1_CMD + ((flow - STEP_1) * RATE_1);
+    }
+    else if (flow > STEP_2 && flow <= STEP_3) {
+        low = STEP_2_CMD + ((flow - STEP_2) * RATE_2);
+    }
+    else if (flow > STEP_3 && flow <= STEP_4) {
+        low = STEP_3_CMD + ((flow - STEP_3) * RATE_3);
+    }
+    else if (flow > STEP_4 && flow <= STEP_5) {
+        low = STEP_4_CMD + ((flow - STEP_4) * RATE_4);
+    }
+    else if (flow > STEP_5) {
+        low = STEP_5_CMD + (int) ((flow - STEP_5) * RATE_5);
+        high = (flow % 2) * (0x8000); // add half of a step to achieve odd numbers
+    }
 
-  return setSpeed(high, low, force);
+    return setSpeed(high, low, force);
 }
 
 int32_t getSpeed(bool print) {

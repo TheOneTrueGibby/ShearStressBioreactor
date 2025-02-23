@@ -20,11 +20,25 @@
 #include "BioreactorVaribiles.hpp"
 
 // Set up Pump controller
-const int MODBUS_RX = 5;
-const int MODBUS_TX = 17;
+const int MODBUS_RX2 = 17;
+const int MODBUS_TX2 = 5;
+const int MODBUS_DE = 19;
+const int MODBUS_RE = 19;
 const int MODBUS_ENABLE = 19; // automatically set to high when writing, low otherwise to receive
 const int PUMP_ADDRESS = 0xEF; // Modbus address of pump controller
 const int MODBUS_TIMEOUT = 500; // timeout in ms for Modbus command responses
+
+void preTransmission()
+{
+  digitalWrite(MODBUS_RE, 1);
+  digitalWrite(MODBUS_DE, 1);
+}
+
+void postTransmission()
+{
+  digitalWrite(MODBUS_RE, 0);
+  digitalWrite(MODBUS_DE, 0);
+}
 
 //Set up Flow Sensor
 SensirionLF flowSensor(SLF3X_SCALE_FACTOR_FLOW, SLF3X_SCALE_FACTOR_TEMP, SLF3X_I2C_ADDRESS);
@@ -47,17 +61,18 @@ void setup() {
   //Start Serial Communication
   Serial.begin(115200);
 
-  pinMode(19, OUTPUT);
-  digitalWrite(19, LOW);  // Set the DE/RE pin to LOW initially (to receive)
+  // Setup RS485 communication
+  pinMode(MODBUS_RE, OUTPUT);
+  pinMode(MODBUS_DE, OUTPUT);
+  digitalWrite(MODBUS_RE, 0);
+  digitalWrite(MODBUS_DE, 0);
 
   // Initialize ModbusMaster with proper pins for TX, RX, and DE/RE
-  node.begin(PUMP_ADDRESS, Serial);
+  Serial2.begin(9600, SERIAL_8N1, MODBUS_RX2, MODBUS_TX2);
+  node.begin(PUMP_ADDRESS, Serial2);
 
-  // Setup RS485 communication
-  pinMode(MODBUS_TX, OUTPUT);
-  pinMode(MODBUS_RX, INPUT);
-  pinMode(MODBUS_ENABLE, OUTPUT);
-  digitalWrite(MODBUS_ENABLE, LOW);
+  node.preTransmission(preTransmission);
+  node.postTransmission(postTransmission);
   
   //set up web server
   initWebSetup();
@@ -67,10 +82,6 @@ void setup() {
 
   pumpOn = checkStatus();
   Serial.printf("Pump is: %d\n", pumpOn);
-
-  // if (pumpOn == 0) {
-  //   setPump(1);
-  // }
   
   //Set up Flow Sensor
   flowSensorSetup(flowSensor); //Function in FlowSensor.hpp
