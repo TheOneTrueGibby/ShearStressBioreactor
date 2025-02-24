@@ -63,12 +63,6 @@ void loop() {
   // ws.textAll(flowData); //Send data to be handled by webscoket
   // delay(250);
 
-  //Move stepper motor (works)
-  // stepper.moveRelativeInMillimeters(MOVE_DISTANCE);
-  // while (!stepper.motionComplete()) {
-  //     //Do Nothing
-  // }
-
   // stepper.moveRelativeInMillimeters(-MOVE_DISTANCE);
   // while (!stepper.motionComplete()) {
   //     //Do Nothing
