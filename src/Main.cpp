@@ -34,7 +34,7 @@ void setup() {
   digitalWrite(MODBUS_DE, 0);
 
   // Initialize ModbusMaster with proper pins for TX, RX, and DE/RE
-  Serial2.begin(9600, SERIAL_8N1, MODBUS_RX2, MODBUS_TX2);
+  Serial2.begin(115200, SERIAL_8N1, MODBUS_RX2, MODBUS_TX2);
   node.begin(PUMP_ADDRESS, Serial2);
 
   node.preTransmission(preTransmission);
