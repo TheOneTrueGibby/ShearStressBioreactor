@@ -46,8 +46,8 @@ void setup() {
   //begin communication
   Wire.begin();
 
-  pumpOn = checkStatus();
-  Serial.printf("Pump is: %d\n", pumpOn);
+  //pumpOn = checkStatus();
+  //Serial.printf("Pump is: %d\n", pumpOn);
   
   //Set up Flow Sensor and Stepper Motor
   flowSensorSetup(flowSensor); //Function in FlowSensor.hpp
@@ -58,6 +58,13 @@ void setup() {
 
 void loop() {
   ws.cleanupClients();
+
+  bool status;
+
+  uint8_t result = node.readCoils(0x1001, 1);
+  status = node.getResponseBuffer(0);
+  Serial.print(status);
+  delay(1000);
 
   // String flowData = readFlowSensor(flowSensor); //Function in FlowSensor.hpp
   // ws.textAll(flowData); //Send data to be handled by webscoket
