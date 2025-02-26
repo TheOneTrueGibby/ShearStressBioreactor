@@ -9,7 +9,6 @@ const int MODBUS_DE = 18;
 const int MODBUS_RE = 18;
 const int MODBUS_ENABLE = 19; // automatically set to high when writing, low otherwise to receive
 const int PUMP_ADDRESS = 0xEF; // Modbus address of pump controller
-const int MODBUS_TIMEOUT = 500; // timeout in ms for Modbus command responses
 
 // Pump speeds in ml/min above which the precision of the pump decreases by a factor of 2
 const int STEP_0 = 8;

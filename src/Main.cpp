@@ -34,9 +34,8 @@ void setup() {
   digitalWrite(MODBUS_DE, 0);
 
   // Initialize ModbusMaster with proper pins for TX, RX, and DE/RE
-  Serial2.begin(115200, SERIAL_8N1, MODBUS_RX2, MODBUS_TX2);
+  Serial2.begin(9600, SERIAL_8N1, MODBUS_RX2, MODBUS_TX2);
   node.begin(PUMP_ADDRESS, Serial2);
-
   node.preTransmission(preTransmission);
   node.postTransmission(postTransmission);
   
@@ -45,9 +44,6 @@ void setup() {
 
   //begin communication
   Wire.begin();
-
-  //pumpOn = checkStatus();
-  //Serial.printf("Pump is: %d\n", pumpOn);
   
   //Set up Flow Sensor and Stepper Motor
   flowSensorSetup(flowSensor); //Function in FlowSensor.hpp
@@ -62,8 +58,14 @@ void loop() {
   bool status;
 
   uint8_t result = node.readCoils(0x1001, 1);
-  status = node.getResponseBuffer(0);
-  Serial.print(status);
+  if (result == 0) {
+    status = node.getResponseBuffer(0);
+    Serial.print(status);
+  }
+  else {
+    Serial.print(result);
+    Serial.print(" Unable to read\n");
+  }
   delay(1000);
 
   // String flowData = readFlowSensor(flowSensor); //Function in FlowSensor.hpp
