@@ -27,27 +27,17 @@ void setup() {
   //Start Serial Communication
   Serial.begin(115200);
 
-  // Setup RS485 communication
-  pinMode(MODBUS_RE, OUTPUT);
-  pinMode(MODBUS_DE, OUTPUT);
-  digitalWrite(MODBUS_RE, 0);
-  digitalWrite(MODBUS_DE, 0);
-
-  // Initialize ModbusMaster with proper pins for TX, RX, and DE/RE
-  Serial2.begin(9600, SERIAL_8N1, MODBUS_RX2, MODBUS_TX2);
-  node.begin(PUMP_ADDRESS, Serial2);
-  node.preTransmission(preTransmission);
-  node.postTransmission(postTransmission);
+  //Setup modbus for pump communication
+  pumpSetup(); //Function in Pump.hpp
   
-  //set up web server
+  //Set up web server
   initWebSetup();
 
-  //begin communication
+  //Begin wire communication
   Wire.begin();
   
   //Set up Flow Sensor and Stepper Motor
   flowSensorSetup(flowSensor); //Function in FlowSensor.hpp
-  delay(100);
   stepperSetup(stepper); //Function in StepperMotor.hpp
 
 }
@@ -56,7 +46,6 @@ void loop() {
   ws.cleanupClients();
 
   checkStatus();
-  //setPump(!pumpOn);
   delay(1000);
 
   // String flowData = readFlowSensor(flowSensor); //Function in FlowSensor.hpp

@@ -49,6 +49,20 @@ void postTransmission()
   digitalWrite(MODBUS_DE, 0);
 }
 
+void pumpSetup() {
+    // Setup RS485 communication
+    pinMode(MODBUS_RE, OUTPUT);
+    pinMode(MODBUS_DE, OUTPUT);
+    digitalWrite(MODBUS_RE, 0);
+    digitalWrite(MODBUS_DE, 0);
+
+    // Initialize ModbusMaster with proper pins for TX, RX, and DE/RE
+    Serial2.begin(9600, SERIAL_8N1, MODBUS_RX2, MODBUS_TX2);
+    node.begin(PUMP_ADDRESS, Serial2);
+    node.preTransmission(preTransmission);
+    node.postTransmission(postTransmission);
+}
+
 bool checkStatus() {
     if (node.readCoils(0x1001, 1) == 0) {
         uint16_t state = node.getResponseBuffer(0);
