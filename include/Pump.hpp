@@ -50,11 +50,12 @@ void postTransmission()
 }
 
 bool checkStatus() {
-    if (node.readCoils(0x1001, 1) == 0) { 
-        uint16_t state = node.getResponseBuffer(0);  // Get the state of the coil from the received buffer
+    if (node.readCoils(0x1001, 1) == 0) {
+        uint16_t state = node.getResponseBuffer(0);
         Serial.printf("Pump status: %d\n", state);
-        pumpOn = state != 0;  // If state is not 0, the pump is on
-    } else {
+        pumpOn = state != 0;
+    }
+    else {
         Serial.println("Error: Unable to read pump state!");
     }
     return pumpOn;

@@ -55,17 +55,8 @@ void setup() {
 void loop() {
   ws.cleanupClients();
 
-  bool status;
-
-  uint8_t result = node.readCoils(0x1001, 1);
-  if (result == 0) {
-    status = node.getResponseBuffer(0);
-    Serial.print(status);
-  }
-  else {
-    Serial.print(result);
-    Serial.print(" Unable to read\n");
-  }
+  checkStatus();
+  //setPump(!pumpOn);
   delay(1000);
 
   // String flowData = readFlowSensor(flowSensor); //Function in FlowSensor.hpp
