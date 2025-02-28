@@ -40,21 +40,19 @@ void setup() {
   flowSensorSetup(flowSensor); //Function in FlowSensor.hpp
   stepperSetup(stepper); //Function in StepperMotor.hpp
 
+  checkStatus();
+  setSpeed(100, false);
+  //setPump(true);
+  getSpeed();
+
 }
 
 void loop() {
   ws.cleanupClients();
 
-  checkStatus();
+  String flowData = readFlowSensor(flowSensor); //Function in FlowSensor.hpp
+  ws.textAll(flowData); //Send data to be handled by webscoket
+  String pumpStatus = checkStatus();
+  ws.textAll(pumpStatus); //Send data to be handled by webscoket
   delay(1000);
-
-  // String flowData = readFlowSensor(flowSensor); //Function in FlowSensor.hpp
-  // ws.textAll(flowData); //Send data to be handled by webscoket
-  // delay(250);
-
-  // stepper.moveRelativeInMillimeters(-MOVE_DISTANCE);
-  // while (!stepper.motionComplete()) {
-  //     //Do Nothing
-  // }
-  // Serial.print("Moved Stepper Motor\n");
 }

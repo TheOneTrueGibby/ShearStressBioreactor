@@ -42,5 +42,6 @@ function onClose(event) {
 
 function onMessage(event) {
     console.log('Received: ', event.data);
-    document.getElementById('flowData').innerText = event.data; // Update webpage
+    document.getElementById('flowData').innerText = event.data;
+    document.getElementById('pumpStatus').innerText = event.data;
 }

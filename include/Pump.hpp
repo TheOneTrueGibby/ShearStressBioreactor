@@ -63,16 +63,25 @@ void pumpSetup() {
     node.postTransmission(postTransmission);
 }
 
-bool checkStatus() {
+String checkStatus() {
+    String pumpStatus = "";
     if (node.readCoils(0x1001, 1) == 0) {
         uint16_t state = node.getResponseBuffer(0);
-        Serial.printf("Pump status: %d\n", state);
-        pumpOn = state != 0;
+        if(state == 1) {
+            pumpStatus += "Pump status: On";
+            Serial.printf("Pump status: On\n");
+        } else if (state == 0) {
+            pumpStatus += "Pump status: Off";
+            Serial.printf("Pump status: Off\n");
+        }
+        pumpOn = state;
     }
     else {
+        pumpStatus += "Pump status: Unknown";
         Serial.println("Error: Unable to read pump state!");
     }
-    return pumpOn;
+    return pumpStatus;
+    //return pumpOn;
 }
 
 bool setPump(bool option) {
@@ -156,11 +165,11 @@ bool setSpeed(int flow, bool force) {
     return setSpeed(high, low, force);
 }
 
-int32_t getSpeed(bool print) {
+int32_t getSpeed() {
     uint16_t result = node.readWriteMultipleRegisters(0x3001, 6); // read all holding registers
     int32_t lowBytes = -1;
     // Check if the command returned no error
-    if (print && result == 0) {
+    if (result == 0) {
         // Print the speeds stored in the holding registers
         lowBytes = node.getResponseBuffer(0);
         Serial.printf("Set speed: %X %X\n", node.getResponseBuffer(1), lowBytes);
