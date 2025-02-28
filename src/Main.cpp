@@ -1,7 +1,6 @@
 /*****************************************************************************************************
-* NewMain.cpp
-* 
-* Where all commands/routines are executed
+Main.cpp
+Where we call all functions and run all code
 /*****************************************************************************************************/
 
 //All library includes
