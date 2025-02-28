@@ -1,5 +1,8 @@
-//set up to host website and data exchange
-//used this tutorial: https://m1cr0lab-esp32.github.io/remote-control-with-websocket/web-server-setup/
+/************************************************************************
+Gibson Moseley - WebHosting.hpp
+set up to host website and data exchange between esp32 hosted website and software
+used this tutorial: https://m1cr0lab-esp32.github.io/remote-control-with-websocket/web-server-setup/ for starting point
+*************************************************************************/
 
 //all necessary library includes
 #include <WiFi.h>

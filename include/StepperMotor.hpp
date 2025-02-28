@@ -1,3 +1,8 @@
+/************************************************************************
+Gibson Moseley - StepperMotor.hpp
+All vaibiles and functions needed to setup and control a stepper motor
+*************************************************************************/
+
 #include <ESP_FlexyStepper.h>
 
 //Pins for Stepper Motor

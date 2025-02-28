@@ -1,3 +1,8 @@
+/************************************************************************
+Gibson Moseley - Pump.hpp
+All functions to setup and control the pump
+*************************************************************************/
+
 #include <ModbusMaster.h>
 
 ModbusMaster node;

@@ -1,3 +1,7 @@
+/************************************************************************
+Gibson Moseley - BioreactorVaribiles.hpp
+*************************************************************************/
+
 
 static constexpr double CHANNEL_HEIGHT = 0.0005; // m
 static constexpr double CHANNEL_WIDTH = 0.04; // m

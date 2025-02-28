@@ -1,8 +1,11 @@
-//
+/************************************************************************
+Gibson Moseley - FlowSensor.hpp
+*************************************************************************/
 
 #include "sensirion-lf.h"
 #include "sensirion-lf.cpp"
 
+SensirionLF flowSensor(SLF3X_SCALE_FACTOR_FLOW, SLF3X_SCALE_FACTOR_TEMP, SLF3X_I2C_ADDRESS);
 
 void flowSensorSetup(SensirionLF flowSensor) {
     uint16_t reset = flowSensor.init();

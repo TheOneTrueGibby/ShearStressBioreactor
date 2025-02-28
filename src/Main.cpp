@@ -19,9 +19,6 @@
 #include "BioreactorVaribiles.hpp"
 #include "StepperMotor.hpp"
 
-//Set up Flow Sensor
-SensirionLF flowSensor(SLF3X_SCALE_FACTOR_FLOW, SLF3X_SCALE_FACTOR_TEMP, SLF3X_I2C_ADDRESS);
-
 //Start Running
 void setup() {
   //Start Serial Communication
