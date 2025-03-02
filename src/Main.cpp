@@ -44,9 +44,9 @@ void setup() {
 
 void loop() {
   ws.cleanupClients();
-  String flowData = readFlowSensor(flowSensor); //Function in FlowSensor.hpp
-  ws.textAll(flowData); //Send data to be handled by webscoket
+  //String flowData = readFlowSensor(flowSensor); //Function in FlowSensor.hpp
+  //ws.textAll(flowData); //Send data to be handled by webscoket
   //String pumpStatus = checkStatus();
   //ws.textAll(pumpStatus); //Send data to be handled by webscoket
-  delay(1000);
+  delay(100);
 }

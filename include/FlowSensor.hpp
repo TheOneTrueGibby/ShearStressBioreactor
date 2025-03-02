@@ -43,5 +43,6 @@ String readFlowSensor(SensirionLF flowSensor) {
         Serial.println(ret);
         flowData = "Error in flowsensor.readSample(): " + String(ret);
     }
+    ws.textAll(flowData);
     return flowData;
 }
