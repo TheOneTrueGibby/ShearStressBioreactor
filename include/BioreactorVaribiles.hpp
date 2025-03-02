@@ -19,6 +19,12 @@ double shearStressCalc(double flowRate) {
     return sh;
 }
 
+//Calculates the flow rate ml/min needed to generate specified chear stress in Pa
+double flowRateBasedOnShearStressCalc(double shearStress) {
+    double fl = 0;
+    return fl;
+}
+
 
 //Calculates the Reynolds number for the given flow rate.
 double reynoldsCalc(double flowRate) {

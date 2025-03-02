@@ -68,7 +68,7 @@ void pumpSetup() {
     node.postTransmission(postTransmission);
 }
 
-String checkStatus() {
+String checkPumpStatus() {
     String pumpStatus = "";
     if (node.readCoils(0x1001, 1) == 0) {
         uint16_t state = node.getResponseBuffer(0);
@@ -102,7 +102,7 @@ bool setPump(bool option) {
     return pumpOn;
 }
 
-bool setSpeed(uint16_t high, uint16_t low, bool start/* = false*/) {
+bool setPumpSpeed(uint16_t high, uint16_t low, bool start/* = false*/) {
     node.setTransmitBuffer(0, low);
     node.setTransmitBuffer(1, high);
     int result = node.writeMultipleRegisters(0x3001, 0x02);
@@ -120,7 +120,7 @@ bool setSpeed(uint16_t high, uint16_t low, bool start/* = false*/) {
     }
 }
 
-bool setSpeed(int flow, bool force) {
+bool setPumpSpeed(int flow, bool force) {
     // The pump will ignore speed commands when running
     if (pumpOn) {
         if (force) {
@@ -167,10 +167,10 @@ bool setSpeed(int flow, bool force) {
         high = (flow % 2) * (0x8000); // add half of a step to achieve odd numbers
     }
 
-    return setSpeed(high, low, force);
+    return setPumpSpeed(high, low, force);
 }
 
-int32_t getSpeed() {
+int32_t getPumpSpeed() {
     uint16_t result = node.readWriteMultipleRegisters(0x3001, 6); // read all holding registers
     int32_t lowBytes = -1;
     // Check if the command returned no error

@@ -44,5 +44,5 @@ function onMessage(event) {
     console.log('Received: ', event.data);
 
     document.getElementById('flowData').innerText = data.flowData;
-    document.getElementById('pumpStatus').innerText = data.pumpStatus;
+    //document.getElementById('pumpStatus').innerText = data.pumpStatus;
 }
