@@ -1,10 +1,13 @@
 /************************************************************************
 Gibson Moseley - FlowSensor.hpp
+
+Holds all commands necessry to use the flow sensor, and declerations of the flow sensor
 *************************************************************************/
 
 #ifndef FLOWSENSOR_HPP
 #define FLOWSENSOR_HPP
 
+//inclusion of necessary libraries
 #include "sensirion-lf.h"
 #include "sensirion-lf.cpp"
 
