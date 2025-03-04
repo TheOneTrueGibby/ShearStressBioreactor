@@ -37,10 +37,6 @@ void setup() {
   flowSensorSetup(flowSensor); //Function in FlowSensor.hpp
   stepperSetup(stepper); //Function in StepperMotor.hpp
 
-  // checkPumpStatus();
-  // setPumpSpeed(100, false);
-  // getPumpSpeed();
-
   setRoutine(0.01, 0.02, 1, 2);
 }
 
