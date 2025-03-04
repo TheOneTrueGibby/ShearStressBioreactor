@@ -17,6 +17,7 @@ Where we call all functions and run all code
 #include "Pump.hpp"
 #include "BioreactorVaribiles.hpp"
 #include "StepperMotor.hpp"
+#include "Routine.hpp"
 
 //Start Running
 void setup() {
@@ -36,10 +37,11 @@ void setup() {
   flowSensorSetup(flowSensor); //Function in FlowSensor.hpp
   stepperSetup(stepper); //Function in StepperMotor.hpp
 
-  checkPumpStatus();
-  setPumpSpeed(100, false);
-  getPumpSpeed();
+  // checkPumpStatus();
+  // setPumpSpeed(100, false);
+  // getPumpSpeed();
 
+  setRoutine(0.01, 0.02, 5, 1);
 }
 
 void loop() {

@@ -21,7 +21,7 @@ double shearStressCalc(double flowRate) {
 
 //Calculates the flow rate ml/min needed to generate specified chear stress in Pa
 double flowRateBasedOnShearStressCalc(double shearStress) {
-    double fl = 0;
+    double fl = (shearStress * 1e7 *  CHANNEL_WIDTH * CHANNEL_HEIGHT * CHANNEL_HEIGHT) / MU;
     return fl;
 }
 

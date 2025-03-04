@@ -13,6 +13,7 @@ using namespace std::chrono;
 int timeRunningTotal;
 int timeRunningRoutine;
 
+//alows seeting for a basic routne that repeats x times in hr conversions
 void setRoutine(double timeRun, double timeBreak, double shearStress, int repetion) {
     int flowRate = flowRateBasedOnShearStressCalc(shearStress);
     auto timeRunHr =  std::chrono::duration<double, std::chrono::hours::period>(timeRun);
