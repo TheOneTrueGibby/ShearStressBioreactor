@@ -3,6 +3,9 @@ Gibson Moseley - Pump.hpp
 All functions to setup and control the pump
 *************************************************************************/
 
+#ifndef PUMP_HPP
+#define PUMP_HPP
+
 #include <ModbusMaster.h>
 
 ModbusMaster node;
@@ -190,3 +193,5 @@ int32_t getPumpSpeed() {
 bool isPumpOn() {
     return pumpOn;
 }
+
+#endif

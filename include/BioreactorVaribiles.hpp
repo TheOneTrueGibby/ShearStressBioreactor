@@ -2,6 +2,8 @@
 Gibson Moseley - BioreactorVaribiles.hpp
 *************************************************************************/
 
+#ifndef BIOREACTORVARIBILES_HPP
+#define BIOREACTORVARIBILES_HPP
 
 static constexpr double CHANNEL_HEIGHT = 0.0005; // m
 static constexpr double CHANNEL_WIDTH = 0.04; // m
@@ -31,3 +33,5 @@ double reynoldsCalc(double flowRate) {
     double r = (RHO * (flowRate / (CHANNEL_HEIGHT * CHANNEL_WIDTH)) * CHANNEL_HEIGHT) / MU;
     return r;
 }
+
+#endif

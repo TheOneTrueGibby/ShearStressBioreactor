@@ -2,6 +2,9 @@
 Gibson Moseley - FlowSensor.hpp
 *************************************************************************/
 
+#ifndef FLOWSENSOR_HPP
+#define FLOWSENSOR_HPP
+
 #include "sensirion-lf.h"
 #include "sensirion-lf.cpp"
 
@@ -46,3 +49,5 @@ String readFlowSensor(SensirionLF flowSensor) {
     ws.textAll(flowData);
     return flowData;
 }
+
+#endif
