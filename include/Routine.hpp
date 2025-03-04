@@ -31,12 +31,14 @@ void setRoutine(double timeRun, double timeBreak, double shearStress, int repeti
         auto start = high_resolution_clock::now();
         while (duration_cast<hours>(high_resolution_clock::now() - start) < timeRunHr) { //when time run is set turn pump off and keep off for time break amount
             readFlowSensor(flowSensor);
+            auto start = high_resolution_clock::now();
         }
 
         setPump(0);
         auto start = high_resolution_clock::now();
         while (duration_cast<hours>(high_resolution_clock::now() - start) < timeRunHr) { //when time run is set turn pump off and keep off for time break amount
             readFlowSensor(flowSensor);
+            auto start = high_resolution_clock::now();
         }
     }
 }
