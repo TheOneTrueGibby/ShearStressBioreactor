@@ -41,7 +41,7 @@ void setup() {
   // setPumpSpeed(100, false);
   // getPumpSpeed();
 
-  //setRoutine(0.01, 0.02, 5, 1);
+  setRoutine(0.01, 0.02, 1, 2);
 }
 
 void loop() {
