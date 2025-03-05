@@ -31,8 +31,9 @@ void flowSensorSetup(SensirionLF flowSensor) {
 
 //reads the setup flowsensor provided and send that data to the website
 String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
+    delay(250);
     int ret = flowSensor.readSample();
-    String flowData = "";
+    String flowData = "flowData: ";
 
     if (ret == 0) {
         if (printTerminal == 1) {
@@ -63,7 +64,7 @@ String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
     }
 
     //send string varibile to webserver/website through webscoket 
-    //ws.textAll(flowData);
+    ws.textAll(flowData);
     return flowData;
 }
 

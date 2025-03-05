@@ -72,7 +72,8 @@ void pumpSetup() {
 }
 
 String checkPumpStatus() {
-    String pumpStatus = "";
+    delay(250);
+    String pumpStatus = "pumpStatus: ";
     if (node.readCoils(0x1001, 1) == 0) {
         uint16_t state = node.getResponseBuffer(0);
         if(state == 1) {

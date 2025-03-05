@@ -43,6 +43,15 @@ function onClose(event) {
 function onMessage(event) {
     console.log('Received: ', event.data);
 
-    document.getElementById('flowData').innerText = data.flowData;
+    let [variableName, value] = event.data.split(':');
+    
+    variableName = variableName.trim();
+    value = value.trim();
+
+    let element = document.getElementById(variableName);
+    if (element) {
+        element.innerText = value;
+    }
+    //document.getElementById('flowData').innerText = data.flowData;
     //document.getElementById('pumpStatus').innerText = data.pumpStatus;
 }
