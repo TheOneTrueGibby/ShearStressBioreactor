@@ -43,7 +43,7 @@ function onClose(event) {
 function onMessage(event) {
     console.log('Received: ', event.data);
 
-    let [variableName, value] = event.data.split(':');
+    let [variableName, value] = event.data.split(';');
     
     variableName = variableName.trim();
     value = value.trim();

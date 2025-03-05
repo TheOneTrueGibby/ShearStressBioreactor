@@ -33,7 +33,7 @@ void flowSensorSetup(SensirionLF flowSensor) {
 String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
     delay(250);
     int ret = flowSensor.readSample();
-    String flowData = "flowData: ";
+    String flowData = "flowData; ";
 
     if (ret == 0) {
         if (printTerminal == 1) {
