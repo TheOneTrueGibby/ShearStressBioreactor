@@ -30,24 +30,26 @@ void flowSensorSetup(SensirionLF flowSensor) {
 }
 
 //reads the setup flowsensor provided and send that data to the website
-String readFlowSensor(SensirionLF flowSensor) {
+String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
     int ret = flowSensor.readSample();
     String flowData = "";
 
     if (ret == 0) {
-        //Print flow to terminal
-        Serial.print("Flow: ");
-        Serial.print(flowSensor.getFlow(), 2);
-        Serial.print(" ml/min");
+        if (printTerminal == 1) {
+            //Print flow and temp  to terminal
+            Serial.print("Flow: ");
+            Serial.print(flowSensor.getFlow(), 2);
+            Serial.print(" ml/min");
+
+            //Print temp to terminal
+            Serial.print(" | Temp: ");
+            Serial.print(flowSensor.getTemp(), 1);
+            Serial.print(" deg C\n");
+        }
 
         //Put flow data into string varibile
         flowData += "Flow: ";
         flowData += String(flowSensor.getFlow(), 2) + " ml/min";
-
-        //Print temp to terminal
-        Serial.print(" | Temp: ");
-        Serial.print(flowSensor.getTemp(), 1);
-        Serial.print(" deg C\n");
 
         //Put temp data into string varibile
         flowData += " | Temp: ";
@@ -56,11 +58,12 @@ String readFlowSensor(SensirionLF flowSensor) {
         //if unable to read set string varibile as error message
         Serial.print("Error in flowsensor.readSample(): ");
         Serial.println(ret);
+        Serial.print("\n");
         flowData = "Error in flowsensor.readSample(): " + String(ret);
     }
 
     //send string varibile to webserver/website through webscoket 
-    ws.textAll(flowData);
+    //ws.textAll(flowData);
     return flowData;
 }
 

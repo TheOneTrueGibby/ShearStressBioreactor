@@ -4,6 +4,9 @@ set up to host website and data exchange between esp32 hosted website and softwa
 used this tutorial: https://m1cr0lab-esp32.github.io/remote-control-with-websocket/web-server-setup/ for starting point
 *************************************************************************/
 
+#ifndef WEBHOSTING_HPP
+#define WEBHOSTING_HPP
+
 //all necessary library includes
 #include <WiFi.h>
 #include <WiFiManager.h>
@@ -68,3 +71,5 @@ void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
         break;
   }
 }
+
+#endif

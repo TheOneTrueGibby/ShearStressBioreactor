@@ -25,23 +25,25 @@ void setRoutine(double timeRun, double timeBreak, double shearStress, int repeti
             setPump(0);
         }
 
-        Serial.printf("Starting Routine Iternation: %d", i);
+        Serial.printf("Starting Routine Iternation: %d\n", i);
         setPumpSpeed(flowRate, false);
         setPump(1);
 
-        Serial.printf("Running for %d hours", timeRunHr);
+        Serial.printf("Running for %d hours\n", timeRun);
         auto start = high_resolution_clock::now();
         while (duration_cast<hours>(high_resolution_clock::now() - start) < timeRunHr) {
-            readFlowSensor(flowSensor);
+            //readFlowSensor(flowSensor, 0);
             start = high_resolution_clock::now();
+            delay(250);
         }
 
-        Serial.printf("Breaking for %d hours", timeBreakHr);
+        Serial.printf("Breaking for %d hours\n", timeBreak);
         setPump(0);
         start = high_resolution_clock::now();
         while (duration_cast<hours>(high_resolution_clock::now() - start) < timeRunHr) {
-            readFlowSensor(flowSensor);
+            //readFlowSensor(flowSensor, 0);
             start = high_resolution_clock::now();
+            delay(250);
         }
     }
 }
