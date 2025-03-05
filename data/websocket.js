@@ -1,27 +1,18 @@
-/**
- * ----------------------------------------------------------------------------
- * ESP32 Remote Control with WebSocket
- * ----------------------------------------------------------------------------
- * © 2020 Stéphane Calderoni
- * ----------------------------------------------------------------------------
- */
+/************************************************************************
+Gibson Moseley - websocket.js
+
+handles webscoket data handling for website side
+helped with tutorial: https://m1cr0lab-esp32.github.io/remote-control-with-websocket/
+*************************************************************************/
 
 var gateway = `ws://${window.location.hostname}/ws`;
 var websocket;
-
-// ----------------------------------------------------------------------------
-// Initialization
-// ----------------------------------------------------------------------------
 
 window.addEventListener('load', onLoad);
 
 function onLoad(event) {
     initWebSocket();
 }
-
-// ----------------------------------------------------------------------------
-// WebSocket handling
-// ----------------------------------------------------------------------------
 
 function initWebSocket() {
     console.log('Trying to open a WebSocket connection...');
@@ -40,6 +31,7 @@ function onClose(event) {
     setTimeout(initWebSocket, 2000);
 }
 
+//This allows string varibiles to be sent to the websever in the format of "varibleHTML; data you want to send"
 function onMessage(event) {
     console.log('Received: ', event.data);
 
