@@ -42,10 +42,10 @@ void setup() {
 
 void loop() {
   ws.cleanupClients();
-  readFlowSensor(flowSensor, 1); //Function in FlowSensor.hpp
+  String flowData = readFlowSensor(flowSensor, 1); //Function in FlowSensor.hpp
   //checkPumpStatus();
-  //ws.textAll(flowData); //Send data to be handled by webscoket
-  int result = digitalRead(22);
-  Serial.println(result);
+  ws.textAll(flowData); //Send data to be handled by webscoket
+  //int result = digitalRead(22);
+  //Serial.println(result);
   //delay(100);
 }
