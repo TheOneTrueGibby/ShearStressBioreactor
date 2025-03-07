@@ -37,13 +37,14 @@ void setup() {
   flowSensorSetup(flowSensor); //Function in FlowSensor.hpp
   stepperSetup(stepper); //Function in StepperMotor.hpp
 
-  //setRoutine(1, 1, 1, 1);
+  setRoutine(0.01, 0.001, 0.3, 2);
 }
 
 void loop() {
+  delay(100);
   ws.cleanupClients();
   //String flowData = readFlowSensor(flowSensor, 1); //Function in FlowSensor.hpp
-  readFlowSensor(flowSensor, 1);
+  //readFlowSensor(flowSensor, 1);
   //checkPumpStatus();
   //ws.textAll(flowData); //Send data to be handled by webscoket
   //int result = digitalRead(22);

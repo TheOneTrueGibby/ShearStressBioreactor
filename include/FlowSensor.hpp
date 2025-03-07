@@ -31,7 +31,7 @@ void flowSensorSetup(SensirionLF flowSensor) {
 
 //reads the setup flowsensor provided and send that data to the website
 String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
-    delay(250);
+    delay(50);
     int ret = flowSensor.readSample();
     String flowData = "flowData; ";
 

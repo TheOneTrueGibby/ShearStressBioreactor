@@ -31,7 +31,8 @@ function onClose(event) {
     setTimeout(initWebSocket, 2000);
 }
 
-//This allows string varibiles to be sent to the websever in the format of "varibleHTML; data you want to send"
+//This allows string varibiles to be sent to the websever in the format of "[varibleHTMLName]; data you want to send"
+//Example: "flowdata; Flow is not set" is broken into varName = flowdata, value = "Flow is not set"
 function onMessage(event) {
     console.log('Received: ', event.data);
 

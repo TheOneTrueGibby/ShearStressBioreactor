@@ -71,17 +71,21 @@ void pumpSetup() {
     node.postTransmission(postTransmission);
 }
 
-String checkPumpStatus() {
-    delay(250);
+String checkPumpStatus(bool printSerial) {
+    delay(50);
     String pumpStatus = "pumpStatus; ";
     if (node.readCoils(0x1001, 1) == 0) {
         uint16_t state = node.getResponseBuffer(0);
         if(state == 1) {
             pumpStatus += "Pump status: On";
-            Serial.printf("Pump status: On\n");
+            if(printSerial == 1) {
+                Serial.printf("Pump status: On\n");
+            }
         } else if (state == 0) {
             pumpStatus += "Pump status: Off";
-            Serial.printf("Pump status: Off\n");
+            if(printSerial == 1) {
+                Serial.printf("Pump status: Off\n");
+            }
         }
         pumpOn = state;
     }
@@ -89,6 +93,7 @@ String checkPumpStatus() {
         pumpStatus += "Pump status: Unknown";
         Serial.println("Error: Unable to read pump state!");
     }
+    ws.textAll(pumpStatus);
     return pumpStatus;
     //return pumpOn;
 }
