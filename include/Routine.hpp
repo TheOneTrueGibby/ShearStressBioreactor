@@ -7,16 +7,17 @@ Allows for the running of routines for the system
 #ifndef ROUTINE_HPP
 #define ROUTINE_HPP
 
+//library for timing
 #include <chrono>
+
+//all necessary files for includes
 #include "Pump.hpp"
 #include "BioreactorVaribiles.hpp"
 #include "FlowSensor.hpp"
 
+//naming conventions
 using namespace std;
 using namespace std::chrono;
-
-int timeRunningTotal;
-int timeRunningRoutine;
 
 //alows seeting for a basic routne that repeats x times in hr conversions, scaled in seconds and rounds.
 //Example 3.6 seconds will be 4 seconds
