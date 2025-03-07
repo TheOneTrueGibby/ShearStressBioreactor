@@ -2,7 +2,8 @@
 Gibson Moseley - Routine.hpp
 *************************************************************************/
 
-//#include <iostream>
+#ifndef ROUTINE_HPP
+#define ROUTINE_HPP
 
 #include <chrono>
 #include "Pump.hpp"
@@ -57,3 +58,5 @@ void setRoutine(double timeRun, double timeBreak, double shearStress, int repeti
     }
     Serial.print("Routine Done\n"); 
 }
+
+#endif

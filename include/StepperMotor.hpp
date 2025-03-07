@@ -3,6 +3,9 @@ Gibson Moseley - StepperMotor.hpp
 All vaibiles and functions needed to setup and control a stepper motor
 *************************************************************************/
 
+#ifndef STEPPERMOTOR_HPP
+#define STEPPERMOTOR_HPP
+
 #include <ESP_FlexyStepper.h>
 
 //Pins for Stepper Motor
@@ -34,3 +37,5 @@ void stepperSetup(ESP_FlexyStepper stepper) {
 void moveStepper(int moveDistnace) {
     stepper.moveRelativeInMillimeters(moveDistnace);
 }
+
+#endif
