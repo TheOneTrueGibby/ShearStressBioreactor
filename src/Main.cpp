@@ -18,6 +18,7 @@ Where we call all functions and run all code
 #include "BioreactorVaribiles.hpp"
 #include "StepperMotor.hpp"
 #include "Routine.hpp"
+#include "MicrosdCard.hpp"
 
 //Start Running
 void setup() {
@@ -37,7 +38,8 @@ void setup() {
   flowSensorSetup(flowSensor); //Function in FlowSensor.hpp
   stepperSetup(stepper); //Function in StepperMotor.hpp
 
-  setRoutine(0.01, 0.001, 0.3, 2);
+  //setRoutine(0.01, 0.001, 0.3, 2);
+  setupMicroSDcard();
 }
 
 void loop() {
