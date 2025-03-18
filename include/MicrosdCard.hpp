@@ -16,7 +16,7 @@ Used tutorial: https://randomnerdtutorials.com/esp32-microsd-card-arduino/
 #define MOSI  23
 #define CS  5
 
-SPIClass spi = SPIClass(HSPI);
+SPIClass spi = SPIClass(VSPI);
 
 void setupMicroSDcard() {
   //Serial.begin(115200);
