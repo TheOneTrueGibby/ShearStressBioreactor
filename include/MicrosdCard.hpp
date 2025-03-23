@@ -1,6 +1,9 @@
 /************************************************************************
 Gibson Moseley - MicrosdCard.hpp
 
+This is built to communicate with the MicroSD card connected to the esp32, purpose is to record all relevent information
+particuallry from sensors and flow data.
+
 Used tutorial: https://randomnerdtutorials.com/esp32-microsd-card-arduino/
 *************************************************************************/
 
@@ -173,6 +176,11 @@ void testFileIO(fs::FS &fs, const char * path){
   end = millis() - start;
   Serial.printf("%u bytes written for %u ms\n", 2048 * 512, end);
   file.close();
+}
+
+void writeBioreactorInfo(fs::FS &fs, const char * path, String routineName, int timeRoutine, String flowrate, int searStress) {
+  String message = "Routine: " + String(routineName) + ", Routine Time: " + String(timeRoutine) + ", " + String(flowrate) + ", Shear Stress: " + String(searStress) + "\n";
+  appendFile(SD, "/Log.txt", message.c_str());
 }
 
 void setupMicroSDcard() {

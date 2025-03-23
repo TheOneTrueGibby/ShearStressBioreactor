@@ -14,6 +14,7 @@ Allows for the running of routines for the system
 #include "Pump.hpp"
 #include "BioreactorVaribiles.hpp"
 #include "FlowSensor.hpp"
+#include "MicrosdCard.hpp"
 
 //naming conventions
 using namespace std;
@@ -30,6 +31,7 @@ void setRoutine(double timeRun, double timeBreak, double shearStress, int repeti
     auto timeBreakHr = std::chrono::duration<double, std::chrono::seconds::period>(timeBreak * 3600);
 
     //runn the routine as may times as speicifed
+    auto startTotal = high_resolution_clock::now();
     for(int i = 1; i < repetion + 1; i++) {
         checkPumpStatus(0);
 
@@ -43,18 +45,21 @@ void setRoutine(double timeRun, double timeBreak, double shearStress, int repeti
         }
 
         //print what repition we are on and start pump
-        Serial.printf("Starting Routine Iternation: %d, ", i);
+        Serial.printf("Starting Routine Iteration: %d, ", i);
         setPump(1);
 
         //run the pump for specified amount of time and print how long at the end
         auto start = high_resolution_clock::now();
         while (duration_cast<seconds>(high_resolution_clock::now() - start) < timeRunHr) {
-            readFlowSensor(flowSensor, 0);
+            auto currentTotal = duration_cast<seconds>(high_resolution_clock::now() - startTotal);
+            String flow = readFlowSensor(flowSensor, 0);
             checkPumpStatus(0);
+
+            writeBioreactorInfo();
         }
-        auto finalTime = duration_cast<seconds>(high_resolution_clock::now() - start);
-        int time = finalTime.count();
-        Serial.printf("Time ran was %d seconds, ", time);
+        //auto finalTime = duration_cast<seconds>(high_resolution_clock::now() - start);
+        //int time = finalTime.count();
+        //Serial.printf("Time ran was %d seconds, ", time);
 
         //for break turn pump off
         setPump(0);
@@ -65,9 +70,9 @@ void setRoutine(double timeRun, double timeBreak, double shearStress, int repeti
             readFlowSensor(flowSensor, 0);
             checkPumpStatus(0);
         }
-        finalTime = duration_cast<seconds>(high_resolution_clock::now() - start);
-        time = finalTime.count();
-        Serial.printf("Time paused was %d seconds.\n", time);
+        //finalTime = duration_cast<seconds>(high_resolution_clock::now() - start);
+        //time = finalTime.count();
+        //Serial.printf("Time paused was %d seconds.\n", time);
     }
 
     //denote routine is over
