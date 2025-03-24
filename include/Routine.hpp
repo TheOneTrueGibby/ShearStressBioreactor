@@ -55,7 +55,7 @@ void setRoutine(double timeRun, double timeBreak, double shearStress, int repeti
             String flow = readFlowSensor(flowSensor, 0);
             checkPumpStatus(0);
 
-            //writeBioreactorInfo();
+            //writeBioreactorInfo(flow, );
         }
         //auto finalTime = duration_cast<seconds>(high_resolution_clock::now() - start);
         //int time = finalTime.count();
