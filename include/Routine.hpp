@@ -20,6 +20,28 @@ Allows for the running of routines for the system
 using namespace std;
 using namespace std::chrono;
 
+//this converts the amount of time running in seconds to a String with Hr:Min:Sec
+String convertTimeToString(int timeSeconds) {
+    int timeLeft = timeSeconds;
+    String clockConversion = "";
+
+    int totalHr = timeSeconds/3600;
+    timeLeft -= timeLeft - (3600 * totalHr);
+
+    int totalMin = timeLeft/60;
+    timeLeft -= timeLeft - (60 * totalMin);
+
+    int totalSec = timeLeft;
+
+    clockConversion = "Routine Time: " + String(totalHr) + ":" + String(totalMin) + ":" + String(totalSec);
+
+    String clockWebsite = "runningTime; " + clockConversion;
+    ws.textAll(clockWebsite);
+
+    return clockConversion;
+    
+}
+
 //alows seeting for a basic routne that repeats x times in hr conversions, scaled in seconds and rounds.
 //Example 3.6 seconds will be 4 seconds
 void setRoutine(String routineName, double timeRun, double timeBreak, double shearStress, int repetion) {
@@ -31,7 +53,6 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
     auto timeBreakHr = std::chrono::duration<double, std::chrono::seconds::period>(timeBreak * 3600);
 
     //runn the routine as may times as speicifed
-    auto startTotal = high_resolution_clock::now();
     for(int i = 1; i < repetion + 1; i++) {
         checkPumpStatus(0);
 
@@ -49,10 +70,11 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
         setPump(1);
 
         //run the pump for specified amount of time and print how long at the end
+        auto startTotal = high_resolution_clock::now();
         auto start = high_resolution_clock::now();
         while (duration_cast<seconds>(high_resolution_clock::now() - start) < timeRunHr) {
             auto currentTotal = duration_cast<seconds>(high_resolution_clock::now() - startTotal);
-            int time = currentTotal.count();
+            String time = convertTimeToString(currentTotal.count());
             String flow = readFlowSensor(flowSensor, 0);
             checkPumpStatus(0);
 
@@ -68,8 +90,12 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
         //dont run the pump for speicifed amount of time and print it
         start = high_resolution_clock::now();
         while (duration_cast<seconds>(high_resolution_clock::now() - start) < timeBreakHr) {
-            readFlowSensor(flowSensor, 0);
+            auto currentTotal = duration_cast<seconds>(high_resolution_clock::now() - startTotal);
+            String time = convertTimeToString(currentTotal.count());
+            String flow = readFlowSensor(flowSensor, 0);
             checkPumpStatus(0);
+
+            writeBioreactorInfo(routineName, time, flow);
         }
         //finalTime = duration_cast<seconds>(high_resolution_clock::now() - start);
         //time = finalTime.count();
