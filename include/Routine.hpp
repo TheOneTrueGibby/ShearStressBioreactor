@@ -22,7 +22,7 @@ using namespace std::chrono;
 
 //alows seeting for a basic routne that repeats x times in hr conversions, scaled in seconds and rounds.
 //Example 3.6 seconds will be 4 seconds
-void setRoutine(double timeRun, double timeBreak, double shearStress, int repetion) {
+void setRoutine(String routineName, double timeRun, double timeBreak, double shearStress, int repetion) {
     //calculate flowrate needed to achive required shearStress
     int flowRate = flowRateBasedOnShearStressCalc(shearStress);
 
@@ -52,10 +52,11 @@ void setRoutine(double timeRun, double timeBreak, double shearStress, int repeti
         auto start = high_resolution_clock::now();
         while (duration_cast<seconds>(high_resolution_clock::now() - start) < timeRunHr) {
             auto currentTotal = duration_cast<seconds>(high_resolution_clock::now() - startTotal);
+            int time = currentTotal.count();
             String flow = readFlowSensor(flowSensor, 0);
             checkPumpStatus(0);
 
-            //writeBioreactorInfo(flow, );
+            writeBioreactorInfo(routineName, time, flow);
         }
         //auto finalTime = duration_cast<seconds>(high_resolution_clock::now() - start);
         //int time = finalTime.count();

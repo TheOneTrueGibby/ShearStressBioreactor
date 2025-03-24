@@ -179,7 +179,7 @@ void testFileIO(fs::FS &fs, const char * path){
 }
 
 void writeBioreactorInfo(String routineName, int timeRoutine, String flowrate) {
-  String message = "Routine: " + String(routineName) + ", Routine Time: " + String(timeRoutine) + ", " + String(flowrate) + "\n";
+  String message = "Routine: " + String(routineName) + ", Routine Time: " + String(timeRoutine) + " Seconds, " + String(flowrate) + "\r\n";
   appendFile(SD, "/Log.txt", message.c_str());
 }
 
@@ -212,7 +212,17 @@ void setupMicroSDcard() {
   uint64_t cardSize = SD.cardSize() / (1024 * 1024);
   Serial.printf("SD Card Size: %lluMB\n", cardSize);
 
-  writeFile(SD, "/hello.txt", "Hello ");
+  File file = SD.open("/log.txt");
+  if(!file) {
+    Serial.println("File doesn't exist");
+    Serial.println("Creating file...");
+    writeFile(SD, "/data.txt", "Routine Name, Time (seconds), Flow (ml/min), Temp (F), Shear Stress (Pa) \r\n");
+  }
+  else {
+    Serial.println("File already exists");  
+  }
+  file.close();
+
   appendFile(SD, "/hello.txt", "World!\n");
 }
 
