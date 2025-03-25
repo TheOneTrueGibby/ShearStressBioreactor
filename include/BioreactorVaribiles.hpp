@@ -20,8 +20,8 @@ double flowRateCalc(double sesnorValue) {
 }
 
 //Calculates the shear stress in Pa that will result from the provided flow rate in ml/min.
-double shearStressCalc(double flowRate) {
-    double sh = (flowRate / 6e7) * (6 * MU) / (CHANNEL_WIDTH * CHANNEL_HEIGHT * CHANNEL_HEIGHT);
+float shearStressCalc(float flowRate) {
+    float sh = (flowRate / 6e7) * (6 * MU) / (CHANNEL_WIDTH * CHANNEL_HEIGHT * CHANNEL_HEIGHT);
     return sh;
 }
 

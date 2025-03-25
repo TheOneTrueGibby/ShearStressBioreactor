@@ -74,11 +74,12 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
         auto start = high_resolution_clock::now();
         while (duration_cast<seconds>(high_resolution_clock::now() - start) < timeRunHr) {
             auto currentTotal = duration_cast<seconds>(high_resolution_clock::now() - startTotal);
-            String time = convertTimeToString(currentTotal.count());
+            int timeInt = currentTotal.count();
+            String time = convertTimeToString(timeInt);
             String flow = readFlowSensor(flowSensor, 0);
             checkPumpStatus(0);
 
-            writeBioreactorInfo(routineName, time, flow);
+            //writeBioreactorInfo(routineName, time, flow);
         }
         //auto finalTime = duration_cast<seconds>(high_resolution_clock::now() - start);
         //int time = finalTime.count();
@@ -95,7 +96,7 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
             String flow = readFlowSensor(flowSensor, 0);
             checkPumpStatus(0);
 
-            writeBioreactorInfo(routineName, time, flow);
+            //writeBioreactorInfo(routineName, time, flow);
         }
         //finalTime = duration_cast<seconds>(high_resolution_clock::now() - start);
         //time = finalTime.count();
