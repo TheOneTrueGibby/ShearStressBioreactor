@@ -72,7 +72,7 @@ void pumpSetup() {
 }
 
 String checkPumpStatus(bool printSerial) {
-    delay(50);
+    delay(100);
     String pumpStatus = "pumpStatus; ";
     if (node.readCoils(0x1001, 1) == 0) {
         uint16_t state = node.getResponseBuffer(0);

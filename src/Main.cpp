@@ -34,12 +34,12 @@ void setup() {
   //Begin wire communication
   Wire.begin();
   
-  //Set up Flow Sensor and Stepper Motor
+  //Set up Flow Sensor, Stepper Motor, & MicroSD
   flowSensorSetup(flowSensor); //Function in FlowSensor.hpp
   // stepperSetup(stepper); //Function in StepperMotor.hpp
-
-  setRoutine("Test", 0.01, 0.001, 0.3, 5);
   // setupMicroSDcard();
+
+  //setRoutine("Test", 0.01, 0.001, 0.3, 5);
 }
 
 void loop() {
