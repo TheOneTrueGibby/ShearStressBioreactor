@@ -36,14 +36,14 @@ void setup() {
   
   //Set up Flow Sensor and Stepper Motor
   flowSensorSetup(flowSensor); //Function in FlowSensor.hpp
-  stepperSetup(stepper); //Function in StepperMotor.hpp
+  // stepperSetup(stepper); //Function in StepperMotor.hpp
 
-  //setRoutine(0.01, 0.001, 0.3, 2);
-  setupMicroSDcard();
+  setRoutine("Test", 0.01, 0.001, 0.3, 5);
+  // setupMicroSDcard();
 }
 
 void loop() {
-  delay(100);
+  delay(200);
   ws.cleanupClients();
   //String flowData = readFlowSensor(flowSensor, 1); //Function in FlowSensor.hpp
   //readFlowSensor(flowSensor, 1);

@@ -63,7 +63,8 @@ String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
 
         //Put shear stress data into string varibile
         flowShear += "Shear Stress: ";
-        flowShear += String(flowShearStress, 2) + " Pa";
+        flowShear += String(flowShearStress) + " Pa";
+        //Serial.print(flowShear);
 
         //combine both into one String
         flowAll += flowData + "| " + flowShear;
