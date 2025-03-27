@@ -14,12 +14,12 @@ Used tutorial: https://randomnerdtutorials.com/esp32-microsd-card-arduino/
 #include "SD.h"
 #include "SPI.h"
 
-#define SCK  14
-#define MISO  12
-#define MOSI  13
+#define SCK  18
+#define MISO  19
+#define MOSI  23
 #define CS  5
 
-SPIClass spi = SPIClass(HSPI);
+SPIClass spi = SPIClass(VSPI);
 
 void listDir(fs::FS &fs, const char * dirname, uint8_t levels){
   Serial.printf("Listing directory: %s\n", dirname);

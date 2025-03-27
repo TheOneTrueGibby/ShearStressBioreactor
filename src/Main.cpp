@@ -26,7 +26,7 @@ void setup() {
   Serial.begin(115200);
 
   //Setup modbus for pump communication
-  pumpSetup(); //Function in Pump.hpp
+  //pumpSetup(); //Function in Pump.hpp
   
   //Set up web server
   initWebSetup();
@@ -35,9 +35,9 @@ void setup() {
   Wire.begin();
   
   //Set up Flow Sensor, Stepper Motor, & MicroSD
-  flowSensorSetup(flowSensor); //Function in FlowSensor.hpp
+  //flowSensorSetup(flowSensor); //Function in FlowSensor.hpp
   // stepperSetup(stepper); //Function in StepperMotor.hpp
-  // setupMicroSDcard();
+  setupMicroSDcard();
 
   //setRoutine("Test", 0.01, 0.001, 0.3, 5);
 }
