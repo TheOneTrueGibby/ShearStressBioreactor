@@ -23,20 +23,29 @@ using namespace std::chrono;
 //this converts the amount of time running in seconds to a String with Hr:Min:Sec
 String convertTimeToString(int timeSeconds) {
     int timeLeft = timeSeconds;
+    int totalHr = 0;
+    int totalMin = 0;
+    int totalSec = 0;
     String clockConversion = "";
 
-    int totalHr = timeSeconds/3600;
-    timeLeft -= timeLeft - (3600 * totalHr);
+    if(timeLeft/3600 >= 1) {
+        totalHr = timeLeft/3600;
+        timeLeft -= timeLeft - (3600 * totalHr);
+    }
 
-    int totalMin = timeLeft/60;
-    timeLeft -= timeLeft - (60 * totalMin);
+    if(timeLeft/60 >= 1) {
+        totalMin = timeLeft/60;
+        timeLeft -= timeLeft - (60 * totalMin);
+    }
 
-    int totalSec = timeLeft;
+    totalSec = timeLeft;
 
     clockConversion = "Routine Time: " + String(totalHr) + ":" + String(totalMin) + ":" + String(totalSec);
 
     String clockWebsite = "runningTime; " + clockConversion;
+    Serial.print(clockConversion);
     ws.textAll(clockWebsite);
+    Serial.print("\n");
 
     return clockConversion;
     

@@ -38,7 +38,7 @@ void setup() {
   flowSensorSetup(flowSensor); //Function in FlowSensor.hpp
   // stepperSetup(stepper); //Function in StepperMotor.hpp
 
-  setRoutine("Test", 0.01, 0.001, 0.3, 5);
+  setRoutine("Test", 0.1, 0.001, 0.3, 5);
   // setupMicroSDcard();
 }
 
