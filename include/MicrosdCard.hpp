@@ -14,13 +14,6 @@ Used tutorial: https://randomnerdtutorials.com/esp32-microsd-card-arduino/
 #include "SD.h"
 #include "SPI.h"
 
-#define SCK  14
-#define MISO  12
-#define MOSI  13
-#define CS  5
-
-SPIClass spi = SPIClass(HSPI);
-
 void listDir(fs::FS &fs, const char * dirname, uint8_t levels){
   Serial.printf("Listing directory: %s\n", dirname);
 
@@ -111,7 +104,7 @@ void appendFile(fs::FS &fs, const char * path, const char * message){
     return;
   }
   if(file.print(message)){
-    Serial.println("Message appended");
+      Serial.println("Message appended");
   } else {
     Serial.println("Append failed");
   }
@@ -185,9 +178,7 @@ void writeBioreactorInfo(String routineName, String timeRoutine, String flowrate
 
 void setupMicroSDcard() {
   //Serial.begin(115200);
-  spi.begin(SCK, MISO, MOSI, CS);
-
-  if (!SD.begin(CS, spi, 80000000)) {
+  if(!SD.begin(5)){
     Serial.println("Card Mount Failed");
     return;
   }
@@ -216,14 +207,12 @@ void setupMicroSDcard() {
   if(!file) {
     Serial.println("File doesn't exist");
     Serial.println("Creating file...");
-    writeFile(SD, "/data.txt", "Routine Name, Time (seconds), Flow (ml/min), Temp (F), Shear Stress (Pa) \r\n");
+    writeFile(SD, "/log.txt", "Routine Name, Time (seconds), Flow (ml/min), Temp (F), Shear Stress (Pa) \r\n");
   }
   else {
     Serial.println("File already exists");  
   }
   file.close();
-
-  appendFile(SD, "/hello.txt", "World!\n");
 }
 
 #endif

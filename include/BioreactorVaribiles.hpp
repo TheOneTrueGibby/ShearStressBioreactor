@@ -14,8 +14,8 @@ static constexpr double MU = 0.0006922; // Pa * s
 static constexpr double RHO = 993; // kg / m^3
 
 //Calculates flowrate
-double flowRateCalc(double sesnorValue) {
-    double fl = (((CHANNEL_WIDTH * CHANNEL_HEIGHT * CHANNEL_HEIGHT * sesnorValue) / (6 * MU)) * 6e7)/32;
+float flowRateCalc(float sesnorValue) {
+    float fl = (((CHANNEL_WIDTH * CHANNEL_HEIGHT * CHANNEL_HEIGHT * sesnorValue) / (6 * MU)) * 6e7)/32;
     return fl;
 }
 
@@ -26,15 +26,14 @@ float shearStressCalc(float flowRate) {
 }
 
 //Calculates the flow rate ml/min needed to generate specified chear stress in Pa
-double flowRateBasedOnShearStressCalc(double shearStress) {
-    double fl = (shearStress * 1e7 *  CHANNEL_WIDTH * CHANNEL_HEIGHT * CHANNEL_HEIGHT) / MU;
+float flowRateBasedOnShearStressCalc(float shearStress) {
+    float fl = (shearStress * 1e7 *  CHANNEL_WIDTH * CHANNEL_HEIGHT * CHANNEL_HEIGHT) / MU;
     return fl;
 }
 
-
 //Calculates the Reynolds number for the given flow rate.
-double reynoldsCalc(double flowRate) {
-    double r = (RHO * (flowRate / (CHANNEL_HEIGHT * CHANNEL_WIDTH)) * CHANNEL_HEIGHT) / MU;
+float reynoldsCalc(float flowRate) {
+    float r = (RHO * (flowRate / (CHANNEL_HEIGHT * CHANNEL_WIDTH)) * CHANNEL_HEIGHT) / MU;
     return r;
 }
 

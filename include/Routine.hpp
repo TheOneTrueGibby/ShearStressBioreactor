@@ -23,29 +23,20 @@ using namespace std::chrono;
 //this converts the amount of time running in seconds to a String with Hr:Min:Sec
 String convertTimeToString(int timeSeconds) {
     int timeLeft = timeSeconds;
-    int totalHr = 0;
-    int totalMin = 0;
-    int totalSec = 0;
+
+    int totalHr = timeSeconds / 3600;
+    int totalMin = (timeSeconds % 3600) / 60;
+    int totalSec = timeSeconds % 60;
+
     String clockConversion = "";
-
-    if(timeLeft/3600 >= 1) {
-        totalHr = timeLeft/3600;
-        timeLeft -= timeLeft - (3600 * totalHr);
-    }
-
-    if(timeLeft/60 >= 1) {
-        totalMin = timeLeft/60;
-        timeLeft -= timeLeft - (60 * totalMin);
-    }
-
-    totalSec = timeLeft;
 
     clockConversion = "Routine Time: " + String(totalHr) + ":" + String(totalMin) + ":" + String(totalSec);
 
     String clockWebsite = "runningTime; " + clockConversion;
     Serial.print(clockConversion);
     ws.textAll(clockWebsite);
-    Serial.print("\n");
+    //Serial.print(clockConversion);
+    //Serial.print("\n");
 
     return clockConversion;
     
@@ -101,7 +92,8 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
         start = high_resolution_clock::now();
         while (duration_cast<seconds>(high_resolution_clock::now() - start) < timeBreakHr) {
             auto currentTotal = duration_cast<seconds>(high_resolution_clock::now() - startTotal);
-            String time = convertTimeToString(currentTotal.count());
+            int timeInt = currentTotal.count();
+            String time = convertTimeToString(timeInt);
             String flow = readFlowSensor(flowSensor, 0);
             checkPumpStatus(0);
 

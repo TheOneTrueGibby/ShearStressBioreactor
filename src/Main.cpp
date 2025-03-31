@@ -26,30 +26,23 @@ void setup() {
   Serial.begin(115200);
 
   //Setup modbus for pump communication
-  pumpSetup(); //Function in Pump.hpp
+  //pumpSetup(); //Function in Pump.hpp
   
   //Set up web server
   initWebSetup();
+  setupMicroSDcard();
 
   //Begin wire communication
   Wire.begin();
   
-  //Set up Flow Sensor and Stepper Motor
+  //Set up Flow Sensor, Stepper Motor, & MicroSD
   flowSensorSetup(flowSensor); //Function in FlowSensor.hpp
   // stepperSetup(stepper); //Function in StepperMotor.hpp
 
-  setRoutine("Test", 0.1, 0.001, 0.3, 5);
-  // setupMicroSDcard();
+  //setRoutine("Test", 0.01, 0.001, 0.3, 1);
 }
 
 void loop() {
-  delay(100);
-  ws.cleanupClients();
-  String flowData = readFlowSensor(flowSensor, 1); //Function in FlowSensor.hpp
-  //readFlowSensor(flowSensor, 1);
-  //checkPumpStatus();
-  ws.textAll(flowData); //Send data to be handled by webscoket
-  //int result = digitalRead(22);
-  //Serial.println(result);
-  //delay(100);
+  delay(200);
+  //ws.cleanupClients();
 }
