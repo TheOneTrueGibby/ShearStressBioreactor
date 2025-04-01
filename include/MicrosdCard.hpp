@@ -173,11 +173,10 @@ void testFileIO(fs::FS &fs, const char * path){
 
 void writeBioreactorInfo(String routineName, String timeRoutine, String flowrate) {
   String message = "Routine: " + String(routineName) + ", " + String(timeRoutine) + ", " + String(flowrate) + "\r\n";
-  appendFile(SD, "/Log.txt", message.c_str());
+  appendFile(SD, "/log.txt", message.c_str());
 }
 
 void setupMicroSDcard() {
-  //Serial.begin(115200);
   if(!SD.begin(5)){
     Serial.println("Card Mount Failed");
     return;
