@@ -65,21 +65,25 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
         }
 
         //print what repition we are on and start pump
-        Serial.printf("Starting Routine Iteration: %d, ", i);
+        Serial.printf("Starting Routine Iteration: %d\n", i);
         setPump(1);
 
-        //run the pump for specified amount of time and print how long at the end
+        //clock to calculate total time of the routine run and when samples were read
         auto startTotal = high_resolution_clock::now();
+
+        //run the pump for specified amount of run time
         auto start = high_resolution_clock::now();
         while (duration_cast<seconds>(high_resolution_clock::now() - start) < timeRunHr) {
             auto currentTotal = duration_cast<seconds>(high_resolution_clock::now() - startTotal);
             int timeInt = currentTotal.count();
+            Serial.printf("Time Ran: %d", timeInt);
             String time = convertTimeToString(timeInt);
             String flow = readFlowSensor(flowSensor, 0);
             checkPumpStatus(0);
 
-            //writeBioreactorInfo(routineName, time, flow);
+            writeBioreactorInfo(routineName, time, flow);
         }
+        //debug code to see how long it was run
         //auto finalTime = duration_cast<seconds>(high_resolution_clock::now() - start);
         //int time = finalTime.count();
         //Serial.printf("Time ran was %d seconds, ", time);
@@ -87,17 +91,19 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
         //for break turn pump off
         setPump(0);
 
-        //dont run the pump for speicifed amount of time and print it
+        //dont run the pump for the speicifed amount of break time
         start = high_resolution_clock::now();
         while (duration_cast<seconds>(high_resolution_clock::now() - start) < timeBreakHr) {
             auto currentTotal = duration_cast<seconds>(high_resolution_clock::now() - startTotal);
             int timeInt = currentTotal.count();
+            Serial.printf("Time Ran: %d", timeInt);
             String time = convertTimeToString(timeInt);
             String flow = readFlowSensor(flowSensor, 0);
             checkPumpStatus(0);
 
-            //writeBioreactorInfo(routineName, time, flow);
+            writeBioreactorInfo(routineName, time, flow);
         }
+        //debug code to see how long it was not run
         //finalTime = duration_cast<seconds>(high_resolution_clock::now() - start);
         //time = finalTime.count();
         //Serial.printf("Time paused was %d seconds.\n", time);

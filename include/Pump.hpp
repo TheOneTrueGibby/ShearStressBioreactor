@@ -15,7 +15,7 @@ const int MODBUS_RX2 = 16;
 const int MODBUS_TX2 = 17;
 const int MODBUS_DE = 18;
 const int MODBUS_RE = 18;
-const int MODBUS_ENABLE = 19; // automatically set to high when writing, low otherwise to receive
+//const int MODBUS_ENABLE = 19; // automatically set to high when writing, low otherwise to receive
 const int PUMP_ADDRESS = 0xEF; // Modbus address of pump controller
 
 // Pump speeds in ml/min above which the precision of the pump decreases by a factor of 2
@@ -90,8 +90,10 @@ String checkPumpStatus(bool printSerial) {
         pumpOn = state;
     }
     else {
-        pumpStatus += "Pump status: Unknown";
-        Serial.println("Error: Unable to read pump state!");
+        if (printSerial == 1) {
+            pumpStatus += "Pump status: Unknown";
+            Serial.println("Error: Unable to read pump state!");
+        }
     }
     ws.textAll(pumpStatus);
     return pumpStatus;
