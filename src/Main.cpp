@@ -25,9 +25,6 @@ void setup() {
   //Start Serial Communication
   Serial.begin(115200);
 
-  //Begin wire communication
-  Wire.begin();
-
   //Set up web server
   initWebSetup(); //Function in WebHosting.hpp
 
@@ -36,6 +33,9 @@ void setup() {
   
   //Setup modbus for pump communication
   pumpSetup(); //Function in Pump.hpp
+
+  //Begin wire communication
+  Wire.begin();
   
   //Set up Flow Sensor
   flowSensorSetup(flowSensor); //Function in FlowSensor.hpp
@@ -43,7 +43,7 @@ void setup() {
   //Set up Stepper Motor
   //stepperSetup(stepper); //Function in StepperMotor.hpp
 
-  setRoutine("TestFinal", 0.001, 0.001, 1, 1);
+  setRoutine("TestFinalFinal", 0.001, 0.001, 1, 1);
 }
 
 void loop() {
