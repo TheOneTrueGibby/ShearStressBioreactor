@@ -27,12 +27,13 @@ void setup() {
 
   //Set up web server
   initWebSetup(); //Function in WebHosting.hpp
-
-  //Set up microSD card
-  setupMicroSDcard(); //Function in MicrosdCard.hpp
   
   //Setup modbus for pump communication
   pumpSetup(); //Function in Pump.hpp
+  setPump(0);
+
+  //Set up microSD card
+  setupMicroSDcard(); //Function in MicrosdCard.hpp
 
   //Begin wire communication
   Wire.begin();
