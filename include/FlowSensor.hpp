@@ -7,7 +7,7 @@ Holds all commands necessry to use the flow sensor, and declerations of the flow
 #ifndef FLOWSENSOR_HPP
 #define FLOWSENSOR_HPP
 
-//inclusion of necessary libraries
+//inclusion of necessary files/functions
 #include "sensirion-lf.h"
 #include "sensirion-lf.cpp"
 #include "BioreactorVaribiles.hpp"
@@ -30,19 +30,27 @@ void flowSensorSetup(SensirionLF flowSensor) {
     }
 }
 
-//reads the setup flowsensor provided and send that data to the website
+//reads the provided flowsensor provided and prints out in serial if set to true
 String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
     delay(100);
+
+    //read the flow sensor
     int ret = flowSensor.readSample();
+
+    //set up strings to hold readings
     String flowData = "";
     String flowShear = "";
     String flowAll = "";
 
+    //if we were able to read flowsensor then we can get temp and flow otherwose there is an error
     if (ret == 0) {
+
+        //get both flow and temp, and calculate shear stress based on flow rate
         float flowReading = flowSensor.getFlow();
         float flowTemp = flowSensor.getTemp();
         float flowShearStress = shearStressCalc(flowReading);
 
+        //if set to true, prints readings in terminal
         if (printTerminal == 1) {
             //Print flow and temp  to terminal
             Serial.print("Flow: ");
@@ -81,6 +89,8 @@ String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
     String flowShearWebsite = "shearStress; " + flowShear;
     ws.textAll(flowDataWebsite);
     ws.textAll(flowShearWebsite);
+
+    //return all the data as a string
     return flowAll;
 }
 
