@@ -82,12 +82,11 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
             delay(secondCheck);
             auto currentTotal = duration_cast<seconds>(high_resolution_clock::now() - startTotal);
             int timeInt = currentTotal.count();
-            Serial.printf("Time Ran: %d\n", timeInt);
             String time = convertTimeToString(timeInt);
             String flow = readFlowSensor(flowSensor, 0);
-            checkPumpStatus(0);
+            String pump = checkPumpStatus(0);
 
-            writeBioreactorInfo(routineName, time, flow);
+            writeBioreactorInfo(routineName, time, flow, pump);
         }
         //debug code to see how long it was run
         //auto finalTime = duration_cast<seconds>(high_resolution_clock::now() - start);
@@ -103,12 +102,11 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
             delay(secondCheck);
             auto currentTotal = duration_cast<seconds>(high_resolution_clock::now() - startTotal);
             int timeInt = currentTotal.count();
-            Serial.printf("Time Ran: %d\n", timeInt);
             String time = convertTimeToString(timeInt);
             String flow = readFlowSensor(flowSensor, 0);
-            checkPumpStatus(0);
+            String pump = checkPumpStatus(0);
 
-            writeBioreactorInfo(routineName, time, flow);
+            writeBioreactorInfo(routineName, time, flow, pump);
         }
         //debug code to see how long it was not run
         //finalTime = duration_cast<seconds>(high_resolution_clock::now() - start);

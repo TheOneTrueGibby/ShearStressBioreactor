@@ -171,8 +171,8 @@ void testFileIO(fs::FS &fs, const char * path){
   file.close();
 }
 
-void writeBioreactorInfo(String routineName, String timeRoutine, String flowrate) {
-  String message = "Routine: " + String(routineName) + ", " + String(timeRoutine) + ", " + String(flowrate) + "\r\n";
+void writeBioreactorInfo(String routineName, String timeRoutine, String flowrate, String pumpStatus) {
+  String message = routineName + ", " + timeRoutine + ", " + flowrate + ", " + pumpStatus +"\r\n";
   appendFile(SD, "/log.txt", message.c_str());
 }
 
