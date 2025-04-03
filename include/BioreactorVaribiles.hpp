@@ -9,8 +9,8 @@ This holds all equations and varbilies about bioreactor setup to calculate value
 
 //All bioreactor varibiles needed for calculation
 static constexpr double CHANNEL_HEIGHT = 0.0005; // m
-static constexpr double CHANNEL_WIDTH = 0.04; // m
-static constexpr double MU = 0.0006922; // Pa * s
+static constexpr double CHANNEL_WIDTH = 0.025; // m
+static constexpr double MU = 0.0155; // mPa * min
 static constexpr double RHO = 993; // kg / m^3
 
 //Calculates flowrate based on sensor value given
@@ -19,15 +19,21 @@ float flowRateCalc(float sesnorValue) {
     return fl;
 }
 
+// //Calculates the shear stress in Pa that will result from the provided flow rate in ml/min.
+// float shearStressCalc(float flowRate) {
+//     float sh = (flowRate / 6e7) * (6 * MU) / (CHANNEL_WIDTH * CHANNEL_HEIGHT * CHANNEL_HEIGHT);
+//     return sh;
+// }
+
 //Calculates the shear stress in Pa that will result from the provided flow rate in ml/min.
 float shearStressCalc(float flowRate) {
-    float sh = (flowRate / 6e7) * (6 * MU) / (CHANNEL_WIDTH * CHANNEL_HEIGHT * CHANNEL_HEIGHT);
+    float sh = (flowRate * 6 * MU) / (CHANNEL_WIDTH * CHANNEL_HEIGHT * CHANNEL_HEIGHT);
     return sh;
 }
 
 //Calculates the flow rate ml/min needed to generate specified chear stress in Pa
 float flowRateBasedOnShearStressCalc(float shearStress) {
-    float fl = (shearStress * 1e7 *  CHANNEL_WIDTH * CHANNEL_HEIGHT * CHANNEL_HEIGHT) / MU;
+    float fl = (shearStress *  CHANNEL_WIDTH * CHANNEL_HEIGHT * CHANNEL_HEIGHT) / (6 * MU);
     return fl;
 }
 
