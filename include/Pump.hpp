@@ -74,7 +74,7 @@ void pumpSetup() {
 
 //This sets the pumpOn global varibile based on the pump status and returns a string with the data if pump is on or off
 String checkPumpStatus(bool printSerial) {
-    delay(100);
+    //delay(100);
 
     //string to store pump status and anothe rone to send to the website
     String pumpStatus = "";
@@ -118,19 +118,29 @@ String checkPumpStatus(bool printSerial) {
     return pumpStatus;
 }
 
+//This sets the pump to on (1) or off (0)
 bool setPump(bool option) {
+    //make sure the pumpOn varibile is correct
+    checkPumpStatus(0);
+
+    //check if the option is diffrent then current state
     if (pumpOn != option) {
+        //set pump on to the option
         pumpOn = option;
 
+        //Write the option to the correct regestry and if unable to set pumpOn back
         uint16_t result = node.writeSingleCoil(0x1001, pumpOn ? 0xFF : 0x00);
         if (result != 0) {
             Serial.printf("Unable to switch pump state! Error code: %d\n", result);
             pumpOn = !option;
         }
     }
+
+    //return current status
     return pumpOn;
 }
 
+//This function is used to write the speed to the right registers
 bool setPumpSpeed(uint16_t high, uint16_t low, bool start/* = false*/) {
     node.setTransmitBuffer(0, low);
     node.setTransmitBuffer(1, high);
@@ -149,6 +159,7 @@ bool setPumpSpeed(uint16_t high, uint16_t low, bool start/* = false*/) {
     }
 }
 
+//This function sets the speed to the pump to match the requested flow rate in m/min
 bool setPumpSpeed(int flow, bool force) {
     // The pump will ignore speed commands when running
     if (pumpOn) {
@@ -211,13 +222,6 @@ int32_t getPumpSpeed() {
     }
     
     return lowBytes;
-}
-
-/*
- * Returns whether the pump is on.
- */
-bool isPumpOn() {
-    return pumpOn;
 }
 
 #endif
