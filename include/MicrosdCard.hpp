@@ -206,7 +206,7 @@ void setupMicroSDcard() {
   if(!file) {
     Serial.println("File doesn't exist");
     Serial.println("Creating file...");
-    writeFile(SD, "/log.txt", "Routine Name, Time (seconds), Flow (ml/min), Temp (F), Shear Stress (Pa) \r\n");
+    writeFile(SD, "/log.txt", "Routine Name, Time (seconds), Flow (ml/min), Temp (F), Shear Stress (Pa), Pump (On/Off)\r\n");
   }
   else {
     Serial.println("File already exists");  
