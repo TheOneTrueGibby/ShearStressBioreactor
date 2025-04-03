@@ -115,7 +115,7 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
     }
 
     //denote routine is over
-    Serial.print("Routine Done\n"); 
+    Serial.printf("Routine %s Done\n", routineName);
 }
 
 #endif
