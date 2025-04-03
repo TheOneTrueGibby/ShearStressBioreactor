@@ -96,7 +96,7 @@ void writeFile(fs::FS &fs, const char * path, const char * message){
 }
 
 void appendFile(fs::FS &fs, const char * path, const char * message){
-  Serial.printf("Appending to file: %s\n", path);
+  //Serial.printf("Appending to file: %s\n", path);
 
   File file = fs.open(path, FILE_APPEND);
   if(!file){
@@ -104,9 +104,9 @@ void appendFile(fs::FS &fs, const char * path, const char * message){
     return;
   }
   if(file.print(message)){
-      Serial.println("Message appended");
+      //Serial.println("Message appended");
   } else {
-    Serial.println("Append failed");
+    //Serial.println("Append failed");
   }
   file.close();
 }
@@ -173,11 +173,10 @@ void testFileIO(fs::FS &fs, const char * path){
 
 void writeBioreactorInfo(String routineName, String timeRoutine, String flowrate) {
   String message = "Routine: " + String(routineName) + ", " + String(timeRoutine) + ", " + String(flowrate) + "\r\n";
-  appendFile(SD, "/Log.txt", message.c_str());
+  appendFile(SD, "/log.txt", message.c_str());
 }
 
 void setupMicroSDcard() {
-  //Serial.begin(115200);
   if(!SD.begin(5)){
     Serial.println("Card Mount Failed");
     return;
