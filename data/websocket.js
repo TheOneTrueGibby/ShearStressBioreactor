@@ -45,6 +45,4 @@ function onMessage(event) {
     if (element) {
         element.innerText = value;
     }
-    //document.getElementById('flowData').innerText = data.flowData;
-    //document.getElementById('pumpStatus').innerText = data.pumpStatus;
 }

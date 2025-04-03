@@ -18,36 +18,37 @@ Where we call all functions and run all code
 #include "BioreactorVaribiles.hpp"
 #include "StepperMotor.hpp"
 #include "Routine.hpp"
+#include "MicrosdCard.hpp"
 
 //Start Running
 void setup() {
   //Start Serial Communication
   Serial.begin(115200);
 
+  //Set up web server
+  initWebSetup(); //Function in WebHosting.hpp
+  
   //Setup modbus for pump communication
   pumpSetup(); //Function in Pump.hpp
-  
-  //Set up web server
-  initWebSetup();
+  setPump(0);
+
+  //Set up microSD card
+  setupMicroSDcard(); //Function in MicrosdCard.hpp
 
   //Begin wire communication
   Wire.begin();
   
-  //Set up Flow Sensor and Stepper Motor
+  //Set up Flow Sensor
   flowSensorSetup(flowSensor); //Function in FlowSensor.hpp
-  stepperSetup(stepper); //Function in StepperMotor.hpp
 
-  setRoutine(0.01, 0.001, 0.3, 2);
+  //Set up Stepper Motor
+  //stepperSetup(stepper); //Function in StepperMotor.hpp
+
+  setRoutine("Test", 0.001, 0.001, 1, 1);
 }
 
 void loop() {
+  //refresh data on the website 
   delay(100);
   ws.cleanupClients();
-  //String flowData = readFlowSensor(flowSensor, 1); //Function in FlowSensor.hpp
-  //readFlowSensor(flowSensor, 1);
-  //checkPumpStatus();
-  //ws.textAll(flowData); //Send data to be handled by webscoket
-  //int result = digitalRead(22);
-  //Serial.println(result);
-  //delay(100);
 }

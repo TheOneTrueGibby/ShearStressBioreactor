@@ -13,9 +13,9 @@ ModbusMaster node;
 // Set up Pump controller
 const int MODBUS_RX2 = 16;
 const int MODBUS_TX2 = 17;
-const int MODBUS_DE = 18;
-const int MODBUS_RE = 18;
-const int MODBUS_ENABLE = 19; // automatically set to high when writing, low otherwise to receive
+const int MODBUS_DE = 14;
+const int MODBUS_RE = 14;
+//const int MODBUS_ENABLE = 19; // automatically set to high when writing, low otherwise to receive
 const int PUMP_ADDRESS = 0xEF; // Modbus address of pump controller
 
 // Pump speeds in ml/min above which the precision of the pump decreases by a factor of 2
@@ -57,6 +57,7 @@ void postTransmission()
   digitalWrite(MODBUS_DE, 0);
 }
 
+//this sets all necessary paramaters in order to communicate with the pump
 void pumpSetup() {
     // Setup RS485 communication
     pinMode(MODBUS_RE, OUTPUT);
@@ -71,46 +72,75 @@ void pumpSetup() {
     node.postTransmission(postTransmission);
 }
 
+//This sets the pumpOn global varibile based on the pump status and returns a string with the data if pump is on or off
 String checkPumpStatus(bool printSerial) {
-    delay(50);
-    String pumpStatus = "pumpStatus; ";
+    //delay(100);
+
+    //string to store pump status and anothe rone to send to the website
+    String pumpStatus = "";
+    String pumpStatusWebsite = "";
+
+    //Read coils that return pump status, if we can't read then sned that to website and print to terminal if set
     if (node.readCoils(0x1001, 1) == 0) {
+
+        //Store the repsonse buffer (which is pump status)
         uint16_t state = node.getResponseBuffer(0);
+
+        //Based on buffer print/store if pump is on or off
         if(state == 1) {
             pumpStatus += "Pump status: On";
             if(printSerial == 1) {
                 Serial.printf("Pump status: On\n");
             }
-        } else if (state == 0) {
+        } 
+        else if (state == 0) {
             pumpStatus += "Pump status: Off";
             if(printSerial == 1) {
                 Serial.printf("Pump status: Off\n");
             }
         }
+
+        //set pump varibile to current state
         pumpOn = state;
     }
     else {
         pumpStatus += "Pump status: Unknown";
-        Serial.println("Error: Unable to read pump state!");
+        if (printSerial == 1) {
+            Serial.println("Error: Unable to read pump state!");
+        }
     }
-    ws.textAll(pumpStatus);
+
+    //Add the website varibile name so website displays pump data
+    pumpStatusWebsite = "pumpStatus; " + pumpStatus;
+    ws.textAll(pumpStatusWebsite);
+
+    //return the pump status string
     return pumpStatus;
-    //return pumpOn;
 }
 
+//This sets the pump to on (1) or off (0)
 bool setPump(bool option) {
+    //make sure the pumpOn varibile is correct
+    checkPumpStatus(0);
+
+    //check if the option is diffrent then current state
     if (pumpOn != option) {
+        //set pump on to the option
         pumpOn = option;
 
+        //Write the option to the correct regestry and if unable to set pumpOn back
         uint16_t result = node.writeSingleCoil(0x1001, pumpOn ? 0xFF : 0x00);
         if (result != 0) {
             Serial.printf("Unable to switch pump state! Error code: %d\n", result);
             pumpOn = !option;
         }
     }
+
+    //return current status
     return pumpOn;
 }
 
+//This function is used to write the speed to the right registers
 bool setPumpSpeed(uint16_t high, uint16_t low, bool start/* = false*/) {
     node.setTransmitBuffer(0, low);
     node.setTransmitBuffer(1, high);
@@ -129,6 +159,7 @@ bool setPumpSpeed(uint16_t high, uint16_t low, bool start/* = false*/) {
     }
 }
 
+//This function sets the speed to the pump to match the requested flow rate in m/min
 bool setPumpSpeed(int flow, bool force) {
     // The pump will ignore speed commands when running
     if (pumpOn) {
@@ -191,13 +222,6 @@ int32_t getPumpSpeed() {
     }
     
     return lowBytes;
-}
-
-/*
- * Returns whether the pump is on.
- */
-bool isPumpOn() {
-    return pumpOn;
 }
 
 #endif
