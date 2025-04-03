@@ -51,6 +51,9 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
     auto timeRunHr =  std::chrono::duration<double, std::chrono::seconds::period>(timeRun * 3600);
     auto timeBreakHr = std::chrono::duration<double, std::chrono::seconds::period>(timeBreak * 3600);
 
+    //Print name of routinr that is being run
+    Serial.printf("Running Routine %s\n", routineName);
+
     //runn the routine as may times as speicifed
     for(int i = 1; i < repetion + 1; i++) {
         checkPumpStatus(0);
@@ -65,7 +68,7 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
         }
 
         //print what repition we are on and start pump
-        Serial.printf("Starting Routine Iteration: %d\n", i);
+        //Serial.printf("Starting Routine Iteration: %d\n", i);
         setPump(1);
 
         //clock to calculate total time of the routine run and when samples were read
