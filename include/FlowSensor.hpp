@@ -32,7 +32,7 @@ void flowSensorSetup(SensirionLF flowSensor) {
 
 //reads the provided flowsensor provided and prints out in serial if set to true
 String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
-    delay(100);
+    //delay(100);
 
     //read the flow sensor
     int ret = flowSensor.readSample();

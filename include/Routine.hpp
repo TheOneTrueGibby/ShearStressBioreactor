@@ -20,6 +20,8 @@ Allows for the running of routines for the system
 using namespace std;
 using namespace std::chrono;
 
+const int secondCheck = 1000;
+
 //this converts the amount of time running in seconds to a String with Hr:Min:Sec
 String convertTimeToString(int timeSeconds) {
     int timeLeft = timeSeconds;
@@ -77,9 +79,10 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
         //run the pump for specified amount of run time
         auto start = high_resolution_clock::now();
         while (duration_cast<seconds>(high_resolution_clock::now() - start) < timeRunHr) {
+            delay(secondCheck);
             auto currentTotal = duration_cast<seconds>(high_resolution_clock::now() - startTotal);
             int timeInt = currentTotal.count();
-            Serial.printf("Time Ran: %d", timeInt);
+            Serial.printf("Time Ran: %d\n", timeInt);
             String time = convertTimeToString(timeInt);
             String flow = readFlowSensor(flowSensor, 0);
             checkPumpStatus(0);
@@ -97,9 +100,10 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
         //dont run the pump for the speicifed amount of break time
         start = high_resolution_clock::now();
         while (duration_cast<seconds>(high_resolution_clock::now() - start) < timeBreakHr) {
+            delay(secondCheck);
             auto currentTotal = duration_cast<seconds>(high_resolution_clock::now() - startTotal);
             int timeInt = currentTotal.count();
-            Serial.printf("Time Ran: %d", timeInt);
+            Serial.printf("Time Ran: %d\n", timeInt);
             String time = convertTimeToString(timeInt);
             String flow = readFlowSensor(flowSensor, 0);
             checkPumpStatus(0);
