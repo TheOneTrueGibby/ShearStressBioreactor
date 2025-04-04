@@ -210,6 +210,7 @@ bool setPumpSpeed(int flow, bool force) {
     return setPumpSpeed(high, low, force);
 }
 
+//Returns current pump speed
 int32_t getPumpSpeed() {
     uint16_t result = node.readWriteMultipleRegisters(0x3001, 6); // read all holding registers
     int32_t lowBytes = -1;

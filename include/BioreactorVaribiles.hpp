@@ -7,7 +7,7 @@ This holds all equations and varbilies about bioreactor setup to calculate value
 #ifndef BIOREACTORVARIBILES_HPP
 #define BIOREACTORVARIBILES_HPP
 
-//All bioreactor varibiles needed for calculation
+//All bioreactor varibiles needed for calculation (change as needed)
 static constexpr double CHANNEL_HEIGHT = 0.0005; // m
 static constexpr double CHANNEL_WIDTH = 0.025; // m
 static constexpr double MU = 0.0155; // mPa * min
