@@ -37,8 +37,6 @@ String convertTimeToString(int timeSeconds) {
     String clockWebsite = "runningTime; " + clockConversion;
     Serial.print(clockConversion);
     ws.textAll(clockWebsite);
-    //Serial.print(clockConversion);
-    //Serial.print("\n");
 
     return clockConversion;
     
@@ -89,10 +87,6 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
 
             writeBioreactorInfo(routineName, time, flow, pump);
         }
-        //debug code to see how long it was run
-        //auto finalTime = duration_cast<seconds>(high_resolution_clock::now() - start);
-        //int time = finalTime.count();
-        //Serial.printf("Time ran was %d seconds, ", time);
 
         //for break turn pump off
         setPump(0);
@@ -109,10 +103,6 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
 
             writeBioreactorInfo(routineName, time, flow, pump);
         }
-        //debug code to see how long it was not run
-        //finalTime = duration_cast<seconds>(high_resolution_clock::now() - start);
-        //time = finalTime.count();
-        //Serial.printf("Time paused was %d seconds.\n", time);
     }
 
     //denote routine is over

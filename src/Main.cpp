@@ -30,7 +30,7 @@ void setup() {
   
   //Setup modbus for pump communication
   pumpSetup(); //Function in Pump.hpp
-  setPump(0);
+  setPump(0); //Function in Pump.hpp
 
   //Set up microSD card
   setupMicroSDcard(); //Function in MicrosdCard.hpp
@@ -48,7 +48,7 @@ void setup() {
 }
 
 void loop() {
-  //refresh data on the website 
-  delay(100);
+  //refresh data on the website every second
+  delay(1000);
   ws.cleanupClients();
 }
