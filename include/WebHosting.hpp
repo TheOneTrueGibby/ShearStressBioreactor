@@ -19,7 +19,7 @@ AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
 
 //File includes
-#include "Routine.hpp"
+//#include "Routine.hpp"
 
 //Function delcerations
 void initSPIFFS();
@@ -88,7 +88,8 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
     int repetitions = repetitionsStr.toInt();
 
     //Call setRoutine function with the extracted values
-    setRoutine(routineName.c_str(), runTime, breakTime, shearStress, repetitions);
+    //Serial.print("Running Routine");
+    //setRoutine(routineName.c_str(), runTime, breakTime, shearStress, repetitions);
   }
 }
 

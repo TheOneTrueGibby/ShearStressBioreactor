@@ -15,7 +15,7 @@ Allows for the running of routines for the system
 #include "BioreactorVaribiles.hpp"
 #include "FlowSensor.hpp"
 #include "MicrosdCard.hpp"
-#include "WebHosting.hpp"
+//#include "WebHosting.hpp"
 
 //naming conventions
 using namespace std;
@@ -36,7 +36,7 @@ String convertTimeToString(int timeSeconds) {
     clockConversion = "Routine Time: " + String(totalHr) + ":" + String(totalMin) + ":" + String(totalSec);
 
     String clockWebsite = "runningTime; " + clockConversion;
-    Serial.print(clockConversion);
+    //\erial.printf("%s\n",clockConversion);
     ws.textAll(clockWebsite);
 
     return clockConversion;
@@ -79,12 +79,12 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
         //run the pump for specified amount of run time
         auto start = high_resolution_clock::now();
         while (duration_cast<seconds>(high_resolution_clock::now() - start) < timeRunHr) {
-            delay(oneSecondDelay);
+            //delay(1000);
             auto currentTotal = duration_cast<seconds>(high_resolution_clock::now() - startTotal);
             int timeInt = currentTotal.count();
             String time = convertTimeToString(timeInt);
             String flow = readFlowSensor(flowSensor, 0);
-            String pump = checkPumpStatus(0);
+            String pump = checkPumpStatus(1);
 
             writeBioreactorInfo(routineName, time, flow, pump);
         }
@@ -95,7 +95,7 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
         //dont run the pump for the speicifed amount of break time
         start = high_resolution_clock::now();
         while (duration_cast<seconds>(high_resolution_clock::now() - start) < timeBreakHr) {
-            delay(oneSecondDelay);
+            //delay(1000);
             auto currentTotal = duration_cast<seconds>(high_resolution_clock::now() - startTotal);
             int timeInt = currentTotal.count();
             String time = convertTimeToString(timeInt);
