@@ -52,7 +52,7 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
     auto timeRunHr =  std::chrono::duration<double, std::chrono::seconds::period>(timeRun * 3600);
     auto timeBreakHr = std::chrono::duration<double, std::chrono::seconds::period>(timeBreak * 3600);
 
-    //Print name of routinr that is being run
+    //Print name of routine that is being run
     Serial.printf("Running Routine: %s\n", routineName);
 
     //runn the routine as may times as speicifed
@@ -82,10 +82,10 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
             auto currentTotal = duration_cast<seconds>(high_resolution_clock::now() - startTotal);
             int timeInt = currentTotal.count();
             String time = convertTimeToString(timeInt);
-            String flow = readFlowSensor(flowSensor, 0);
+            //String flow = readFlowSensor(flowSensor, 0);
             String pump = checkPumpStatus(0);
 
-            writeBioreactorInfo(routineName, time, flow, pump);
+            //writeBioreactorInfo(routineName, time, flow, pump);
         }
 
         //for break turn pump off
@@ -98,10 +98,10 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
             auto currentTotal = duration_cast<seconds>(high_resolution_clock::now() - startTotal);
             int timeInt = currentTotal.count();
             String time = convertTimeToString(timeInt);
-            String flow = readFlowSensor(flowSensor, 0);
+            //String flow = readFlowSensor(flowSensor, 0);
             String pump = checkPumpStatus(0);
 
-            writeBioreactorInfo(routineName, time, flow, pump);
+            //writeBioreactorInfo(routineName, time, flow, pump);
         }
     }
 
