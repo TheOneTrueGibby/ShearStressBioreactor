@@ -7,6 +7,8 @@ All functions to setup and control the pump
 #define PUMP_HPP
 
 #include <ModbusMaster.h>
+#include <Arduino.h>
+#include "FlowSensor.hpp"
 
 ModbusMaster node;
 
@@ -45,6 +47,10 @@ const double RATE_5 = 0.5;  // 1 / 2
 
 bool pumpOn;
 
+bool flowInRange = false; // Flag to indicate if flow is within range
+
+extern float rollingAverageFlow; // Declare rolling average flow rate variable
+
 void preTransmission()
 {
   digitalWrite(MODBUS_RE, 1);
@@ -72,15 +78,15 @@ void pumpSetup() {
     node.postTransmission(postTransmission);
 }
 
-//This sets the pumpOn global varibile based on the pump status and returns a string with the data if pump is on or off
+//This sets the pumpOn global variable based on the pump status and returns a string with the data if pump is on or off
 String checkPumpStatus(bool printSerial) {
     //delay(100);
 
-    //string to store pump status and anothe rone to send to the website
+    //string to store pump status and another one to send to the website
     String pumpStatus = "";
     String pumpStatusWebsite = "";
 
-    //Read coils that return pump status, if we can't read then sned that to website and print to terminal if set
+    //Read coils that return pump status, if we can't read then send that to website and print to terminal if set
     if (node.readCoils(0x1001, 1) == 0) {
 
         //Store the repsonse buffer (which is pump status)
@@ -120,7 +126,7 @@ String checkPumpStatus(bool printSerial) {
 
 //This sets the pump to on (1) or off (0)
 bool setPump(bool option) {
-    //make sure the pumpOn varibile is correct
+    //make sure the pumpOn variable is correct
     checkPumpStatus(0);
 
     //check if the option is diffrent then current state
@@ -159,12 +165,12 @@ bool setPumpSpeed(uint16_t high, uint16_t low, bool start/* = false*/) {
     }
 }
 
-//This function sets the speed to the pump to match the requested flow rate in m/min
+//This function sets the speed to the pump to match the requested flow rate in mL/min
 bool setPumpSpeed(int flow, bool force) {
     // The pump will ignore speed commands when running
     if (pumpOn) {
         if (force) {
-            setPump(false);
+            setPump(true);
         }
         else {
             Serial.println("Error: Attempt to set pump speed while running.");
@@ -210,18 +216,134 @@ bool setPumpSpeed(int flow, bool force) {
     return setPumpSpeed(high, low, force);
 }
 
+//Returns current pump speed
 int32_t getPumpSpeed() {
-    uint16_t result = node.readWriteMultipleRegisters(0x3001, 6); // read all holding registers
-    int32_t lowBytes = -1;
-    // Check if the command returned no error
+    static int32_t lastPumpSpeed = 0; // Store the last valid pump speed
+
+    // Read 2 registers starting at 0x3005 (real-time speed high and low bytes)
+    uint16_t result = node.readHoldingRegisters(0x3005, 2);
     if (result == 0) {
-        // Print the speeds stored in the holding registers
-        lowBytes = node.getResponseBuffer(0);
-        Serial.printf("Set speed: %X %X\n", node.getResponseBuffer(1), lowBytes);
-        Serial.printf("Real-time speed: %X %X\n", node.getResponseBuffer(5), node.getResponseBuffer(4));
+        // Combine high and low bytes into a 32-bit integer
+        uint32_t rawValue = ((uint32_t)node.getResponseBuffer(0) << 16) | node.getResponseBuffer(1);
+
+        // Interpret the raw value as an IEEE 754 float
+        float* pumpSpeed = (float*)&rawValue;
+
+        // Update the last valid pump speed
+        lastPumpSpeed = (int32_t)(*pumpSpeed);
+
+        // Print debug information
+        //Serial.printf("Pump Speed (float): %.2f\n", *pumpSpeed);
+        return lastPumpSpeed;
+    } else {
+        // Print error information
+        Serial.printf("Error reading pump speed! Error code: %d\n", result);
+        return lastPumpSpeed; // Return the last valid pump speed instead of -1
     }
-    
-    return lowBytes;
 }
+
+// PID parameters
+float kp = 0.1; // Proportional gain
+float ki = 0.1; // Integral gain
+float kd = 0.01; // Derivative gain
+
+// initial PID parameters of Kp = 0.1, and Ki = 0.1 gave good first control scheme
+
+// PID state variables
+float previousError = 0.0;
+float integral = 0.0;
+
+//extern float rollingAverageFlow; // Declare rolling average function
+
+// Function to calculate PID output
+float calculatePID(float setpoint, float measuredValue) {
+    float error = setpoint - measuredValue;
+    integral += error*1; // Integral term (adjust the time step as needed)
+    float derivative = error - previousError;
+    previousError = error;
+
+    // PID formula
+    // return (kp * error) + (ki * integral) + (kd * derivative);
+    return (kp * error) + (ki * integral);
+}
+
+// Function to smoothly ramp the pump speed
+int smoothPumpSpeed(int currentSpeed, int targetSpeed, int maxChange) {
+    if (abs(targetSpeed - currentSpeed) > maxChange) {
+        if (targetSpeed > currentSpeed) {
+            targetSpeed =  currentSpeed + maxChange;
+        } 
+        else  {
+            targetSpeed = currentSpeed - maxChange;
+        }
+    }
+    else {
+        currentSpeed = targetSpeed; // If within range, set to target speed 
+    }
+    return targetSpeed;
+}
+
+// Updated function to control pump speed using PID with smooth ramping
+void controlPumpSpeed(float setpoint) {
+
+    float difference = setpoint*0.05;
+
+    float currentFlowRate = rollingAverageFlow;
+
+    // Check if the flow rate is within the acceptable range
+    if (difference > abs(setpoint - currentFlowRate) && currentFlowRate > 0) {
+        flowInRange = true; // Set the flag to indicate flow is in range
+        // Serial.println("Flow is in range.");
+    } else {
+        flowInRange = false; // Set the flag to indicate flow is not in range
+        // Serial.println("Flow is not in range.");
+    }
+
+    //while (!flowInRange) {
+
+    if (!flowInRange) {
+
+            float pidOutput = calculatePID(setpoint, currentFlowRate);
+
+            // Convert PID output to a valid pump speed
+            int targetSpeed = constrain((int)pidOutput, 8, 400); // Ensure speed is within pump range
+
+            // Get the current pump speed
+            int currentSpeed = getPumpSpeed();
+
+            // Smoothly ramp the pump speed
+            int newSpeed = smoothPumpSpeed(currentSpeed, targetSpeed, 50); // Limit speed change to 25 units per loop
+
+            // Set the pump speed
+            setPumpSpeed(newSpeed, true);
+
+            // Serial.print("Current Flow: ");
+            // Serial.print(currentFlowRate);
+            // Serial.print(" | Target Speed: ");
+            // Serial.print(targetSpeed);
+            // Serial.print(" | Current Speed: ");
+            // Serial.print(currentSpeed);
+            // Serial.print(" | New Speed: ");
+            // Serial.println(newSpeed);
+
+            //delay(1000); // Delay time for flow to adjust
+
+        }
+    }
+    // Print the current flow rate and target flow rate
+    // Serial.print(" Target Flow Rate: ");
+    // Serial.print(setpoint);
+    // Serial.print(" | Current Flow Rate: ");
+    // Serial.println(currentFlowRate);
+
+    // Print debug information
+    // Serial.print("Current Speed: ");
+    // Serial.print(" | Current Flow: ");
+    // Serial.print(currentFlowRate);
+    // Serial.print(" | Target Speed: ");
+    // Serial.print(targetSpeed);
+    // Serial.print(" | New Speed: ");
+    // Serial.println(newSpeed);
+//}
 
 #endif
