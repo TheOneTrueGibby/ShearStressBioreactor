@@ -16,6 +16,7 @@ int HIGH_MOTOR_ENAPIN = 25;
 //Set up Stepper Motor varibiles
 ESP_FlexyStepper stepper;
 
+//Detirmines hoe fast and far the stepper motor turns per rotation
 const float STEPS_PER_REV = 200;
 const float DISTANCE_PER_REV = 1;
 const float MAX_SPEED = 1000;

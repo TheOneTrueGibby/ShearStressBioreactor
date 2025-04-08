@@ -60,15 +60,16 @@ void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
 
   switch (type) {
     case WS_EVT_CONNECT:
-        Serial.printf("WebSocket client #%u connected from %s\n", client->id(), client->remoteIP().toString().c_str());
-        break;
+      Serial.printf("WebSocket client #%u connected from %s\n", client->id(), client->remoteIP().toString().c_str());
+      break;
     case WS_EVT_DISCONNECT:
-        Serial.printf("WebSocket client #%u disconnected\n", client->id());
-        break;
+      Serial.printf("WebSocket client #%u disconnected\n", client->id());
+      break;
     case WS_EVT_DATA:
+      break;
     case WS_EVT_PONG:
     case WS_EVT_ERROR:
-        break;
+      break;
   }
 }
 
