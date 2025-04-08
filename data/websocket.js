@@ -60,9 +60,9 @@ function onSubmit(event) {
     //Gather the values from the form
     var routineName = document.getElementById('routineNameValue').value;
     var shearStress = document.getElementById('shearStressValue').value;
-    var runTime = document.getElementById('runTime').value;
-    var breakTime = document.getElementById('breakTime').value;
-    var repetitions = document.getElementById('repeation').value;
+    var runTime = document.getElementById('runTimeValue').value;
+    var breakTime = document.getElementById('breakTimeValue').value;
+    var repetitions = document.getElementById('repeationValue').value;
 
     // Create a message string to send to the ESP32
     var message = routineName + ";" + shearStress + ";" + runTime + ";" + breakTime + ";" + repetitions;

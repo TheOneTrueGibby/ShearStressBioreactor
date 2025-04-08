@@ -44,7 +44,7 @@ void setup() {
   //Set up Stepper Motor
   //stepperSetup(stepper); //Function in StepperMotor.hpp
 
-  setRoutine("Test", 0.001, 0.001, 1, 1);
+  //setRoutine("Test", 0.001, 0.001, 1, 1);
 }
 
 void loop() {

@@ -80,13 +80,13 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
     String repetitionsStr = message.substring(separator4 + 1);
 
     //Convert the string values to appropriate types
-    float shearStress = shearStressStr.toFloat();
-    float runTime = runTimeStr.toFloat();
-    float breakTime = breakTimeStr.toFloat();
+    float shearStress = shearStressStr.toDouble();
+    float runTime = runTimeStr.toDouble();
+    float breakTime = breakTimeStr.toDouble();
     int repetitions = repetitionsStr.toInt();
 
     //Call setRoutine function with the extracted values
-    //setRoutine(routineName.c_str(), runTime, breakTime, shearStress, repetitions, ws);
+    setRoutine(routineName.c_str(), runTime, breakTime, shearStress, repetitions);
   }
 }
 
