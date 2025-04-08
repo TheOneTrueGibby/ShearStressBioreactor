@@ -7,21 +7,21 @@ used this tutorial: https://m1cr0lab-esp32.github.io/remote-control-with-websock
 #ifndef WEBHOSTING_HPP
 #define WEBHOSTING_HPP
 
-//all necessary library includes
+//All necessary library includes
 #include <WiFi.h>
 #include <WiFiManager.h>
 #include <SPIFFS.h>
 #include <ESPAsyncWebServer.h>
 
-//set up server hosting on esp32
+//Set up server hosting on esp32
 WiFiManager wifiManager;
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
 
-//file includes
+//File includes
 #include "Routine.hpp"
 
-//function delcerations
+//Function delcerations
 void initSPIFFS();
 void initWebServer();
 void initWebServer();
@@ -29,7 +29,7 @@ void initWebSocket();
 void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len);
 void handleWebSocketMessage(void *arg, uint8_t *data, size_t len);
 
-//function definitions
+//Call all necassry function to setup website/websocket hosting
 void initWebSetup() {
   initSPIFFS();
   //wifiManager.startConfigPortal(); //used to force setup page if needing change wifi
@@ -66,20 +66,22 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
   if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
     data[len] = 0;  // Null-terminate the string
     
-    //Parse the incoming message, which is in the format: routineName; shearStress; runTime; breakTime; repetitions
+    //Parse the incoming message, which is in the format: routineName;shearStress;runTime;breakTime;repetitions
+    //Get the index of the semicolon sperators
     String message = String((char*)data);
     int separator1 = message.indexOf(';');
     int separator2 = message.indexOf(';', separator1 + 1);
     int separator3 = message.indexOf(';', separator2 + 1);
     int separator4 = message.indexOf(';', separator3 + 1);
     
+    //Get each part of the string making sure to not include the ';'
     String routineName = message.substring(0, separator1);
     String shearStressStr = message.substring(separator1 + 1, separator2);
     String runTimeStr = message.substring(separator2 + 1, separator3);
     String breakTimeStr = message.substring(separator3 + 1, separator4);
     String repetitionsStr = message.substring(separator4 + 1);
 
-    //Convert the string values to appropriate types
+    //Convert the string values to appropriate types for the routine function
     float shearStress = shearStressStr.toDouble();
     float runTime = runTimeStr.toDouble();
     float breakTime = breakTimeStr.toDouble();
