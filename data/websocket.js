@@ -55,7 +55,7 @@ function initFormSubmit() {
 
 function onSubmit(event) {
     //Prevent form from reloading the page
-    //event.preventDefault();
+    event.preventDefault();
 
     //Gather the values from the form
     var routineName = document.getElementById('routineNameValue').value;

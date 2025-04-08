@@ -49,6 +49,6 @@ void setup() {
 
 void loop() {
   //refresh data on the website every second
-  //delay(100);
-  //ws.cleanupClients();
+  delay(100);
+  ws.cleanupClients();
 }
