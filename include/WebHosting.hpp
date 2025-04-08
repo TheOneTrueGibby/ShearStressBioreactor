@@ -64,10 +64,10 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
   AwsFrameInfo *info = (AwsFrameInfo*)arg;
   
   if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
-    data[len] = 0;  // Null-terminate the string
+    data[len] = 0;
     
     //Parse the incoming message, which is in the format: routineName;shearStress;runTime;breakTime;repetitions
-    //Get the index of the semicolon sperators
+    //Get the index of all the semicolon sperators
     String message = String((char*)data);
     int separator1 = message.indexOf(';');
     int separator2 = message.indexOf(';', separator1 + 1);
