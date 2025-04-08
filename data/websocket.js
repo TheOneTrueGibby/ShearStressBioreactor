@@ -12,6 +12,7 @@ window.addEventListener('load', onLoad);
 
 function onLoad(event) {
     initWebSocket();
+    initFormSubmit();
 }
 
 function initWebSocket() {
@@ -45,4 +46,29 @@ function onMessage(event) {
     if (element) {
         element.innerText = value;
     }
+}
+
+//Function to handle form submission and send data to the ESP32
+function initFormSubmit() {
+    document.getElementById('submitButton').addEventListener('click', onSubmit);
+}
+
+function onSubmit(event) {
+    //Prevent form from reloading the page
+    event.preventDefault();
+
+    //Gather the values from the form
+    var routineName = document.getElementById('routineNameValue').value;
+    var shearStress = document.getElementById('shearStressValue').value;
+    var runTime = document.getElementById('runTime').value;
+    var breakTime = document.getElementById('breakTime').value;
+    var repetitions = document.getElementById('repeation').value;
+
+    // Create a message string to send to the ESP32
+    var message = routineName + ";" + shearStress + ";" + runTime + ";" + breakTime + ";" + repetitions;
+
+    //Send the message to the WebSocket server
+    websocket.send(message);
+
+    console.log('Sending data:', message);
 }

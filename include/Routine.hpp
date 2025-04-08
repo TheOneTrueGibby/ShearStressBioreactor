@@ -15,6 +15,7 @@ Allows for the running of routines for the system
 #include "BioreactorVaribiles.hpp"
 #include "FlowSensor.hpp"
 #include "MicrosdCard.hpp"
+#include "WebHosting.hpp"
 
 //naming conventions
 using namespace std;

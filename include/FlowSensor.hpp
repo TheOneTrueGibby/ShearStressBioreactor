@@ -11,6 +11,7 @@ Holds all commands necessry to use the flow sensor, and declerations of the flow
 #include "sensirion-lf.h"
 #include "sensirion-lf.cpp"
 #include "BioreactorVaribiles.hpp"
+#include "WebHosting.hpp"
 
 //set up low flow sensor with appropriate varibiles
 SensirionLF flowSensor(SLF3X_SCALE_FACTOR_FLOW, SLF3X_SCALE_FACTOR_TEMP, SLF3X_I2C_ADDRESS);

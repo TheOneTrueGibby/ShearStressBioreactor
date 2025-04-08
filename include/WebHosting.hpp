@@ -18,12 +18,16 @@ WiFiManager wifiManager;
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
 
+//file includes
+#include "Routine.hpp"
+
 //function delcerations
 void initSPIFFS();
 void initWebServer();
 void initWebServer();
 void initWebSocket();
 void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len);
+void handleWebSocketMessage(void *arg, uint8_t *data, size_t len);
 
 //function definitions
 void initWebSetup() {
@@ -56,6 +60,36 @@ void initWebSocket() {
   server.addHandler(&ws);
 }
 
+void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
+  AwsFrameInfo *info = (AwsFrameInfo*)arg;
+  
+  if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
+    data[len] = 0;  // Null-terminate the string
+    
+    //Parse the incoming message, which is in the format: routineName; shearStress; runTime; breakTime; repetitions
+    String message = String((char*)data);
+    int separator1 = message.indexOf(';');
+    int separator2 = message.indexOf(';', separator1 + 1);
+    int separator3 = message.indexOf(';', separator2 + 1);
+    int separator4 = message.indexOf(';', separator3 + 1);
+    
+    String routineName = message.substring(0, separator1);
+    String shearStressStr = message.substring(separator1 + 1, separator2);
+    String runTimeStr = message.substring(separator2 + 1, separator3);
+    String breakTimeStr = message.substring(separator3 + 1, separator4);
+    String repetitionsStr = message.substring(separator4 + 1);
+
+    //Convert the string values to appropriate types
+    float shearStress = shearStressStr.toFloat();
+    float runTime = runTimeStr.toFloat();
+    float breakTime = breakTimeStr.toFloat();
+    int repetitions = repetitionsStr.toInt();
+
+    //Call setRoutine function with the extracted values
+    //setRoutine(routineName.c_str(), runTime, breakTime, shearStress, repetitions, ws);
+  }
+}
+
 void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
 
   switch (type) {
@@ -66,6 +100,7 @@ void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
       Serial.printf("WebSocket client #%u disconnected\n", client->id());
       break;
     case WS_EVT_DATA:
+      handleWebSocketMessage(arg, data, len);
       break;
     case WS_EVT_PONG:
     case WS_EVT_ERROR:
