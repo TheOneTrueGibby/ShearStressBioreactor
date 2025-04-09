@@ -36,20 +36,19 @@ float kd = 0.01; //Derivative gain
 float previousError = 0.0;
 float integral = 0.0;
 
-void feedBackControl(float flowReading) {
-    
+void feedBackControl(float flowReading, float desiredFlow) {
+    rollingAverageFlow = calculateRollingAverage(flowReading);
+    controlPumpSpeed(desiredFlow);
+
 }
 
 //Ensure the rollingAverageFlow variable is updated globally
-void updateRollingAverage() {
-    float currentFlowRate = readFlowSensor(flowSensor, 0);
-    // Serial.print("Current Flow Rate: ");
-    // Serial.println(currentFlowRate); // Debug print to verify sensor reading
+// void updateRollingAverage(float flowReading) {
 
-    rollingAverageFlow = calculateRollingAverage(currentFlowRate);
-    // Serial.print("Updated Rolling Average Flow: ");
-    // Serial.println(rollingAverageFlow); // Debug print to verify rolling average update
-}
+//     rollingAverageFlow = calculateRollingAverage(currentFlowRate);
+//     //Serial.print("Updated Rolling Average Flow: ");
+//     //Serial.println(rollingAverageFlow); //Debug print to verify rolling average update
+// }
 
 float calculateRollingAverage(float newReading) {
     // Debug print to verify new reading
