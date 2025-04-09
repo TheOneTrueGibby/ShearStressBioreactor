@@ -166,7 +166,7 @@ bool setPumpSpeed(int flow, bool force) {
     // The pump will ignore speed commands when running
     if (pumpOn) {
         if (force) {
-            setPump(false);
+            setPump(true);
         }
         else {
             Serial.println("Error: Attempt to set pump speed while running.");
@@ -214,17 +214,28 @@ bool setPumpSpeed(int flow, bool force) {
 
 //Returns current pump speed
 int32_t getPumpSpeed() {
-    uint16_t result = node.readWriteMultipleRegisters(0x3001, 6); // read all holding registers
-    int32_t lowBytes = -1;
-    // Check if the command returned no error
+    static int32_t lastPumpSpeed = 0; // Store the last valid pump speed
+
+    // Read 2 registers starting at 0x3005 (real-time speed high and low bytes)
+    uint16_t result = node.readHoldingRegisters(0x3005, 2);
     if (result == 0) {
-        // Print the speeds stored in the holding registers
-        lowBytes = node.getResponseBuffer(0);
-        Serial.printf("Set speed: %X %X\n", node.getResponseBuffer(1), lowBytes);
-        Serial.printf("Real-time speed: %X %X\n", node.getResponseBuffer(5), node.getResponseBuffer(4));
+        // Combine high and low bytes into a 32-bit integer
+        uint32_t rawValue = ((uint32_t)node.getResponseBuffer(0) << 16) | node.getResponseBuffer(1);
+
+        // Interpret the raw value as an IEEE 754 float
+        float* pumpSpeed = (float*)&rawValue;
+
+        // Update the last valid pump speed
+        lastPumpSpeed = (int32_t)(*pumpSpeed);
+
+        // Print debug information
+        //Serial.printf("Pump Speed (float): %.2f\n", *pumpSpeed);
+        return lastPumpSpeed;
+    } else {
+        // Print error information
+        Serial.printf("Error reading pump speed! Error code: %d\n", result);
+        return lastPumpSpeed; // Return the last valid pump speed instead of -1
     }
-    
-    return lowBytes;
 }
 
 #endif
