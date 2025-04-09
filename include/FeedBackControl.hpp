@@ -37,28 +37,28 @@ float previousError = 0.0;
 float integral = 0.0;
 
 float calculateRollingAverage(float newReading) {
-    // Debug print to verify new reading
-    // Serial.print("New Reading for Rolling Average: ");
-    // Serial.println(newReading);
+    //Debug print to verify new reading
+    //Serial.print("New Reading for Rolling Average: ");
+    //Serial.println(newReading);
 
-    // Add the new reading to the buffer
+    //Add the new reading to the buffer
     flowReadings.push_front(newReading);
 
-    float sum = 0.0; // Variable to hold the sum of flow readings
+    float sum = 0.0; //Variable to hold the sum of flow readings
 
-    // Remove the oldest reading if the buffer exceeds the window size
+    //Remove the oldest reading if the buffer exceeds the window size
     if (flowReadings.size() > rollingWindowSize) {
         flowReadings.pop_back();
     }
 
-    // Calculate the average
+    //Calculate the average
     for (float reading : flowReadings) {
         sum += reading;
     }
 
     float average = sum / flowReadings.size();
-    // Serial.print("Calculated Rolling Average: ");
-    // Serial.println(average); // Debug print to verify calculation
+    //Serial.print("Calculated Rolling Average: ");
+    //Serial.println(average); // Debug print to verify calculation
 
     return average;
 }
@@ -73,12 +73,12 @@ void updateRollingAverage(float newFlowReading) {
 // Function to calculate PID output
 float calculatePID(float setpoint, float measuredValue) {
     float error = setpoint - measuredValue;
-    integral += error*1; // Integral term (adjust the time step as needed)
+    integral += error*1; //Integral term (adjust the time step as needed)
     float derivative = error - previousError;
     previousError = error;
 
-    // PID formula
-    // return (kp * error) + (ki * integral) + (kd * derivative);
+    //PID formula
+    //return (kp * error) + (ki * integral) + (kd * derivative);
     return (kp * error) + (ki * integral);
 }
 
@@ -93,25 +93,25 @@ int smoothPumpSpeed(int currentSpeed, int targetSpeed, int maxChange) {
         }
     }
     else {
-        currentSpeed = targetSpeed; // If within range, set to target speed 
+        currentSpeed = targetSpeed; //If within range, set to target speed 
     }
     return targetSpeed;
 }
 
-// Updated function to control pump speed using PID with smooth ramping
+//Updated function to control pump speed using PID with smooth ramping
 void controlPumpSpeed(float setpoint) {
 
     float difference = setpoint*0.05;
 
     float currentFlowRate = rollingAverageFlow;
 
-    // Check if the flow rate is within the acceptable range
+    //Check if the flow rate is within the acceptable range
     if (difference > abs(setpoint - currentFlowRate) && currentFlowRate > 0) {
         flowInRange = true; // Set the flag to indicate flow is in range
-        // Serial.println("Flow is in range.");
+        //Serial.println("Flow is in range.");
     } else {
         flowInRange = false; // Set the flag to indicate flow is not in range
-        // Serial.println("Flow is not in range.");
+        //Serial.println("Flow is not in range.");
     }
 
     //while (!flowInRange) {
@@ -120,16 +120,16 @@ void controlPumpSpeed(float setpoint) {
 
             float pidOutput = calculatePID(setpoint, currentFlowRate);
 
-            // Convert PID output to a valid pump speed
+            //Convert PID output to a valid pump speed
             int targetSpeed = constrain((int)pidOutput, 8, 400); // Ensure speed is within pump range
 
-            // Get the current pump speed
+            //Get the current pump speed
             int currentSpeed = getPumpSpeed();
 
-            // Smoothly ramp the pump speed
+            //Smoothly ramp the pump speed
             int newSpeed = smoothPumpSpeed(currentSpeed, targetSpeed, 50); // Limit speed change to 25 units per loop
 
-            // Set the pump speed
+            //Set the pump speed
             setPumpSpeed(newSpeed, true);
 
             // Serial.print("Current Flow: ");
@@ -145,20 +145,5 @@ void controlPumpSpeed(float setpoint) {
 
         }
     }
-    // Print the current flow rate and target flow rate
-    // Serial.print(" Target Flow Rate: ");
-    // Serial.print(setpoint);
-    // Serial.print(" | Current Flow Rate: ");
-    // Serial.println(currentFlowRate);
-
-    // Print debug information
-    // Serial.print("Current Speed: ");
-    // Serial.print(" | Current Flow: ");
-    // Serial.print(currentFlowRate);
-    // Serial.print(" | Target Speed: ");
-    // Serial.print(targetSpeed);
-    // Serial.print(" | New Speed: ");
-    // Serial.println(newSpeed);
-//}
 
 #endif
