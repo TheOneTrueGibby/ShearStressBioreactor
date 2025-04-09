@@ -65,7 +65,7 @@ float calculateRollingAverage(float newReading) {
 
 //Ensure the rollingAverageFlow variable is updated globally
 void updateRollingAverage(float flowReading) {
-    rollingAverageFlow = calculateRollingAverage(currentFlowRate);
+    rollingAverageFlow = calculateRollingAverage(flowReading);
     //Serial.print("Updated Rolling Average Flow: ");
     //Serial.println(rollingAverageFlow); //Debug print to verify rolling average update
 }
