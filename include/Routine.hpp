@@ -80,16 +80,15 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
         //run the pump for specified amount of run time
         auto start = high_resolution_clock::now();
         while (duration_cast<seconds>(high_resolution_clock::now() - start) < timeRunHr) {
-            delay(1000);
-            ws.cleanupClients();
-            auto currentTotal = duration_cast<seconds>(high_resolution_clock::now() - startTotal);
-            int timeInt = currentTotal.count();
-            String time = convertTimeToString(timeInt);
-            String flow = readFlowSensor(flowSensor, 0);
-            controlPumpSpeed(flowRate);
-            String pump = checkPumpStatus(0);
+            delay(1000); //Run all data only every second
+            auto currentTotal = duration_cast<seconds>(high_resolution_clock::now() - startTotal); //Get current time in routine
+            int timeInt = currentTotal.count(); //Convert current time to integer
+            String time = convertTimeToString(timeInt); //Convert it to a clock string and send it to website
+            String flow = readFlowSensor(flowSensor, 0); //Read the flow seneor and update rolling average
+            controlPumpSpeed(flowRate); //Conrtrol pump speed
+            String pump = checkPumpStatus(0); //Get pump status
 
-            writeBioreactorInfo(routineName, time, flow, pump);
+            writeBioreactorInfo(routineName, time, flow, pump); //Write all data to microSD
         }
 
         //for break turn pump off
@@ -98,14 +97,14 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
         //dont run the pump for the speicifed amount of break time
         start = high_resolution_clock::now();
         while (duration_cast<seconds>(high_resolution_clock::now() - start) < timeBreakHr) {
-            delay(1000);
-            auto currentTotal = duration_cast<seconds>(high_resolution_clock::now() - startTotal);
-            int timeInt = currentTotal.count();
-            String time = convertTimeToString(timeInt);
-            String flow = readFlowSensor(flowSensor, 0);
-            String pump = checkPumpStatus(0);
+            delay(1000); //Run all data only every second
+            auto currentTotal = duration_cast<seconds>(high_resolution_clock::now() - startTotal); //Get current time in routine
+            int timeInt = currentTotal.count(); //Convert current time to integer
+            String time = convertTimeToString(timeInt); //Convert it to a clock string and send it to website
+            String flow = readFlowSensor(flowSensor, 0); //Read the flow seneor and update rolling average
+            String pump = checkPumpStatus(0); //Get pump status
 
-            writeBioreactorInfo(routineName, time, flow, pump);
+            writeBioreactorInfo(routineName, time, flow, pump); //Write all data to microSD
         }
     }
 
