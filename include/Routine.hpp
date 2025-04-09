@@ -15,6 +15,7 @@ Allows for the running of routines for the system
 #include "BioreactorVaribiles.hpp"
 #include "FlowSensor.hpp"
 #include "MicrosdCard.hpp"
+#include "FeedBackControl.hpp"
 //#include "WebHosting.hpp"
 
 //naming conventions
@@ -85,6 +86,7 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
             int timeInt = currentTotal.count();
             String time = convertTimeToString(timeInt);
             String flow = readFlowSensor(flowSensor, 0);
+            controlPumpSpeed(flowRate);
             String pump = checkPumpStatus(0);
 
             writeBioreactorInfo(routineName, time, flow, pump);
@@ -101,6 +103,7 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
             int timeInt = currentTotal.count();
             String time = convertTimeToString(timeInt);
             String flow = readFlowSensor(flowSensor, 0);
+            controlPumpSpeed(flowRate);
             String pump = checkPumpStatus(0);
 
             writeBioreactorInfo(routineName, time, flow, pump);

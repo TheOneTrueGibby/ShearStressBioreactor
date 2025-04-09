@@ -36,20 +36,6 @@ float kd = 0.01; //Derivative gain
 float previousError = 0.0;
 float integral = 0.0;
 
-void feedBackControl(float flowReading, float desiredFlow) {
-    rollingAverageFlow = calculateRollingAverage(flowReading);
-    controlPumpSpeed(desiredFlow);
-
-}
-
-//Ensure the rollingAverageFlow variable is updated globally
-// void updateRollingAverage(float flowReading) {
-
-//     rollingAverageFlow = calculateRollingAverage(currentFlowRate);
-//     //Serial.print("Updated Rolling Average Flow: ");
-//     //Serial.println(rollingAverageFlow); //Debug print to verify rolling average update
-// }
-
 float calculateRollingAverage(float newReading) {
     // Debug print to verify new reading
     // Serial.print("New Reading for Rolling Average: ");
@@ -75,6 +61,13 @@ float calculateRollingAverage(float newReading) {
     // Serial.println(average); // Debug print to verify calculation
 
     return average;
+}
+
+//Ensure the rollingAverageFlow variable is updated globally
+void updateRollingAverage(float flowReading) {
+    rollingAverageFlow = calculateRollingAverage(currentFlowRate);
+    //Serial.print("Updated Rolling Average Flow: ");
+    //Serial.println(rollingAverageFlow); //Debug print to verify rolling average update
 }
 
 // Function to calculate PID output

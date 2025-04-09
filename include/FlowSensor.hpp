@@ -51,6 +51,9 @@ String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
         float flowTemp = flowSensor.getTemp();
         float flowShearStress = shearStressCalc(flowReading);
 
+        //Update rolling average for feedback control loop
+        updateRollingAverage(flowReading);
+
         //if set to true, prints readings in terminal
         if (printTerminal == 1) {
             //Print flow and temp  to terminal
