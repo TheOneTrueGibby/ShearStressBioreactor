@@ -1,6 +1,6 @@
 /************************************************************************
 Gibson Moseley & Dillon West - FeedBackConrol.hpp
-
+Way to smoothly control the pump and a nice feedback loop
 *************************************************************************/
 
 #ifndef FEEDBACKCONTROL_HPP
@@ -132,14 +132,14 @@ void controlPumpSpeed(float setpoint) {
             //Set the pump speed
             setPumpSpeed(newSpeed, true);
 
-            // Serial.print("Current Flow: ");
-            // Serial.print(currentFlowRate);
-            // Serial.print(" | Target Speed: ");
-            // Serial.print(targetSpeed);
-            // Serial.print(" | Current Speed: ");
-            // Serial.print(currentSpeed);
-            // Serial.print(" | New Speed: ");
-            // Serial.println(newSpeed);
+            //Serial.print("Current Flow: ");
+            //Serial.print(currentFlowRate);
+            //Serial.print(" | Target Speed: ");
+            //Serial.print(targetSpeed);
+            //Serial.print(" | Current Speed: ");
+            //Serial.print(currentSpeed);
+            //Serial.print(" | New Speed: ");
+            //Serial.println(newSpeed);
 
             //delay(1000); // Delay time for flow to adjust
 
