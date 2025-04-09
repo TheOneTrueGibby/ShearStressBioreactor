@@ -103,7 +103,6 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
             int timeInt = currentTotal.count();
             String time = convertTimeToString(timeInt);
             String flow = readFlowSensor(flowSensor, 0);
-            controlPumpSpeed(flowRate);
             String pump = checkPumpStatus(0);
 
             writeBioreactorInfo(routineName, time, flow, pump);
