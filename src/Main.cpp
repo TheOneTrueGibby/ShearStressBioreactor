@@ -21,6 +21,8 @@ Where we call all functions and run all code
 #include "Routine.hpp"
 #include "MicrosdCard.hpp"
 
+bool varPush = false;
+
 //Start Running
 void setup() {
   //Start Serial Communication
@@ -50,20 +52,23 @@ void setup() {
 
   //Testing routine
   //setRoutine("Test", 0.01, 0.01, 1, 1);
-
-  //Update current Bioreactor vars to website
-  //pushCurrentVaribiles();
 }
 
 void loop() {
-  delay(100);
+  //delay(1000);
   //yield();
 
   //Refresh websocket
   ws.cleanupClients();
-  pushCurrentVaribiles();
 
   //Run the task scheduler
   scheduler.execute();
+
+  if (varPush == false) {
+    varPush = true;
+
+    //Update current Bioreactor vars to website
+    pushCurrentVaribiles();
+  }
 
 }
