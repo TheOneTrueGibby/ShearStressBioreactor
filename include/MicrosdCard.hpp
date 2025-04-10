@@ -172,8 +172,21 @@ void testFileIO(fs::FS &fs, const char * path){
 }
 
 void writeBioreactorInfo(String routineName, String timeRoutine, String flowrate, String pumpStatus) {
+  String routineNameFile = "/" + routineName + ".txt";
+  File file = SD.open(routineNameFile.c_str());
+
+  if(!file) {
+    Serial.println("File doesn't exist");
+    Serial.println("Creating file...");
+    writeFile(SD, routineNameFile.c_str(), "Routine Name, Time (seconds), Flow (ml/min), Temp (F), Shear Stress (Pa), Pump (On/Off)\r\n");
+  }
+  else {
+    //Do nothing
+    //Serial.println("File already exists");  
+  }
+  file.close();
   String message = routineName + ", " + timeRoutine + ", " + flowrate + ", " + pumpStatus +"\r\n";
-  appendFile(SD, "/log.txt", message.c_str());
+  appendFile(SD, routineNameFile.c_str(), message.c_str());
 }
 
 void setupMicroSDcard() {
@@ -202,11 +215,11 @@ void setupMicroSDcard() {
   uint64_t cardSize = SD.cardSize() / (1024 * 1024);
   Serial.printf("SD Card Size: %lluMB\n", cardSize);
 
-  File file = SD.open("/log.txt");
+  File file = SD.open("/test.txt");
   if(!file) {
     Serial.println("File doesn't exist");
     Serial.println("Creating file...");
-    writeFile(SD, "/log.txt", "Routine Name, Time (seconds), Flow (ml/min), Temp (F), Shear Stress (Pa), Pump (On/Off)\r\n");
+    writeFile(SD, "/test.txt", "Hello, this means SD is working. Delete if you want to reconfirm\r\n");
   }
   else {
     Serial.println("File already exists");  

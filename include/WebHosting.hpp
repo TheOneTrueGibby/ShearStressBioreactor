@@ -66,55 +66,6 @@ void initWebSocket() {
   server.addHandler(&ws);
 }
 
-// void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
-//   AwsFrameInfo *info = (AwsFrameInfo*)arg;
-
-//   if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
-//       data[len] = 0;
-
-//       //Parse the incoming message, which is in the format: routineName;shearStress;runTime;breakTime;repetitions
-//       String routineDetails = String((char*)data);
-
-//       //FreeRTOS Task to handle the routine
-//       xTaskCreatePinnedToCore(
-//           [](void *pvParameters) {
-//               String routineDetails = *(String*)pvParameters;
-
-//               //Get the index of all the semicolon sperators
-//               int separator1 = routineDetails.indexOf(';');
-//               int separator2 = routineDetails.indexOf(';', separator1 + 1);
-//               int separator3 = routineDetails.indexOf(';', separator2 + 1);
-//               int separator4 = routineDetails.indexOf(';', separator3 + 1);
-
-//               //Get each part of the string making sure to not include the ';'
-//               String routineName = routineDetails.substring(0, separator1);
-//               String shearStressStr = routineDetails.substring(separator1 + 1, separator2);
-//               String runTimeStr = routineDetails.substring(separator2 + 1, separator3);
-//               String breakTimeStr = routineDetails.substring(separator3 + 1, separator4);
-//               String repetitionsStr = routineDetails.substring(separator4 + 1);
-
-//               //Convert the string values to appropriate types for the routine function
-//               float shearStress = shearStressStr.toDouble();
-//               float runTime = runTimeStr.toDouble();
-//               float breakTime = breakTimeStr.toDouble();
-//               int repetitions = repetitionsStr.toInt();
-
-//               //Call the setRoutine function with the extracted values
-//               setRoutine(routineName.c_str(), runTime, breakTime, shearStress, repetitions);
-
-//               //After the routine finishes, delete the task
-//               vTaskDelete(NULL);
-//           },
-//           "Routine Task",            //Task name
-//           2048,                      //Stack size
-//           &routineDetails,           //Task parameter (routine details)
-//           1,                         //Task priority
-//           NULL,                      //No task handle needed
-//           0                          //Core (0 or 1)
-//       );
-//   }
-// }
-
 //Task function to execute the routine
 void routineTaskFunction() {
   //Access the routine details from the global variable
