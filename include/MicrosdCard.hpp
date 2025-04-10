@@ -171,6 +171,7 @@ void testFileIO(fs::FS &fs, const char * path){
   file.close();
 }
 
+//Function to make new routine files and append all necessary data to them
 void writeBioreactorInfo(String routineName, String timeRoutine, String flowrate, String pumpStatus) {
   String routineNameFile = "/" + routineName + ".txt";
   File file = SD.open(routineNameFile.c_str());

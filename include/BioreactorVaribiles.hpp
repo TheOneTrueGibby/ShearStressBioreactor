@@ -13,6 +13,18 @@ static constexpr double CHANNEL_WIDTH = 0.025; // m
 static constexpr double MU = 0.0155; // mPa * min
 static constexpr double RHO = 993; // kg / m^3
 
+void pushCurrentVaribiles() {
+    String height = "channelHeight; " + String(CHANNEL_HEIGHT);
+    String width = "channelWidth; " + String(CHANNEL_WIDTH);
+    String mu= "MU; " + String(MU);
+    String rho = "RHO; " + String(RHO);
+
+    ws.textAll(height);
+    ws.textAll(width);
+    ws.textAll(mu);
+    ws.textAll(rho);
+}
+
 //Calculates flowrate based on sensor value given
 float flowRateCalc(float sesnorValue) {
     float fl = (((CHANNEL_WIDTH * CHANNEL_HEIGHT * CHANNEL_HEIGHT * sesnorValue) / (6 * MU)) * 6e7)/32;

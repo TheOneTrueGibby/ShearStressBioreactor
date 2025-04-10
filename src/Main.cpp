@@ -48,7 +48,11 @@ void setup() {
   //Set up Stepper Motor
   //stepperSetup(stepper); //Function in StepperMotor.hpp
 
+  //Testing routine
   //setRoutine("Test", 0.01, 0.01, 1, 1);
+
+  //Update current Bioreactor vars to website
+  pushCurrentVaribiles();
 }
 
 void loop() {

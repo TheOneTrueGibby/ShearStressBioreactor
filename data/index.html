@@ -54,27 +54,35 @@
         </form>
 
         <!-- Settings -->
-        <!-- <form>
-            <h2>Bioreactor Paramaters/Settings</h2>
+        <h2>Bioreactor Paramaters/Settings</h2>
+        <section>
+            <h3>Current Seetings</h3>
+            <div id="channelHeight">Waiting for Height data...</div>
+            <div id="channelWidth">Waiting for Width data</div>
+            <div id="MU">Waiting for MU data...</div></h1>
+            <div id="RHO">Waiting for RHO data...</div>
+        </section>
+        <form>
+            <h3>Set New Settings</h3>
             <div>
-                <label for="channelHeight">Channel Height: </label>
+                <label for="channelHeightLabel">Channel Height: </label>
                 <input type="number" id="channelHeightValue" placeholder="Channel Height (m)">
             </div>
             <div>
-                <label for="channelWidth">Channel Width: </label>
+                <label for="channelWidthLabel">Channel Width: </label>
                 <input type="number" id="channelWidthValue" placeholder="Channel Width (m)">
             </div>
             <div>
-                <label for="MU">MU: </label>
+                <label for="MULabel">MU: </label>
                 <input type="number" id="MUValue" placeholder="MU (Pa * s)">
             </div>
             <div>
-                <label for="RHO">RHO: </label>
+                <label for="RHOLabel">RHO: </label>
                 <input type="number" id="RHOValue" placeholder="RHO (kg / m^3)">
             </div>
             <div>
                 <button id="valueSetButton">Set Bioreactor Values</button>
             </div>
-        </form> -->
+        </form>
     </body>
 </html>
