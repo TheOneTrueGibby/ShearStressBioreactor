@@ -47,6 +47,9 @@ String convertTimeToString(int timeSeconds) {
 //alows seeting for a basic routne that repeats x times in hr conversions, scaled in seconds and rounds.
 //Example 3.6 seconds will be 4 seconds
 void setRoutine(String routineName, double timeRun, double timeBreak, double shearStress, int repetion) {
+    //Update vars on website
+    pushCurrentVaribiles();
+
     //calculate flowrate needed to achive required shearStress
     int flowRate = flowRateBasedOnShearStressCalc(shearStress);
 

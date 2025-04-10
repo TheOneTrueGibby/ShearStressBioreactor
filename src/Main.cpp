@@ -55,7 +55,7 @@ void setup() {
 }
 
 void loop() {
-  //delay(1000);
+  //delay();
   //yield();
 
   //Refresh websocket
@@ -63,12 +63,4 @@ void loop() {
 
   //Run the task scheduler
   scheduler.execute();
-
-  if (varPush == false) {
-    varPush = true;
-
-    //Update current Bioreactor vars to website
-    pushCurrentVaribiles();
-  }
-
 }
