@@ -12,6 +12,7 @@ used this tutorial: https://m1cr0lab-esp32.github.io/remote-control-with-websock
 #include <WiFiManager.h>
 #include <SPIFFS.h>
 #include <ESPAsyncWebServer.h>
+#include <TaskScheduler.h>
 
 //Set up server hosting on esp32
 WiFiManager wifiManager;
@@ -20,6 +21,11 @@ AsyncWebSocket ws("/ws");
 
 //File includes
 #include "Routine.hpp"
+
+//Task Scheduler object & handeler
+Scheduler scheduler;
+String routineDetails = "";
+//Task routineTask(0, TASK_FOREVER, &routineTaskFunction);
 
 //Function delcerations
 void initSPIFFS();
@@ -60,36 +66,105 @@ void initWebSocket() {
   server.addHandler(&ws);
 }
 
+// void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
+//   AwsFrameInfo *info = (AwsFrameInfo*)arg;
+
+//   if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
+//       data[len] = 0;
+
+//       //Parse the incoming message, which is in the format: routineName;shearStress;runTime;breakTime;repetitions
+//       String routineDetails = String((char*)data);
+
+//       //FreeRTOS Task to handle the routine
+//       xTaskCreatePinnedToCore(
+//           [](void *pvParameters) {
+//               String routineDetails = *(String*)pvParameters;
+
+//               //Get the index of all the semicolon sperators
+//               int separator1 = routineDetails.indexOf(';');
+//               int separator2 = routineDetails.indexOf(';', separator1 + 1);
+//               int separator3 = routineDetails.indexOf(';', separator2 + 1);
+//               int separator4 = routineDetails.indexOf(';', separator3 + 1);
+
+//               //Get each part of the string making sure to not include the ';'
+//               String routineName = routineDetails.substring(0, separator1);
+//               String shearStressStr = routineDetails.substring(separator1 + 1, separator2);
+//               String runTimeStr = routineDetails.substring(separator2 + 1, separator3);
+//               String breakTimeStr = routineDetails.substring(separator3 + 1, separator4);
+//               String repetitionsStr = routineDetails.substring(separator4 + 1);
+
+//               //Convert the string values to appropriate types for the routine function
+//               float shearStress = shearStressStr.toDouble();
+//               float runTime = runTimeStr.toDouble();
+//               float breakTime = breakTimeStr.toDouble();
+//               int repetitions = repetitionsStr.toInt();
+
+//               //Call the setRoutine function with the extracted values
+//               setRoutine(routineName.c_str(), runTime, breakTime, shearStress, repetitions);
+
+//               //After the routine finishes, delete the task
+//               vTaskDelete(NULL);
+//           },
+//           "Routine Task",            //Task name
+//           2048,                      //Stack size
+//           &routineDetails,           //Task parameter (routine details)
+//           1,                         //Task priority
+//           NULL,                      //No task handle needed
+//           0                          //Core (0 or 1)
+//       );
+//   }
+// }
+
+//Task function to execute the routine
+void routineTaskFunction() {
+  //Access the routine details from the global variable
+  String routineDetailsLocal = routineDetails;
+
+  //Parse routine details
+  int separator1 = routineDetailsLocal.indexOf(';');
+  int separator2 = routineDetailsLocal.indexOf(';', separator1 + 1);
+  int separator3 = routineDetailsLocal.indexOf(';', separator2 + 1);
+  int separator4 = routineDetailsLocal.indexOf(';', separator3 + 1);
+
+  String routineName = routineDetailsLocal.substring(0, separator1);
+  String shearStressStr = routineDetailsLocal.substring(separator1 + 1, separator2);
+  String runTimeStr = routineDetailsLocal.substring(separator2 + 1, separator3);
+  String breakTimeStr = routineDetailsLocal.substring(separator3 + 1, separator4);
+  String repetitionsStr = routineDetailsLocal.substring(separator4 + 1);
+
+  //Convert the string values to appropriate types for the routine function
+  float shearStress = shearStressStr.toDouble();
+  float runTime = runTimeStr.toDouble();
+  float breakTime = breakTimeStr.toDouble();
+  int repetitions = repetitionsStr.toInt();
+
+  //Call the setRoutine function with the extracted values
+  setRoutine(routineName.c_str(), runTime, breakTime, shearStress, repetitions);
+
+  //After the task is executed, we can reset the global variable to avoid running the same routine again
+  routineDetails = "";
+}
+
+Task routineTask(1000, TASK_FOREVER, routineTaskFunction);
+
+//Function to handle WebSocket messages and schedule tasks using TaskScheduler
 void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
   AwsFrameInfo *info = (AwsFrameInfo*)arg;
-  
+
   if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
-    data[len] = 0;
-    
-    //Parse the incoming message, which is in the format: routineName;shearStress;runTime;breakTime;repetitions
-    //Get the index of all the semicolon sperators
-    String message = String((char*)data);
-    int separator1 = message.indexOf(';');
-    int separator2 = message.indexOf(';', separator1 + 1);
-    int separator3 = message.indexOf(';', separator2 + 1);
-    int separator4 = message.indexOf(';', separator3 + 1);
-    
-    //Get each part of the string making sure to not include the ';'
-    String routineName = message.substring(0, separator1);
-    String shearStressStr = message.substring(separator1 + 1, separator2);
-    String runTimeStr = message.substring(separator2 + 1, separator3);
-    String breakTimeStr = message.substring(separator3 + 1, separator4);
-    String repetitionsStr = message.substring(separator4 + 1);
+      data[len] = 0;
 
-    //Convert the string values to appropriate types for the routine function
-    float shearStress = shearStressStr.toDouble();
-    float runTime = runTimeStr.toDouble();
-    float breakTime = breakTimeStr.toDouble();
-    int repetitions = repetitionsStr.toInt();
+      //Parse the incoming message, which is in the format: routineName;shearStress;runTime;breakTime;repetitions
+      String incomingRoutineDetails = String((char*)data);
 
-    //Call setRoutine function with the extracted values
-    //Serial.print("Running Routine");
-    setRoutine(routineName.c_str(), runTime, breakTime, shearStress, repetitions);
+      //Set the global variable to store routine details
+      routineDetails = incomingRoutineDetails;
+
+      //Add the task to the scheduler (it will run once based on the task's configuration)
+      scheduler.addTask(routineTask);
+
+      //Enable the task to start executing
+      routineTask.enable();
   }
 }
 

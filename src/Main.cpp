@@ -10,6 +10,7 @@ Where we call all functions and run all code
 #include <DNSServer.h>
 #include <Update.h>
 #include <Wire.h>
+#include <TaskScheduler.h>
 
 //all file includes
 #include "WebHosting.hpp"
@@ -35,6 +36,9 @@ void setup() {
   //Set up microSD card
   setupMicroSDcard(); //Function in MicrosdCard.hpp
 
+  //Setup TaskScheduler
+  scheduler.init();
+
   //Begin wire communication
   Wire.begin();
   
@@ -48,7 +52,13 @@ void setup() {
 }
 
 void loop() {
-  //refresh data on the website every second
-  delay(100);
+  //delay(100);
+  //yield();
+
+  //Refresh websocket
   ws.cleanupClients();
+
+  //Run the task scheduler
+  scheduler.execute();
+
 }
