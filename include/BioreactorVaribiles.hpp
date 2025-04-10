@@ -8,16 +8,16 @@ This holds all equations and varbilies about bioreactor setup to calculate value
 #define BIOREACTORVARIBILES_HPP
 
 //All bioreactor varibiles needed for calculation (change as needed)
-static constexpr double CHANNEL_HEIGHT = 0.0005; // m
-static constexpr double CHANNEL_WIDTH = 0.025; // m
-static constexpr double MU = 0.0155; // mPa * min
-static constexpr double RHO = 993; // kg / m^3
+static constexpr float CHANNEL_HEIGHT = 0.0005; // m
+static constexpr float CHANNEL_WIDTH = 0.025; // m
+static constexpr float MU = 0.0155; // mPa * min
+static constexpr float RHO = 993; // kg / m^3
 
 void pushCurrentVaribiles() {
-    String height = "channelHeight; " + String(CHANNEL_HEIGHT);
-    String width = "channelWidth; " + String(CHANNEL_WIDTH);
-    String mu= "MU; " + String(MU);
-    String rho = "RHO; " + String(RHO);
+    String height = "channelHeight; Channel Height: " + String(CHANNEL_HEIGHT) + " m";
+    String width = "channelWidth; Channel Width: " + String(CHANNEL_WIDTH) + " m";
+    String mu = "MU; MU: " + String(MU) + " mPa * min";
+    String rho = "RHO; RHO: " + String(RHO) + " kg / m^3";
 
     ws.textAll(height);
     ws.textAll(width);

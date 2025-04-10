@@ -52,15 +52,16 @@ void setup() {
   //setRoutine("Test", 0.01, 0.01, 1, 1);
 
   //Update current Bioreactor vars to website
-  pushCurrentVaribiles();
+  //pushCurrentVaribiles();
 }
 
 void loop() {
-  //delay(100);
+  delay(100);
   //yield();
 
   //Refresh websocket
   ws.cleanupClients();
+  pushCurrentVaribiles();
 
   //Run the task scheduler
   scheduler.execute();
