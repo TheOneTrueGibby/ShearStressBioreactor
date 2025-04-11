@@ -1,7 +1,7 @@
 # Shear Stress Bioreactor
     Shear Stress Bioreactor project for the University of Idaho 2024 - 2025 senior capstone project.
 
-Students involved:
+# Students involved:
 
     * Gibson Moseley (CS)
     * Dillon West (BE)
