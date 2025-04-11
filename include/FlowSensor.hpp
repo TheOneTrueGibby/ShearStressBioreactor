@@ -67,9 +67,9 @@ String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
             Serial.print(" deg C\n");
         }
 
-        //Put flow data & temp into string varibile
+        //Put flow data & temp into string varibile using rolling average from the feed back control
         flowData += "Flow: ";
-        flowData += String(rollingAverageFlow) + " ml/min";
+        flowData += String(rollingAverageFlow) + " ml/min";  //This is pulled from FeedBackControl.hpp
         flowData += ", Temp: ";
         flowData += String(flowTemp, 1) + " deg C";
 
