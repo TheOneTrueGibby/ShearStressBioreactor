@@ -10,7 +10,7 @@ Holds all commands necessry to use the flow sensor, and declerations of the flow
 //inclusion of necessary files/functions
 #include "sensirion-lf.h"
 #include "sensirion-lf.cpp"
-#include "BioreactorVaribiles.hpp"
+#include "BioreactorVariables.hpp"
 #include "FeedBackControl.hpp"
 
 //set up low flow sensor with appropriate varibiles

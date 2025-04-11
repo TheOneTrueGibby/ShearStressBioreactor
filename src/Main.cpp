@@ -16,7 +16,7 @@ Where we call all functions and run all code
 #include "WebHosting.hpp"
 #include "FlowSensor.hpp"
 #include "Pump.hpp"
-#include "BioreactorVaribiles.hpp"
+#include "BioreactorVariables.hpp"
 #include "StepperMotor.hpp"
 #include "Routine.hpp"
 #include "MicrosdCard.hpp"

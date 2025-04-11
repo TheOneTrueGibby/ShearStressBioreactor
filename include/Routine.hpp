@@ -12,7 +12,7 @@ Allows for the running of routines for the system
 
 //all necessary files for includes
 #include "Pump.hpp"
-#include "BioreactorVaribiles.hpp"
+#include "BioreactorVariables.hpp"
 #include "FlowSensor.hpp"
 #include "MicrosdCard.hpp"
 #include "FeedBackControl.hpp"
@@ -48,10 +48,10 @@ String convertTimeToString(int timeSeconds) {
 //Example 3.6 seconds will be 4 seconds
 void setRoutine(String routineName, double timeRun, double timeBreak, double shearStress, int repetion) {
     //Update vars on website
-    pushCurrentVaribiles();
+    pushCurrentVariables();
 
     //calculate flowrate needed to achive required shearStress
-    int flowRate = flowRateBasedOnShearStressCalc(shearStress);
+    float flowRate = flowRateBasedOnShearStressCalc(shearStress);
 
     //scale the time to run and break from hr to seconds
     auto timeRunHr =  std::chrono::duration<double, std::chrono::seconds::period>(timeRun * 3600);
@@ -88,7 +88,7 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
             int timeInt = currentTotal.count(); //Convert current time to integer
             String time = convertTimeToString(timeInt); //Convert it to a clock string and send it to website
             String flow = readFlowSensor(flowSensor, 0); //Read the flow seneor and update rolling average
-            controlPumpSpeed(flowRate); //Conrtrol pump speed
+            controlPumpSpeed(flowRate); //Control pump speed
             String pump = checkPumpStatus(0); //Get pump status
 
             writeBioreactorInfo(routineName, time, flow, pump); //Write all data to microSD

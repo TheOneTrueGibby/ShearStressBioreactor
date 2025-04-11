@@ -1,5 +1,5 @@
 /************************************************************************
-Gibson Moseley & Dillon West - FeedBackConrol.hpp
+Gibson Moseley & Dillon West - FeedBackControl.hpp
 Way to smoothly control the pump and a nice feedback loop
 *************************************************************************/
 
@@ -17,7 +17,7 @@ std::deque<float> flowReadings;
 //Create a Ticker object to update the rolling average
 Ticker rollingAverageUpdater;
 
-float desiredFlowRate = 100.0; //Setpoint in ml/min
+//float desiredFlowRate = 100.0; //Setpoint in ml/min
 float rollingAverageFlow = 0.0; //Define the rolling average flow rate variable
 float currentFlowRate = 0.0; //Variable to hold the current flow rate
 
