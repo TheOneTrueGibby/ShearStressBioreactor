@@ -69,7 +69,7 @@ String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
 
         //Put flow data & temp into string varibile
         flowData += "Flow: ";
-        flowData += String(flowReading, 2) + " ml/min";
+        flowData += String(rollingAverageFlow) + " ml/min";
         flowData += ", Temp: ";
         flowData += String(flowTemp, 1) + " deg C";
 
