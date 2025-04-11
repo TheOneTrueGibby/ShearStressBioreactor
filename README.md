@@ -13,3 +13,7 @@ Tendon-related injuries impact millions of people and collectively cost millions
 # Repository Overview
 The software for the project is developed for the ESP 32 microcontroller with [PlatformIO.](https://platformio.org/) 
 Forked off last years team project and used some of their previous code for project basis, located at https://github.com/CJ5518/ShearStressBioreactor
+
+# ToDo Goals
+Overhaul Website - Make it look nicer and better layed out (bootstrap)
+Add password protection for routines 
