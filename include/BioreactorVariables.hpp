@@ -1,5 +1,6 @@
 /************************************************************************
 Gibson Moseley - BioreactorVaribiles.hpp
+Some code used from last years team - Carson Sloan (utils.hpp/utils.cpp)
 
 This holds all equations and varbilies about bioreactor setup to calculate values correctly
 *************************************************************************/
@@ -14,7 +15,7 @@ static constexpr double MU = (0.93/60); // mPa * min
 static constexpr double RHO = 993; // kg / m^3
 
 //Push current bioreactor vars
-void pushCurrentVaribiles() {
+void pushCurrentVariables() {
     String height = "channelHeight; Channel Height: " + String(CHANNEL_HEIGHT) + " m";
     String width = "channelWidth; Channel Width: " + String(CHANNEL_WIDTH) + " m";
     String mu = "MU; MU: " + String(MU) + " mPa * min";
