@@ -1,6 +1,7 @@
 /************************************************************************
-Gibson Moseley - Pump.hpp
+Gibson Moseley  - Pump.hpp
 All functions to setup and control the pump
+Some code used from last years team - Carson Sloan (pump.hpp/pump.cpp)
 *************************************************************************/
 
 #ifndef PUMP_HPP
