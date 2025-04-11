@@ -13,6 +13,19 @@ static constexpr double CHANNEL_WIDTH = 25; // mm
 static constexpr double MU = (0.93/60); // mPa * min
 static constexpr double RHO = 993; // kg / m^3
 
+//Push current bioreactor vars
+void pushCurrentVaribiles() {
+    String height = "channelHeight; Channel Height: " + String(CHANNEL_HEIGHT) + " m";
+    String width = "channelWidth; Channel Width: " + String(CHANNEL_WIDTH) + " m";
+    String mu = "MU; MU: " + String(MU) + " mPa * min";
+    String rho = "RHO; RHO: " + String(RHO) + " kg / m^3";
+ 
+    ws.textAll(height);
+    ws.textAll(width);
+    ws.textAll(mu);
+    ws.textAll(rho);
+}
+
 //Calculates flowrate based on sensor value given
 // float flowRateCalc(float sensorValue) {
 //     float fl = (((CHANNEL_WIDTH * CHANNEL_HEIGHT * CHANNEL_HEIGHT * sensorValue) / (6 * MU * 1000)));
