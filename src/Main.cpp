@@ -51,7 +51,7 @@ void setup() {
   //stepperSetup(stepper); //Function in StepperMotor.hpp
 
   //Testing routine and adds dummy test to test file
-  setRoutine("test", 0, 0, 0, 0);
+  setRoutine("test", 0, 0, 0, 1);
 }
 
 void loop() {
