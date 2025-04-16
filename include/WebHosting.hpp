@@ -22,10 +22,9 @@ AsyncWebSocket ws("/ws");
 //File includes
 #include "Routine.hpp"
 
-//Task Scheduler object & handeler
+//Task Scheduler object & temp storage of submitted routines
 Scheduler scheduler;
 String routineDetails = "";
-//Task routineTask(0, TASK_FOREVER, &routineTaskFunction);
 
 //Function delcerations
 void initSPIFFS();
@@ -98,7 +97,7 @@ void routineTaskFunction() {
 
 Task routineTask(1000, TASK_FOREVER, routineTaskFunction);
 
-//Function to handle WebSocket messages and schedule tasks using TaskScheduler
+//Function to handle WebSocket messages and schedule tasks using TaskScheduler library
 void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
   AwsFrameInfo *info = (AwsFrameInfo*)arg;
 
