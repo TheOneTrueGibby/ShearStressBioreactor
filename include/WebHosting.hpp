@@ -143,8 +143,8 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
       int semicolonIndex = incomingMessageDetails.indexOf(';');
       mode = incomingMessageDetails.substring(0, semicolonIndex); //Before the first semicolon
       message = incomingMessageDetails.substring(semicolonIndex + 1); //After the first semicolon
-      Serial.printf("The mode is: %s\n", mode);
-      Serial.printf("The message is: %s\n", message);
+      //Serial.printf("The mode is: %s\n", mode);
+      //Serial.printf("The message is: %s\n", message);
 
 
       //if the mode is for routine or settings do which is appropriate

@@ -81,12 +81,12 @@ function onSubmitSettings(event) {
 
     //Gather the values from the form
     var channelHeight = document.getElementById('channelHeightValue').value.trim();
-    var channelHeight = document.getElementById('channelWidthValue').value.trim();
-    var channelHeight = document.getElementById('MUValue').value.trim();
-    var channelHeight = document.getElementById('RHOValue').value.trim();
+    var channelWidth = document.getElementById('channelWidthValue').value.trim();
+    var MU = document.getElementById('MUValue').value.trim();
+    var RHO = document.getElementById('RHOValue').value.trim();
     
     //Create a message string to send to the ESP32
-    var message = channelHeightValue + ";" + channelWidthValue + ";" + MUValue + ";" + RHOValue;
+    var message = channelHeight + ";" + channelWidth + ";" + MU + ";" + RHO;
     var messageSend = "settings;" + message;
 
     //Send the message to the WebSocket server
