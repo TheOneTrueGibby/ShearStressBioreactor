@@ -67,7 +67,7 @@ function onSubmitRoutine(event) {
 
     //Create a message string to send to the ESP32
     var message = routineName + ";" + shearStress + ";" + runTime + ";" + breakTime + ";" + repetitions;
-    var messageSend = "routine; " + message;
+    var messageSend = "routine;" + message;
 
     //Send the message to the WebSocket server
     websocket.send(messageSend);
@@ -87,7 +87,7 @@ function onSubmitSettings(event) {
     
     //Create a message string to send to the ESP32
     var message = channelHeightValue + ";" + channelWidthValue + ";" + MUValue + ";" + RHOValue;
-    var messageSend = "settings; " + message;
+    var messageSend = "settings;" + message;
 
     //Send the message to the WebSocket server
     websocket.send(messageSend);
