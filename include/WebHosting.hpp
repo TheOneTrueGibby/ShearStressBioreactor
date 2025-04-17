@@ -126,8 +126,8 @@ void settingsTaskFunction() {
   seetingsDetails = "";
 }
 
-Task routineTask(1000, TASK_FOREVER, routineTaskFunction);
-Task settingsTask(1000, TASK_FOREVER, settingsTaskFunction);
+Task routineTask(1000, TASK_ONCE, routineTaskFunction);
+Task settingsTask(1000, TASK_ONCE, settingsTaskFunction);
 
 //Function to handle WebSocket messages and schedule tasks using TaskScheduler library
 void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
