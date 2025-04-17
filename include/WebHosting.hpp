@@ -111,12 +111,13 @@ void settingsTaskFunction() {
   String muStr = settingsDetailsLocal.substring(separator2 + 1, separator3);
   String rhoStr = settingsDetailsLocal.substring(separator3 + 1);
 
+  //Convert the string values to appropriate types for the settings function
   float height = heightStr.toFloat();
   float width = widthStr.toFloat();
   float mu = muStr.toFloat();
   float rho = rhoStr.toFloat();
 
-  //Call the setRoutine function with the extracted values
+  //Call the saveBioreactorSettings function with the extracted values
   saveBioreactorSettings(height, width, mu, rho);
 
   //After the task is executed, we can reset the global variable to avoid running the same routine again
@@ -145,9 +146,8 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
       //if the mode is for routine or settings do which is appropriate
       if (mode == "routine;") {
         //Parse the incoming message, and make sure it is in the format: routineName;shearStress;runTime;breakTime;repetitions
-        //String incomingRoutineDetails = String((char*)data);
-
         //Set the global routine variable to store routine details
+        //String incomingRoutineDetails = String((char*)data);
         routineDetails = message;
 
         //Add the task to the scheduler (it will run once based on the task's configuration)
