@@ -117,6 +117,8 @@ void settingsTaskFunction() {
   float mu = muStr.toFloat();
   float rho = rhoStr.toFloat();
 
+  //Serial.printf("%f\n", height);
+
   //Call the saveBioreactorSettings function with the extracted values
   saveBioreactorSettings(height, width, mu, rho);
 
@@ -149,10 +151,9 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
 
       //if the mode is for routine or settings do which is appropriate
       if (mode == "routine") {
-        Serial.printf("The message is: %s\n", message);
+        //Serial.printf("The message is: %s\n", message);
         //Parse the incoming message, and make sure it is in the format: routineName;shearStress;runTime;breakTime;repetitions
         //Set the global routine variable to store routine details
-        //String incomingRoutineDetails = String((char*)data);
         routineDetails = message;
 
         //Add the task to the scheduler (it will run once based on the task's configuration)
@@ -162,7 +163,7 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
         routineTask.enable();
       }
       else if (mode == "settings") {
-
+        //Serial.printf("The message is: %s\n", message);
         //Parse the incoming message, and make sure it is in the format: channelHeightValue;channelWidthValue;MUValue;RHOValue
         //Set the global seetings variable to store routine details
         seetingsDetails = message;

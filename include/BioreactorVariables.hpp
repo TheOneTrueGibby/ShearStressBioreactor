@@ -30,6 +30,9 @@ void pushCurrentVariables() {
     ws.textAll(width);
     ws.textAll(mu);
     ws.textAll(rho);
+
+    //Serial.print("Pushing Current Vars\n");
+    return;
 }
 
 void setBioreactorSettings() {
