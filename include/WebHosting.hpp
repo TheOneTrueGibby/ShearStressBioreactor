@@ -130,6 +130,7 @@ Task settingsTask(1000, TASK_FOREVER, settingsTaskFunction);
 //Function to handle WebSocket messages and schedule tasks using TaskScheduler library
 void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
   AwsFrameInfo *info = (AwsFrameInfo*)arg;
+  //Serial.print("Message webscoket");
 
   if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
       data[len] = 0;
@@ -142,9 +143,13 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
       int semicolonIndex = incomingMessageDetails.indexOf(';');
       mode = incomingMessageDetails.substring(0, semicolonIndex); //Before the first semicolon
       message = incomingMessageDetails.substring(semicolonIndex + 1); //After the first semicolon
+      Serial.printf("The mode is: %s\n", mode);
+      Serial.printf("The message is: %s\n", message);
+
 
       //if the mode is for routine or settings do which is appropriate
-      if (mode == "routine;") {
+      if (mode == "routine") {
+        Serial.printf("The message is: %s\n", message);
         //Parse the incoming message, and make sure it is in the format: routineName;shearStress;runTime;breakTime;repetitions
         //Set the global routine variable to store routine details
         //String incomingRoutineDetails = String((char*)data);
@@ -156,7 +161,7 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
         //Enable the task to start executing
         routineTask.enable();
       }
-      else if (mode == "settings;") {
+      else if (mode == "settings") {
 
         //Parse the incoming message, and make sure it is in the format: channelHeightValue;channelWidthValue;MUValue;RHOValue
         //Set the global seetings variable to store routine details

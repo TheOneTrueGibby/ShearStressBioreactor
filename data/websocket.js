@@ -72,7 +72,7 @@ function onSubmitRoutine(event) {
     //Send the message to the WebSocket server
     websocket.send(messageSend);
 
-    console.log('Sending data:', message);
+    console.log('Sending data:', messageSend);
 }
 
 function onSubmitSettings(event) {
@@ -92,5 +92,5 @@ function onSubmitSettings(event) {
     //Send the message to the WebSocket server
     websocket.send(messageSend);
 
-    console.log('Sending data:', message);
+    console.log('Sending data:', messageSend);
 }

@@ -48,7 +48,7 @@ String convertTimeToString(int timeSeconds) {
 //Example 3.6 seconds will be 4 seconds
 void setRoutine(String routineName, double timeRun, double timeBreak, double shearStress, int repetion) {
     //Update vars on website
-    pushCurrentVariables();
+    //pushCurrentVariables();
 
     //calculate flowrate needed to achive required shearStress
     float flowRate = flowRateBasedOnShearStressCalc(shearStress);
