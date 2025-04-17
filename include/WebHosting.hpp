@@ -95,6 +95,7 @@ void routineTaskFunction() {
 
   //After the task is executed, we can reset the global variable to avoid running the same routine again
   routineDetails = "";
+  //routineTask.disable();
 }
 
 void settingsTaskFunction() {
@@ -118,16 +119,20 @@ void settingsTaskFunction() {
   float rho = rhoStr.toFloat();
 
   //Serial.printf("%f\n", height);
+  //Serial.printf("%f\n", width);
+  //Serial.printf("%f\n", mu);
+  //Serial.printf("%f\n", rho);
 
   //Call the saveBioreactorSettings function with the extracted values
   saveBioreactorSettings(height, width, mu, rho);
 
   //After the task is executed, we can reset the global variable to avoid running the same routine again
   seetingsDetails = "";
+  //settingsTask.disable();
 }
 
-Task routineTask(1000, TASK_ONCE, routineTaskFunction);
-Task settingsTask(1000, TASK_ONCE, settingsTaskFunction);
+Task routineTask(100, TASK_ONCE, routineTaskFunction);
+Task settingsTask(100, TASK_ONCE, settingsTaskFunction);
 
 //Function to handle WebSocket messages and schedule tasks using TaskScheduler library
 void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {

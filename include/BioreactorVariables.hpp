@@ -45,7 +45,7 @@ void setBioreactorSettings() {
 
     preferences.end();
 
-    //pushCurrentVariables();
+    pushCurrentVariables();
 }
 
 void saveBioreactorSettings(float height, float width, float mu, float rho) {
