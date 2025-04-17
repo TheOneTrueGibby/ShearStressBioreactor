@@ -50,25 +50,47 @@ function onMessage(event) {
 
 //Function to handle form submission and send data to the ESP32
 function initFormSubmit() {
-    document.getElementById('submitButton').addEventListener('click', onSubmit);
+    document.getElementById('submitButton').addEventListener('click', onSubmitRoutine);
+    document.getElementById('valueSetButton').addEventListener('click', onSubmitSettings);
 }
 
-function onSubmit(event) {
+function onSubmitRoutine(event) {
     //Prevent form from reloading the page
     event.preventDefault();
 
     //Gather the values from the form
-    var routineName = document.getElementById('routineNameValue').value;
-    var shearStress = document.getElementById('shearStressValue').value;
-    var runTime = document.getElementById('runTimeValue').value;
-    var breakTime = document.getElementById('breakTimeValue').value;
-    var repetitions = document.getElementById('repeationValue').value;
+    var routineName = document.getElementById('routineNameValue').value.trim();
+    var shearStress = document.getElementById('shearStressValue').value.trim();
+    var runTime = document.getElementById('runTimeValue').value.trim();
+    var breakTime = document.getElementById('breakTimeValue').value.trim();
+    var repetitions = document.getElementById('repeationValue').value.trim();
 
-    // Create a message string to send to the ESP32
+    //Create a message string to send to the ESP32
     var message = routineName + ";" + shearStress + ";" + runTime + ";" + breakTime + ";" + repetitions;
+    var messageSend = "routine; " + message;
 
     //Send the message to the WebSocket server
-    websocket.send(message);
+    websocket.send(messageSend);
+
+    console.log('Sending data:', message);
+}
+
+function onSubmitSettings(event) {
+    //Prevent form from reloading the page
+    event.preventDefault();
+
+    //Gather the values from the form
+    var channelHeight = document.getElementById('channelHeightValue').value.trim();
+    var channelHeight = document.getElementById('channelWidthValue').value.trim();
+    var channelHeight = document.getElementById('MUValue').value.trim();
+    var channelHeight = document.getElementById('RHOValue').value.trim();
+    
+    //Create a message string to send to the ESP32
+    var message = channelHeightValue + ";" + channelWidthValue + ";" + MUValue + ";" + RHOValue;
+    var messageSend = "settings; " + message;
+
+    //Send the message to the WebSocket server
+    websocket.send(messageSend);
 
     console.log('Sending data:', message);
 }

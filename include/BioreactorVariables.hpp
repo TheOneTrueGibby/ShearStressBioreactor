@@ -8,11 +8,38 @@ This holds all equations and varbilies about bioreactor setup to calculate value
 #ifndef BIOREACTORVARIABLES_HPP
 #define BIOREACTORVARIABLES_HPP
 
+//Library includes
+#include <Preferences.h>
+
+Preferences preferences;
+
 //All bioreactor varibiles needed for calculation (change as needed)
-static constexpr double CHANNEL_HEIGHT = 1; // mm
-static constexpr double CHANNEL_WIDTH = 25; // mm
-static constexpr double MU = (0.93/60); // mPa * min
-static constexpr double RHO = 993; // kg / m^3
+float CHANNEL_HEIGHT = 1; // mm
+float CHANNEL_WIDTH = 25; // mm
+float MU = (0.93/60); // mPa * min
+float RHO = 993; // kg / m^3
+
+void setBioreactorSettings() {
+    preferences.begin("bioreactor", true);
+
+    CHANNEL_HEIGHT = preferences.getFloat("height", 1);
+    CHANNEL_WIDTH  = preferences.getFloat("width", 25);
+    MU             = preferences.getFloat("mu", 0.93 / 60);
+    RHO            = preferences.getFloat("rho", 993);
+
+    preferences.end();
+}
+
+void saveBioreactorSettings(float height, float width, float mu, float rho) {
+    preferences.begin("bioreactor", false);
+
+    preferences.putFloat("height", height);
+    preferences.putFloat("width", width);
+    preferences.putFloat("mu", mu);
+    preferences.putFloat("rho", rho);
+
+    preferences.end();
+}
 
 //Push current bioreactor vars
 void pushCurrentVariables() {

@@ -21,10 +21,12 @@ AsyncWebSocket ws("/ws");
 
 //File includes
 #include "Routine.hpp"
+#include "BioreactorVariables.hpp"
 
 //Task Scheduler object & temp storage of submitted routines
 Scheduler scheduler;
 String routineDetails = "";
+String seetingsDetails = "";
 
 //Function delcerations
 void initSPIFFS();
@@ -83,9 +85,9 @@ void routineTaskFunction() {
   String repetitionsStr = routineDetailsLocal.substring(separator4 + 1);
 
   //Convert the string values to appropriate types for the routine function
-  float shearStress = shearStressStr.toDouble();
-  float runTime = runTimeStr.toDouble();
-  float breakTime = breakTimeStr.toDouble();
+  float shearStress = shearStressStr.toFloat();
+  float runTime = runTimeStr.toFloat();
+  float breakTime = breakTimeStr.toFloat();
   int repetitions = repetitionsStr.toInt();
 
   //Call the setRoutine function with the extracted values
@@ -95,7 +97,34 @@ void routineTaskFunction() {
   routineDetails = "";
 }
 
+void settingsTaskFunction() {
+  //Access the routine details from the global variable
+  String settingsDetailsLocal = seetingsDetails;
+
+  //Parse routine details
+  int separator1 = settingsDetailsLocal.indexOf(';');
+  int separator2 = settingsDetailsLocal.indexOf(';', separator1 + 1);
+  int separator3 = settingsDetailsLocal.indexOf(';', separator2 + 1);
+
+  String heightStr = settingsDetailsLocal.substring(0, separator1);
+  String widthStr = settingsDetailsLocal.substring(separator1 + 1, separator2);
+  String muStr = settingsDetailsLocal.substring(separator2 + 1, separator3);
+  String rhoStr = settingsDetailsLocal.substring(separator3 + 1);
+
+  float height = heightStr.toFloat();
+  float width = widthStr.toFloat();
+  float mu = muStr.toFloat();
+  float rho = rhoStr.toFloat();
+
+  //Call the setRoutine function with the extracted values
+  saveBioreactorSettings(height, width, mu, rho);
+
+  //After the task is executed, we can reset the global variable to avoid running the same routine again
+  seetingsDetails = "";
+}
+
 Task routineTask(1000, TASK_FOREVER, routineTaskFunction);
+Task settingsTask(1000, TASK_FOREVER, settingsTaskFunction);
 
 //Function to handle WebSocket messages and schedule tasks using TaskScheduler library
 void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
@@ -104,17 +133,41 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
   if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
       data[len] = 0;
 
-      //Parse the incoming message, which is in the format: routineName;shearStress;runTime;breakTime;repetitions
-      String incomingRoutineDetails = String((char*)data);
+      //Sepreate the part of which thing to chnage and the actual message
+      String incomingMessageDetails = String((char*)data);
+      String mode = "";
+      String message = "";
 
-      //Set the global variable to store routine details
-      routineDetails = incomingRoutineDetails;
+      int semicolonIndex = incomingMessageDetails.indexOf(';');
+      mode = incomingMessageDetails.substring(0, semicolonIndex); //Before the first semicolon
+      message = incomingMessageDetails.substring(semicolonIndex + 1); //After the first semicolon
 
-      //Add the task to the scheduler (it will run once based on the task's configuration)
-      scheduler.addTask(routineTask);
+      //if the mode is for routine or settings do which is appropriate
+      if (mode == "routine;") {
+        //Parse the incoming message, and make sure it is in the format: routineName;shearStress;runTime;breakTime;repetitions
+        //String incomingRoutineDetails = String((char*)data);
 
-      //Enable the task to start executing
-      routineTask.enable();
+        //Set the global routine variable to store routine details
+        routineDetails = message;
+
+        //Add the task to the scheduler (it will run once based on the task's configuration)
+        scheduler.addTask(routineTask);
+
+        //Enable the task to start executing
+        routineTask.enable();
+      }
+      else if (mode == "settings;") {
+
+        //Parse the incoming message, and make sure it is in the format: channelHeightValue;channelWidthValue;MUValue;RHOValue
+        //Set the global seetings variable to store routine details
+        seetingsDetails = message;
+
+        //Add the task to the scheduler (it will run once based on the task's configuration)
+        scheduler.addTask(settingsTask);
+
+        //Enable the task to start executing
+        settingsTask.enable();
+      }
   }
 }
 
