@@ -18,6 +18,10 @@ Allows for the running of routines for the system
 #include "FeedBackControl.hpp"
 //#include "WebHosting.hpp"
 
+//Function delcerations
+String convertTimeToString(int timeSeconds);
+void setRoutine(String routineName, double timeRun, double timeBreak, double shearStress, int repetion);
+
 //naming conventions
 using namespace std;
 using namespace std::chrono;
