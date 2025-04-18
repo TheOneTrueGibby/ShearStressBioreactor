@@ -35,13 +35,12 @@ String convertTimeToString(int timeSeconds) {
     int totalMin = (timeSeconds % 3600) / 60;
     int totalSec = timeSeconds % 60;
 
-    String clockConversion = "";
+    String clockConversion = String(totalHr) + ":" + String(totalMin) + ":" + String(totalSec);
 
-    clockConversion = "Routine Time: " + String(totalHr) + ":" + String(totalMin) + ":" + String(totalSec);
-
-    String clockWebsite = "runningTime; " + clockConversion;
+    String clockConversionWeb = "runningTime; Routine Time: " + String(totalHr) + ":" + String(totalMin) + ":" + String(totalSec);
+;
     //Serial.printf("%s\n",clockConversion);
-    ws.textAll(clockWebsite);
+    ws.textAll(clockConversionWeb);
 
     return clockConversion;
     

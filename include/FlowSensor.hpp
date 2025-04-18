@@ -40,15 +40,17 @@ String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
 
     //set up strings to hold readings
     String flowData = "";
+    String flowTemp = "";
     String flowShear = "";
     String flowAll = "";
+    String flowAllWeb = "";
 
     //if we were able to read flowsensor then we can get temp and flow otherwose there is an error
     if (ret == 0) {
 
         //get both flow and temp, and calculate shear stress based on flow rate
         float flowReading = flowSensor.getFlow();
-        float flowTemp = flowSensor.getTemp();
+        float flowTempReading = flowSensor.getTemp();
         float flowShearStress = shearStressCalc(flowReading);
 
         //Update rolling average for feedback control loop
@@ -63,23 +65,22 @@ String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
 
             //Print temp to terminal
             Serial.print(" | Temp: ");
-            Serial.print(flowTemp, 1);
+            Serial.print(flowTempReading, 1);
             Serial.print(" deg C\n");
         }
 
         //Put flow data & temp into string varibile using rolling average from the feed back control
-        flowData += "Flow: ";
-        flowData += String(rollingAverageFlow) + " ml/min";  //This is pulled from FeedBackControl.hpp
-        flowData += ", Temp: ";
-        flowData += String(flowTemp, 1) + " deg C";
+        flowData = String(rollingAverageFlow);  //This is pulled from FeedBackControl.hpp
+        flowTemp = String(flowTempReading, 1);
 
         //Put shear stress data into string varibile
-        flowShear += "Shear Stress: ";
-        flowShear += String(flowShearStress) + " Pa";
+        flowShear += String(flowShearStress);
         //Serial.print(flowShear);
 
+        flowAll = flowData + ", " + flowTemp + ", " + flowShear;
+
         //combine both into one String
-        flowAll += flowData + ", " + flowShear;
+        flowAllWeb += "Flow: " + flowData + " ml/min, " + "Temp: " + flowTemp + " deg C";
     } else {
         //if unable to read set string varibile as error message
         Serial.print("Error in flowsensor.readSample(): ");
@@ -89,8 +90,8 @@ String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
     }
 
     //send string varibiles to webserver/website through webscoket 
-    String flowDataWebsite = "flowData; " + flowData;
-    String flowShearWebsite = "shearStress; " + flowShear;
+    String flowDataWebsite = "flowData; " + flowAllWeb;
+    String flowShearWebsite = "shearStress; Shear Stress: " + flowShear + " Pa";
     ws.textAll(flowDataWebsite);
     ws.textAll(flowShearWebsite);
 
