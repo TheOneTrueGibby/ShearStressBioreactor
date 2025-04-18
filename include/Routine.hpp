@@ -63,6 +63,9 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
     //Print name of routinr that is being run
     Serial.printf("Running Routine: %s\n", routineName);
 
+    //clock to calculate total time of the routine run and when samples were read
+    auto startTotal = high_resolution_clock::now();
+
     //runn the routine as may times as speicifed
     for(int i = 1; i < repetion + 1; i++) {
         checkPumpStatus(0);
@@ -79,9 +82,6 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
         //print what repition we are on and start pump
         //Serial.printf("Starting Routine Iteration: %d\n", i);
         setPump(1);
-
-        //clock to calculate total time of the routine run and when samples were read
-        auto startTotal = high_resolution_clock::now();
 
         //run the pump for specified amount of run time
         auto start = high_resolution_clock::now();
