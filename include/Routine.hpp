@@ -7,28 +7,27 @@ Allows for the running of routines for the system
 #ifndef ROUTINE_HPP
 #define ROUTINE_HPP
 
-//library for timing
+//Library for timing
 #include <chrono>
 
-//all necessary files for includes
+//All necessary files for includes
 #include "Pump.hpp"
 #include "BioreactorVariables.hpp"
 #include "FlowSensor.hpp"
 #include "MicrosdCard.hpp"
 #include "FeedBackControl.hpp"
-//#include "WebHosting.hpp"
 
 //Function delcerations
 String convertTimeToString(int timeSeconds);
 void setRoutine(String routineName, double timeRun, double timeBreak, double shearStress, int repetion);
 
-//naming conventions
+//Naming conventions
 using namespace std;
 using namespace std::chrono;
 
 const int oneSecondDelay = 1000;
 
-//this converts the amount of time running in seconds to a String with Hr:Min:Sec
+//This converts the amount of time running in seconds to a String with Hr:Min:Sec
 String convertTimeToString(int timeSeconds) {
     int timeLeft = timeSeconds;
 
@@ -48,7 +47,7 @@ String convertTimeToString(int timeSeconds) {
     
 }
 
-//alows seeting for a basic routne that repeats x times in hr conversions, scaled in seconds and rounds.
+//Alows seeting for a basic routne that repeats x times in hr conversions, scaled in seconds and rounds.
 //Example 3.6 seconds will be 4 seconds
 void setRoutine(String routineName, double timeRun, double timeBreak, double shearStress, int repetion) {
     //Update vars on website
