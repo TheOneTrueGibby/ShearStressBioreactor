@@ -44,6 +44,7 @@ String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
     String flowShear = "";
     String flowAll = "";
     String flowAllWeb = "";
+    String flowShearWebsite = "";
 
     //if we were able to read flowsensor then we can get temp and flow otherwose there is an error
     if (ret == 0) {
@@ -77,22 +78,24 @@ String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
         flowShear += String(flowShearStress);
         //Serial.print(flowShear);
 
+        //make data string
         flowAll = flowData + ", " + flowTemp + ", " + flowShear;
 
-        //combine both into one String
-        flowAllWeb += "Flow: " + flowData + " ml/min, " + "Temp: " + flowTemp + " deg C";
+        //Make website strings
+        flowAllWeb += " flowData; Flow: " + flowData + " ml/min, " + "Temp: " + flowTemp + " deg C";
+        flowShearWebsite = "shearStress; Shear Stress: " + flowShear + " Pa";
     } else {
         //if unable to read set string varibile as error message
         Serial.print("Error in flowsensor.readSample(): ");
         Serial.println(ret);
         Serial.print("\n");
-        flowData = "Error in flowsensor.readSample(): " + String(ret);
+        flowAll = "Error with reading sample: " + String(ret);
+        flowAllWeb = "flowData; Error with reading sample: " + String(ret);
+        flowShearWebsite = "shearStress; Error with reading sample: " + String(ret);
     }
 
     //send string varibiles to webserver/website through webscoket 
-    String flowDataWebsite = "flowData; " + flowAllWeb;
-    String flowShearWebsite = "shearStress; Shear Stress: " + flowShear + " Pa";
-    ws.textAll(flowDataWebsite);
+    ws.textAll(flowAllWeb);
     ws.textAll(flowShearWebsite);
 
     //return all the data as a string
