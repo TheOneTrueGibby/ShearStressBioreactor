@@ -23,18 +23,23 @@ AsyncWebSocket ws("/ws");
 #include "Routine.hpp"
 #include "BioreactorVariables.hpp"
 
-//Task Scheduler object & temp storage of submitted routines
-Scheduler scheduler;
-String routineDetails = "";
-String seetingsDetails = "";
-
 //Function delcerations
 void initSPIFFS();
 void initWebServer();
 void initWebServer();
 void initWebSocket();
-void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len);
+void routineTaskFunction();
+void settingsTaskFunction();
 void handleWebSocketMessage(void *arg, uint8_t *data, size_t len);
+void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len);
+
+Task routineTask(100, TASK_ONCE, routineTaskFunction);
+Task settingsTask(100, TASK_ONCE, settingsTaskFunction);
+
+//Task Scheduler object & temp storage of submitted routines
+Scheduler scheduler;
+String routineDetails = "";
+String seetingsDetails = "";
 
 //Call all necassry function to setup website/websocket hosting
 void initWebSetup() {
@@ -95,7 +100,7 @@ void routineTaskFunction() {
 
   //After the task is executed, we can reset the global variable to avoid running the same routine again
   routineDetails = "";
-  //routineTask.disable();
+  routineTask.disable();
 }
 
 void settingsTaskFunction() {
@@ -128,11 +133,8 @@ void settingsTaskFunction() {
 
   //After the task is executed, we can reset the global variable to avoid running the same routine again
   seetingsDetails = "";
-  //settingsTask.disable();
+  settingsTask.disable();
 }
-
-Task routineTask(100, TASK_ONCE, routineTaskFunction);
-Task settingsTask(100, TASK_ONCE, settingsTaskFunction);
 
 //Function to handle WebSocket messages and schedule tasks using TaskScheduler library
 void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
