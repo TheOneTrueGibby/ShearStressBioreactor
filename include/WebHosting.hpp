@@ -33,13 +33,14 @@ void settingsTaskFunction();
 void handleWebSocketMessage(void *arg, uint8_t *data, size_t len);
 void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len);
 
-Task routineTask(100, TASK_ONCE, routineTaskFunction);
-Task settingsTask(100, TASK_ONCE, settingsTaskFunction);
-
 //Task Scheduler object & temp storage of submitted routines
 Scheduler scheduler;
 String routineDetails = "";
-String seetingsDetails = "";
+String settingsDetails = "";
+
+//Make the task functions to schedule
+Task routineTask(0, 1, routineTaskFunction, &scheduler, false);
+Task settingsTask(0, 1, settingsTaskFunction, &scheduler, false);
 
 //Call all necassry function to setup website/websocket hosting
 void initWebSetup() {
@@ -53,7 +54,7 @@ void initWebSetup() {
 
 void initSPIFFS() {
   if (!SPIFFS.begin()) {
-    // Serial.println("Cannot mount SPIFFS volume...");
+    Serial.println("Cannot mount SPIFFS volume...");
   }
 }
 
@@ -105,7 +106,7 @@ void routineTaskFunction() {
 
 void settingsTaskFunction() {
   //Access the routine details from the global variable
-  String settingsDetailsLocal = seetingsDetails;
+  String settingsDetailsLocal = settingsDetails;
 
   //Parse routine details
   int separator1 = settingsDetailsLocal.indexOf(';');
@@ -132,7 +133,7 @@ void settingsTaskFunction() {
   saveBioreactorSettings(height, width, mu, rho);
 
   //After the task is executed, we can reset the global variable to avoid running the same routine again
-  seetingsDetails = "";
+  settingsDetails = "";
   settingsTask.disable();
 }
 
@@ -160,26 +161,30 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
       if (mode == "routine") {
         //Serial.printf("The message is: %s\n", message);
         //Parse the incoming message, and make sure it is in the format: routineName;shearStress;runTime;breakTime;repetitions
-        //Set the global routine variable to store routine details
+        //Set the global routine variable to store routine details and that it runs only once
         routineDetails = message;
+        routineTask.setIterations(1);
+        routineTask.enableIfNot();
 
         //Add the task to the scheduler (it will run once based on the task's configuration)
         scheduler.addTask(routineTask);
 
         //Enable the task to start executing
-        routineTask.enable();
+        //routineTask.enable();
       }
       else if (mode == "settings") {
         //Serial.printf("The message is: %s\n", message);
         //Parse the incoming message, and make sure it is in the format: channelHeightValue;channelWidthValue;MUValue;RHOValue
-        //Set the global seetings variable to store routine details
-        seetingsDetails = message;
+        //Set the global settings variable to store routine details
+        settingsDetails = message;
+        settingsTask.setIterations(1);
+        settingsTask.enableIfNot();
 
         //Add the task to the scheduler (it will run once based on the task's configuration)
         scheduler.addTask(settingsTask);
 
         //Enable the task to start executing
-        settingsTask.enable();
+        //settingsTask.enable();
       }
   }
 }
