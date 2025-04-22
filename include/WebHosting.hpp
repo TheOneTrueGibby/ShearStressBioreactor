@@ -164,13 +164,13 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
         //Set the global routine variable to store routine details and that it runs only once
         routineDetails = message;
         routineTask.setIterations(1);
-        routineTask.enableIfNot();
+        //routineTask.enableIfNot();
 
         //Add the task to the scheduler (it will run once based on the task's configuration)
         scheduler.addTask(routineTask);
 
         //Enable the task to start executing
-        //routineTask.enable();
+        routineTask.enable();
       }
       else if (mode == "settings") {
         //Serial.printf("The message is: %s\n", message);
@@ -178,13 +178,13 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
         //Set the global settings variable to store routine details
         settingsDetails = message;
         settingsTask.setIterations(1);
-        settingsTask.enableIfNot();
+        //settingsTask.enableIfNot();
 
         //Add the task to the scheduler (it will run once based on the task's configuration)
         scheduler.addTask(settingsTask);
 
         //Enable the task to start executing
-        //settingsTask.enable();
+        settingsTask.enable();
       }
   }
 }
