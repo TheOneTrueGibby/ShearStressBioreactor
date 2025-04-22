@@ -11,6 +11,7 @@ Where we call all functions and run all code
 #include <Update.h>
 #include <Wire.h>
 #include <TaskScheduler.h>
+#include <ticker.h>
 
 //all file includes
 #include "WebHosting.hpp"
@@ -21,7 +22,22 @@ Where we call all functions and run all code
 #include "Routine.hpp"
 #include "MicrosdCard.hpp"
 
+Ticker rollingAverageUpdater;
+
 bool varPush = false;
+
+float rollingAverageFlow = 0.0;
+float currentFlowRate = 0.0; // Variable to store the rolling average flow rate
+
+void updateRollingAverage() {
+  currentFlowRate = getRawFlow(flowSensor); // Function to get the current flow rate from the sensor
+   //Serial.print("Current Flow Rate: ");
+   //Serial.println(currentFlowRate); // Debug print to verify sensor reading
+
+  rollingAverageFlow = calculateRollingAverage(currentFlowRate);
+   //Serial.print("Updated Rolling Average Flow: ");
+   //Serial.println(rollingAverageFlow); // Debug print to verify rolling average update
+}
 
 //Start Running
 void setup() {
@@ -52,6 +68,8 @@ void setup() {
 
   //Testing routine and adds dummy test to test file
   setRoutine("test", 0, 0, 0, 1);
+
+  rollingAverageUpdater.attach(0.1, updateRollingAverage); // Update rolling average every 0.1 seconds
 }
 
 void loop() {

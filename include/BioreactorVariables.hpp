@@ -11,13 +11,13 @@ This holds all equations and varbilies about bioreactor setup to calculate value
 //All bioreactor varibiles needed for calculation (change as needed)
 static constexpr double CHANNEL_HEIGHT = 1; // mm
 static constexpr double CHANNEL_WIDTH = 25; // mm
-static constexpr double MU = (0.93/60); // mPa * min
-static constexpr double RHO = 993; // kg / m^3
+static constexpr double MU = (0.93/60); // media viscosity, mPa * min
+static constexpr double RHO = 993; // media density, kg / m^3
 
 //Push current bioreactor vars
 void pushCurrentVariables() {
-    String height = "channelHeight; Channel Height: " + String(CHANNEL_HEIGHT) + " m";
-    String width = "channelWidth; Channel Width: " + String(CHANNEL_WIDTH) + " m";
+    String height = "channelHeight; Channel Height: " + String(CHANNEL_HEIGHT) + " mm";
+    String width = "channelWidth; Channel Width: " + String(CHANNEL_WIDTH) + " mm";
     String mu = "MU; MU: " + String(MU) + " mPa * min";
     String rho = "RHO; RHO: " + String(RHO) + " kg / m^3";
  
@@ -41,7 +41,7 @@ void pushCurrentVariables() {
 
 //Calculates the shear stress in Pa that will result from the provided flow rate in ml/min.
 float shearStressCalc(float flowRate) {
-    float sh = (flowRate * 6 * MU) / (CHANNEL_WIDTH * CHANNEL_HEIGHT * CHANNEL_HEIGHT);
+    float sh = (flowRate * 6 * MU * 1000) / (CHANNEL_WIDTH * CHANNEL_HEIGHT * CHANNEL_HEIGHT);
     return sh;
 }
 

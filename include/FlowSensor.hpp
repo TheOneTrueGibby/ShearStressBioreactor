@@ -16,11 +16,13 @@ Holds all commands necessry to use the flow sensor, and declerations of the flow
 //set up low flow sensor with appropriate varibiles
 SensirionLF flowSensor(SLF3X_SCALE_FACTOR_FLOW, SLF3X_SCALE_FACTOR_TEMP, SLF3X_I2C_ADDRESS);
 
+float lastFlow = 0.0;
+extern float rollingAverageFlow; // Declare rolling average flow variable as external
+
 //sets up the flowsensor to be used
 void flowSensorSetup(SensirionLF flowSensor) {
     //run the intilizing command and save result
     uint16_t reset = flowSensor.init();
-
     //if result is zero then error happened otherwise it was reset/setup
     if (reset != 0) {
         Serial.print("Error initializing the flow sensor: ");
@@ -28,6 +30,24 @@ void flowSensorSetup(SensirionLF flowSensor) {
         return;
     } else {
         Serial.println("Flow sensor initialized.");
+    }
+}
+
+float getRawFlow(SensirionLF) {
+    //read the flow sensor
+    int ret = flowSensor.readSample();
+
+    //if we were able to read flowsensor then we can get temp and flow otherwose there is an error
+    if (ret == 0) {
+        //get both flow and temp, and calculate shear stress based on flow rate
+        float flow = flowSensor.getFlow();
+        lastFlow = flow; // Store the last flow reading
+        return lastFlow; // Return the flow reading
+    } else {
+        //if unable to read set string varibile as error message
+        //Serial.print("Error in flowsensor.readSample(): ");
+        //Serial.println(ret);
+        return lastFlow; // Return the last valid flow reading
     }
 }
 
@@ -47,21 +67,18 @@ String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
     if (ret == 0) {
 
         //get both flow and temp, and calculate shear stress based on flow rate
-        float flowReading = flowSensor.getFlow();
+        //float flowReading = flowSensor.getFlow();
         float flowTemp = flowSensor.getTemp();
-        float flowShearStress = shearStressCalc(flowReading);
-
-        //Update rolling average for feedback control loop
-        updateRollingAverage(flowReading);
+        float flowShearStress = shearStressCalc(rollingAverageFlow);
 
         //if set to true, prints readings in terminal
         if (printTerminal == 1) {
-            //Print flow and temp  to terminal
+            // //Print flow and temp  to terminal
             Serial.print("Flow: ");
-            Serial.print(flowReading, 2);
+            Serial.print(rollingAverageFlow, 2);
             Serial.print(" ml/min");
 
-            //Print temp to terminal
+            // Print temp to terminal
             Serial.print(" | Temp: ");
             Serial.print(flowTemp, 1);
             Serial.print(" deg C\n");
@@ -75,17 +92,18 @@ String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
 
         //Put shear stress data into string varibile
         flowShear += "Shear Stress: ";
-        flowShear += String(flowShearStress) + " Pa";
+        flowShear += String(flowShearStress) + " mPa";
         //Serial.print(flowShear);
 
         //combine both into one String
         flowAll += flowData + ", " + flowShear;
     } else {
         //if unable to read set string varibile as error message
-        Serial.print("Error in flowsensor.readSample(): ");
-        Serial.println(ret);
-        Serial.print("\n");
-        flowData = "Error in flowsensor.readSample(): " + String(ret);
+        // Serial.print("Error in flowsensor.readSample(): ");
+        // Serial.println(ret);
+        // Serial.print("\n");
+        //flowData = "Error in flowsensor.readSample(): " + String(ret);
+        flowAll += flowData + ", " + flowShear; // Send last known flow data info
     }
 
     //send string varibiles to webserver/website through webscoket 

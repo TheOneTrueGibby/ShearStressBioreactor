@@ -46,7 +46,7 @@ void initWebSetup() {
 
 void initSPIFFS() {
   if (!SPIFFS.begin()) {
-    Serial.println("Cannot mount SPIFFS volume...");
+    // Serial.println("Cannot mount SPIFFS volume...");
   }
 }
 

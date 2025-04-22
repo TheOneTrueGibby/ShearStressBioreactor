@@ -14,14 +14,11 @@ Way to smoothly control the pump and a nice feedback loop
 //Rolling average buffer for flow readings
 std::deque<float> flowReadings;
 
-//Create a Ticker object to update the rolling average
-Ticker rollingAverageUpdater;
-
 //float desiredFlowRate = 100.0; //Setpoint in ml/min
-float rollingAverageFlow = 0.0; //Define the rolling average flow rate variable
-float currentFlowRate = 0.0; //Variable to hold the current flow rate
 
-const int rollingWindowSize = 25; //Size of the rolling window for aver
+extern float rollingAverageFlow; //Declare the rolling average flow variable as external
+
+const int rollingWindowSize = 20; //Size of the rolling window for average flow rate
 
 bool flowInRange = false; //Flag to indicate if flow is within range
 
@@ -55,11 +52,9 @@ float calculateRollingAverage(float newReading) {
     for (float reading : flowReadings) {
         sum += reading;
     }
-
     float average = sum / flowReadings.size();
     //Serial.print("Calculated Rolling Average: ");
     //Serial.println(average); // Debug print to verify calculation
-
     return average;
 }
 
@@ -100,11 +95,8 @@ int smoothPumpSpeed(int currentSpeed, int targetSpeed, int maxChange) {
 
 //Updated function to control pump speed using PID with smooth ramping
 void controlPumpSpeed(float setpoint) {
-
     float difference = setpoint*0.05;
-
     float currentFlowRate = rollingAverageFlow;
-
     //Check if the flow rate is within the acceptable range
     if (difference > abs(setpoint - currentFlowRate) && currentFlowRate > 0) {
         flowInRange = true; // Set the flag to indicate flow is in range
@@ -113,8 +105,6 @@ void controlPumpSpeed(float setpoint) {
         flowInRange = false; // Set the flag to indicate flow is not in range
         //Serial.println("Flow is not in range.");
     }
-
-    //while (!flowInRange) {
 
     if (!flowInRange) {
 
@@ -127,7 +117,7 @@ void controlPumpSpeed(float setpoint) {
             int currentSpeed = getPumpSpeed();
 
             //Smoothly ramp the pump speed
-            int newSpeed = smoothPumpSpeed(currentSpeed, targetSpeed, 50); // Limit speed change to 25 units per loop
+            int newSpeed = smoothPumpSpeed(currentSpeed, targetSpeed, 25); // Limit speed change to 25 units per loop
 
             //Set the pump speed
             setPumpSpeed(newSpeed, true);
@@ -140,9 +130,7 @@ void controlPumpSpeed(float setpoint) {
             //Serial.print(currentSpeed);
             //Serial.print(" | New Speed: ");
             //Serial.println(newSpeed);
-
             //delay(1000); // Delay time for flow to adjust
-
         }
     }
 

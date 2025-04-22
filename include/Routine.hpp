@@ -58,19 +58,19 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
     auto timeBreakHr = std::chrono::duration<double, std::chrono::seconds::period>(timeBreak * 3600);
 
     //Print name of routinr that is being run
-    Serial.printf("Running Routine: %s\n", routineName);
+    //Serial.printf("Running Routine: %s\n", routineName);
 
     //runn the routine as may times as speicifed
     for(int i = 1; i < repetion + 1; i++) {
         checkPumpStatus(0);
 
-        //make sure flow rate is set and pump is off
+        //make sure flow rate is set and pump is off, and start pump speed at 8
         if (pumpOn == 1 & i == 0) {
             setPump(0);
-            setPumpSpeed(flowRate, 1);
+            setPumpSpeed(8, 1);
         }
         else if (pumpOn == 0 & i == 0) {
-            setPumpSpeed(flowRate, 1);
+            setPumpSpeed(8, 1);
         }
 
         //print what repition we are on and start pump

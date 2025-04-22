@@ -134,7 +134,7 @@ bool setPump(bool option) {
         //Write the option to the correct regestry and if unable to set pumpOn back
         uint16_t result = node.writeSingleCoil(0x1001, pumpOn ? 0xFF : 0x00);
         if (result != 0) {
-            Serial.printf("Unable to switch pump state! Error code: %d\n", result);
+            // Serial.printf("Unable to switch pump state! Error code: %d\n", result);
             pumpOn = !option;
         }
     }
@@ -154,7 +154,7 @@ bool setPumpSpeed(uint16_t high, uint16_t low, bool start/* = false*/) {
     }
 
     if (result != 0) {
-        Serial.printf("Error (%d) setting flow rate!\n", result);
+        // Serial.printf("Error (%d) setting flow rate!\n", result);
         return false;
     }
     else {
@@ -170,7 +170,7 @@ bool setPumpSpeed(int flow, bool force) {
             setPump(true);
         }
         else {
-            Serial.println("Error: Attempt to set pump speed while running.");
+            // Serial.println("Error: Attempt to set pump speed while running.");
             return false;
         }
     }
@@ -189,30 +189,39 @@ bool setPumpSpeed(int flow, bool force) {
     // TODO: currently only integer flow rates are possible, but the high bytes can be used to 
     // achieve decimal values, following the calculations done for flow rates over 256 ml/min
 
+    // TESTING: Non-integer flow rates
+
+    // Start with the known register value at the edge of the precision level, then add the needed steps
+    int integerPart = flow;
+    float fractionalPart = flow - integerPart;
+
     // Start with the known register value at the edge of the precision level, then add the needed steps
     if (flow <= STEP_1) {
-        low = STEP_0_CMD + ((flow - STEP_0) * RATE_0);
+        low = STEP_0_CMD + ((integerPart - STEP_0) * RATE_0);
     }
     else if (flow > STEP_1 && flow <= STEP_2) {
-        low = STEP_1_CMD + ((flow - STEP_1) * RATE_1);
+        low = STEP_1_CMD + ((integerPart - STEP_1) * RATE_1);
     }
     else if (flow > STEP_2 && flow <= STEP_3) {
-        low = STEP_2_CMD + ((flow - STEP_2) * RATE_2);
+        low = STEP_2_CMD + ((integerPart - STEP_2) * RATE_2);
     }
     else if (flow > STEP_3 && flow <= STEP_4) {
-        low = STEP_3_CMD + ((flow - STEP_3) * RATE_3);
+        low = STEP_3_CMD + ((integerPart - STEP_3) * RATE_3);
     }
     else if (flow > STEP_4 && flow <= STEP_5) {
-        low = STEP_4_CMD + ((flow - STEP_4) * RATE_4);
+        low = STEP_4_CMD + ((integerPart - STEP_4) * RATE_4);
     }
     else if (flow > STEP_5) {
-        low = STEP_5_CMD + (int) ((flow - STEP_5) * RATE_5);
-        high = (flow % 2) * (0x8000); // add half of a step to achieve odd numbers
+        low = STEP_5_CMD + (int)((integerPart - STEP_5) * RATE_5);
+    }
+
+    // Encode the fractional part into the high byte
+    if (fractionalPart > 0) {
+        high = (uint16_t)(fractionalPart * 0x8000); // Scale fractional part to high byte
     }
 
     return setPumpSpeed(high, low, force);
 }
-
 //Returns current pump speed
 int32_t getPumpSpeed() {
     static int32_t lastPumpSpeed = 0; // Store the last valid pump speed
@@ -234,7 +243,7 @@ int32_t getPumpSpeed() {
         return lastPumpSpeed;
     } else {
         // Print error information
-        Serial.printf("Error reading pump speed! Error code: %d\n", result);
+        // Serial.printf("Error reading pump speed! Error code: %d\n", result);
         return lastPumpSpeed; // Return the last valid pump speed instead of -1
     }
 }
