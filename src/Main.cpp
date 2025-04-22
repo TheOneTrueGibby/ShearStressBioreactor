@@ -54,6 +54,9 @@ void setup() {
   //Set up microSD card
   setupMicroSDcard(); //Function in MicrosdCard.hpp
 
+  //Set bioreactor vars
+  setBioreactorSettings(); //Function in BioreactorVariables.hpp
+
   //Setup TaskScheduler
   scheduler.init();
 

@@ -91,13 +91,13 @@ String checkPumpStatus(bool printSerial) {
 
         //Based on buffer print/store if pump is on or off
         if(state == 1) {
-            pumpStatus += "Pump status: On";
+            pumpStatus += "On";
             if(printSerial == 1) {
                 Serial.printf("Pump status: On\n");
             }
         } 
         else if (state == 0) {
-            pumpStatus += "Pump status: Off";
+            pumpStatus += "Off";
             if(printSerial == 1) {
                 Serial.printf("Pump status: Off\n");
             }
@@ -107,14 +107,14 @@ String checkPumpStatus(bool printSerial) {
         pumpOn = state;
     }
     else {
-        pumpStatus += "Pump status: Unknown";
+        pumpStatus += "Unknown";
         if (printSerial == 1) {
             Serial.println("Error: Unable to read pump state!");
         }
     }
 
     //Add the website varibile name so website displays pump data
-    pumpStatusWebsite = "pumpStatus; " + pumpStatus;
+    pumpStatusWebsite = "pumpStatus; Pump status: " + pumpStatus;
     ws.textAll(pumpStatusWebsite);
 
     //return the pump status string

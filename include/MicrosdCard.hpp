@@ -173,7 +173,7 @@ void testFileIO(fs::FS &fs, const char * path){
 
 //Function to make new routine files and append all necessary data to them
 void writeBioreactorInfo(String routineName, String timeRoutine, String flowrate, String pumpStatus) {
-  String routineNameFile = "/" + routineName + ".txt";
+  String routineNameFile = "/" + routineName + ".csv";
   File file = SD.open(routineNameFile.c_str());
 
   if(!file) {
@@ -216,11 +216,11 @@ void setupMicroSDcard() {
   uint64_t cardSize = SD.cardSize() / (1024 * 1024);
   // Serial.printf("SD Card Size: %lluMB\n", cardSize);
 
-  File file = SD.open("/test.txt");
+  File file = SD.open("/test.csv");
   if(!file) {
-    // Serial.println("File doesn't exist");
-    // Serial.println("Creating file...");
-    writeFile(SD, "/test.txt", "Hello, this means SD is working. Delete if you want to reconfirm\r\n");
+    Serial.println("File doesn't exist");
+    Serial.println("Creating file...");
+    writeFile(SD, "/test.csv", "Hello, this means SD is working. Delete if you want to reconfirm\r\n");
   }
   else {
     // Serial.println("File already exists");  

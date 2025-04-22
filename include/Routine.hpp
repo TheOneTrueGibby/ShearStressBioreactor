@@ -7,24 +7,27 @@ Allows for the running of routines for the system
 #ifndef ROUTINE_HPP
 #define ROUTINE_HPP
 
-//library for timing
+//Library for timing
 #include <chrono>
 
-//all necessary files for includes
+//All necessary files for includes
 #include "Pump.hpp"
 #include "BioreactorVariables.hpp"
 #include "FlowSensor.hpp"
 #include "MicrosdCard.hpp"
 #include "FeedBackControl.hpp"
-//#include "WebHosting.hpp"
 
-//naming conventions
+//Function delcerations
+String convertTimeToString(int timeSeconds);
+void setRoutine(String routineName, double timeRun, double timeBreak, double shearStress, int repetion);
+
+//Naming conventions
 using namespace std;
 using namespace std::chrono;
 
 const int oneSecondDelay = 1000;
 
-//this converts the amount of time running in seconds to a String with Hr:Min:Sec
+//This converts the amount of time running in seconds to a String with Hr:Min:Sec
 String convertTimeToString(int timeSeconds) {
     int timeLeft = timeSeconds;
 
@@ -32,19 +35,18 @@ String convertTimeToString(int timeSeconds) {
     int totalMin = (timeSeconds % 3600) / 60;
     int totalSec = timeSeconds % 60;
 
-    String clockConversion = "";
+    String clockConversion = String(totalHr) + ":" + String(totalMin) + ":" + String(totalSec);
 
-    clockConversion = "Routine Time: " + String(totalHr) + ":" + String(totalMin) + ":" + String(totalSec);
-
-    String clockWebsite = "runningTime; " + clockConversion;
+    String clockConversionWeb = "runningTime; Routine Time: " + String(totalHr) + ":" + String(totalMin) + ":" + String(totalSec);
+;
     //Serial.printf("%s\n",clockConversion);
-    ws.textAll(clockWebsite);
+    ws.textAll(clockConversionWeb);
 
     return clockConversion;
     
 }
 
-//alows seeting for a basic routne that repeats x times in hr conversions, scaled in seconds and rounds.
+//Alows seeting for a basic routne that repeats x times in hr conversions, scaled in seconds and rounds.
 //Example 3.6 seconds will be 4 seconds
 void setRoutine(String routineName, double timeRun, double timeBreak, double shearStress, int repetion) {
     //Update vars on website
@@ -59,6 +61,9 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
 
     //Print name of routinr that is being run
     //Serial.printf("Running Routine: %s\n", routineName);
+
+    //clock to calculate total time of the routine run and when samples were read
+    auto startTotal = high_resolution_clock::now();
 
     //runn the routine as may times as speicifed
     for(int i = 1; i < repetion + 1; i++) {
@@ -76,9 +81,6 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
         //print what repition we are on and start pump
         //Serial.printf("Starting Routine Iteration: %d\n", i);
         setPump(1);
-
-        //clock to calculate total time of the routine run and when samples were read
-        auto startTotal = high_resolution_clock::now();
 
         //run the pump for specified amount of run time
         auto start = high_resolution_clock::now();
