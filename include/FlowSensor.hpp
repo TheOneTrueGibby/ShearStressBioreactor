@@ -16,8 +16,10 @@ Holds all commands necessry to use the flow sensor, and declerations of the flow
 //set up low flow sensor with appropriate varibiles
 SensirionLF flowSensor(SLF3X_SCALE_FACTOR_FLOW, SLF3X_SCALE_FACTOR_TEMP, SLF3X_I2C_ADDRESS);
 
-float lastFlow = 0.0;
-extern float rollingAverageFlow; // Declare rolling average flow variable as external
+float flowStore;
+float tempStore;
+float shearStore;
+//extern float rollingAverageFlow; // Declare rolling average flow variable as external
 
 //sets up the flowsensor to be used
 void flowSensorSetup(SensirionLF flowSensor) {
@@ -33,23 +35,23 @@ void flowSensorSetup(SensirionLF flowSensor) {
     }
 }
 
-float getRawFlow(SensirionLF) {
-    //read the flow sensor
-    int ret = flowSensor.readSample();
+// float getRawFlow(SensirionLF) {
+//     //read the flow sensor
+//     int ret = flowSensor.readSample();
 
-    //if we were able to read flowsensor then we can get temp and flow otherwose there is an error
-    if (ret == 0) {
-        //get both flow and temp, and calculate shear stress based on flow rate
-        float flow = flowSensor.getFlow();
-        lastFlow = flow; // Store the last flow reading
-        return lastFlow; // Return the flow reading
-    } else {
-        //if unable to read set string varibile as error message
-        //Serial.print("Error in flowsensor.readSample(): ");
-        //Serial.println(ret);
-        return lastFlow; // Return the last valid flow reading
-    }
-}
+//     //if we were able to read flowsensor then we can get temp and flow otherwose there is an error
+//     if (ret == 0) {
+//         //get both flow and temp, and calculate shear stress based on flow rate
+//         float flow = flowSensor.getFlow();
+//         lastFlow = flow; // Store the last flow reading
+//         return lastFlow; // Return the flow reading
+//     } else {
+//         //if unable to read set string varibile as error message
+//         //Serial.print("Error in flowsensor.readSample(): ");
+//         //Serial.println(ret);
+//         return lastFlow; // Return the last valid flow reading
+//     }
+// }
 
 //reads the provided flowsensor provided and prints out in serial if set to true
 String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
@@ -70,7 +72,7 @@ String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
     if (ret == 0) {
 
         //get both flow and temp, and calculate shear stress based on flow rate
-        //float flowReading = flowSensor.getFlow();
+        float flowReading = flowSensor.getFlow();
         float flowTempReading = flowSensor.getTemp();
         float flowShearStress = shearStressCalc(rollingAverageFlow);
 
@@ -122,6 +124,10 @@ String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
 
     //return all the data as a string
     return flowAll;
+}
+
+void getFlowsensorData () {
+
 }
 
 #endif

@@ -39,8 +39,8 @@ String routineDetails = "";
 String settingsDetails = "";
 
 //Make the task functions to schedule
-Task routineTask(0, 1, routineTaskFunction, &scheduler, false);
-Task settingsTask(0, 1, settingsTaskFunction, &scheduler, false);
+Task routineTask(0, TASK_FOREVER, routineTaskFunction);
+Task settingsTask(0, TASK_FOREVER, settingsTaskFunction);
 
 //Call all necassry function to setup website/websocket hosting
 void initWebSetup() {
@@ -163,8 +163,6 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
         //Parse the incoming message, and make sure it is in the format: routineName;shearStress;runTime;breakTime;repetitions
         //Set the global routine variable to store routine details and that it runs only once
         routineDetails = message;
-        routineTask.setIterations(1);
-        //routineTask.enableIfNot();
 
         //Add the task to the scheduler (it will run once based on the task's configuration)
         scheduler.addTask(routineTask);
@@ -177,8 +175,6 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
         //Parse the incoming message, and make sure it is in the format: channelHeightValue;channelWidthValue;MUValue;RHOValue
         //Set the global settings variable to store routine details
         settingsDetails = message;
-        settingsTask.setIterations(1);
-        //settingsTask.enableIfNot();
 
         //Add the task to the scheduler (it will run once based on the task's configuration)
         scheduler.addTask(settingsTask);
