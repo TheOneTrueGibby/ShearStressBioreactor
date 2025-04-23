@@ -13,13 +13,14 @@ Holds all commands necessry to use the flow sensor, and declerations of the flow
 #include "BioreactorVariables.hpp"
 #include "FeedBackControl.hpp"
 
+void flowSensorSetup(SensirionLF flowSensor);
+float readFlowSensor(SensirionLF flowSensor, bool printTerminal);
+String getFlowsensorData();
+
 //set up low flow sensor with appropriate varibiles
 SensirionLF flowSensor(SLF3X_SCALE_FACTOR_FLOW, SLF3X_SCALE_FACTOR_TEMP, SLF3X_I2C_ADDRESS);
 
-float flowStore;
 float tempStore;
-float shearStore;
-//extern float rollingAverageFlow; // Declare rolling average flow variable as external
 
 //sets up the flowsensor to be used
 void flowSensorSetup(SensirionLF flowSensor) {
@@ -35,49 +36,20 @@ void flowSensorSetup(SensirionLF flowSensor) {
     }
 }
 
-// float getRawFlow(SensirionLF) {
-//     //read the flow sensor
-//     int ret = flowSensor.readSample();
-
-//     //if we were able to read flowsensor then we can get temp and flow otherwose there is an error
-//     if (ret == 0) {
-//         //get both flow and temp, and calculate shear stress based on flow rate
-//         float flow = flowSensor.getFlow();
-//         lastFlow = flow; // Store the last flow reading
-//         return lastFlow; // Return the flow reading
-//     } else {
-//         //if unable to read set string varibile as error message
-//         //Serial.print("Error in flowsensor.readSample(): ");
-//         //Serial.println(ret);
-//         return lastFlow; // Return the last valid flow reading
-//     }
-// }
-
 //reads the provided flowsensor provided and prints out in serial if set to true
-String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
-    //delay(100);
-
+float readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
     //read the flow sensor
     int ret = flowSensor.readSample();
-
-    //set up strings to hold readings
-    String flowData = "";
-    String flowTemp = "";
-    String flowShear = "";
-    String flowAll = "";
-    String flowAllWeb = "";
-    String flowShearWebsite = "";
+    float flowReading;
 
     //if we were able to read flowsensor then we can get temp and flow otherwose there is an error
     if (ret == 0) {
 
         //get both flow and temp, and calculate shear stress based on flow rate
-        float flowReading = flowSensor.getFlow();
-        float flowTempReading = flowSensor.getTemp();
-        float flowShearStress = shearStressCalc(rollingAverageFlow);
+        flowReading = flowSensor.getFlow();
 
-        //Update rolling average for feedback control loop
-        //updateRollingAverage(flowReading);
+        float flowTempReading = flowSensor.getTemp();
+        tempStore = flowTempReading;
 
         //if set to true, prints readings in terminal
         if (printTerminal == 1) {
@@ -92,42 +64,34 @@ String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
             Serial.print(" deg C\n");
         }
 
-        //Put flow data & temp into string varibile using rolling average from the feed back control
-        flowData = String(rollingAverageFlow);  //This is pulled from FeedBackControl.hpp
-        flowTemp = String(flowTempReading, 1);
-
-        //Put shear stress data into string varibile
-        //flowShear += "Shear Stress: ";
-        flowShear += String(flowShearStress);
-        //Serial.print(flowShear);
-
-        //make data string
-        flowAll = flowData + ", " + flowTemp + ", " + flowShear;
-
-        //Make website strings
-        flowAllWeb += " flowData; Flow: " + flowData + " ml/min, " + "Temp: " + flowTemp + " deg C";
-        flowShearWebsite = "shearStress; Shear Stress: " + flowShear + " Pa";
     } else {
         //if unable to read set string varibile as error message
         Serial.print("Error in flowsensor.readSample(): ");
         Serial.println(ret);
         Serial.print("\n");
-        flowAll = "Error with reading sample: " + String(ret);
-        flowAllWeb = "flowData; Error with reading sample: " + String(ret);
-        flowShearWebsite = "shearStress; Error with reading sample: " + String(ret);
-        //flowData = "Error in flowsensor.readSample(): " + String(ret);
     }
 
-    //send string varibiles to webserver/website through webscoket 
+    //return flow data as a float value
+    return flowReading;
+}
+
+String getFlowsensorData () {
+    //Put flow data & temp into string varibile using rolling average from the feed back control
+    String flowData = String(rollingAverageFlow);  //This is pulled from FeedBackControl.hpp
+    String flowTemp = String(tempStore);
+
+    //Put shear stress data into string varibile
+    String flowShear = String(shearStressCalc(rollingAverageFlow));
+
+    String flowAll = flowData + ", " + flowTemp + ", " + flowShear;
+
+    String flowAllWeb = " flowData; Flow: " + flowData + " ml/min, " + "Temp: " + flowTemp + " deg C";
+    String flowShearWebsite = "shearStress; Shear Stress: " + flowShear + " Pa";
+
     ws.textAll(flowAllWeb);
     ws.textAll(flowShearWebsite);
 
-    //return all the data as a string
     return flowAll;
-}
-
-void getFlowsensorData () {
-
 }
 
 #endif

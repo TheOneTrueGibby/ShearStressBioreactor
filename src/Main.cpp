@@ -56,7 +56,7 @@ void setup() {
   //Testing routine and adds dummy test to test file
   setRoutine("test", 0, 0, 0, 1);
 
-  rollingAverageUpdater.attach(0.1, updateRollingAverage()); // Update rolling average every 0.1 seconds
+  rollingAverageUpdater.attach(0.1, updateRollingAverage); // Update rolling average every 0.1 seconds
 }
 
 void loop() {

@@ -10,19 +10,19 @@ Way to smoothly control the pump and a nice feedback loop
 #include <Ticker.h> //Ensure the Ticker library is included
 
 #include "Pump.hpp"
+#include "FlowSensor.hpp"
 
+//Ticker decleration
 Ticker rollingAverageUpdater;
+
+//Rolling average buffer for flow readings
+std::deque<float> flowReadings;
 
 bool varPush = false;
 
 float rollingAverageFlow = 0.0;
 float currentFlowRate = 0.0; // Variable to store the rolling average flow rate
-
-//Rolling average buffer for flow readings
-std::deque<float> flowReadings;
-
 const int rollingWindowSize = 20; //Size of the rolling window for average flow rate
-
 bool flowInRange = false; //Flag to indicate if flow is within range
 
 //PID parameters
@@ -62,7 +62,8 @@ float calculateRollingAverage(float newReading) {
 }
 
 //Ensure the rollingAverageFlow variable is updated globally
-void updateRollingAverage(float newFlowReading) {
+void updateRollingAverage() {
+    readFlowSensor(flowSensor, false);
 
     rollingAverageFlow = calculateRollingAverage(newFlowReading);
     //Serial.print("Updated Rolling Average Flow: ");

@@ -89,7 +89,7 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
             auto currentTotal = duration_cast<seconds>(high_resolution_clock::now() - startTotal); //Get current time in routine
             int timeInt = currentTotal.count(); //Convert current time to integer
             String time = convertTimeToString(timeInt); //Convert it to a clock string and send it to website
-            String flow = readFlowSensor(flowSensor, 0); //Read the flow seneor and update rolling average
+            String flow = getFlowsensorData(); //Read the flow seneor and update rolling average
             controlPumpSpeed(flowRate); //Control pump speed
             String pump = checkPumpStatus(0); //Get pump status
 
@@ -106,7 +106,7 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
             auto currentTotal = duration_cast<seconds>(high_resolution_clock::now() - startTotal); //Get current time in routine
             int timeInt = currentTotal.count(); //Convert current time to integer
             String time = convertTimeToString(timeInt); //Convert it to a clock string and send it to website
-            String flow = readFlowSensor(flowSensor, 0); //Read the flow seneor and update rolling average
+            String flow = getFlowsensorData(); //Read the flow seneor and update rolling average
             String pump = checkPumpStatus(0); //Get pump status
 
             writeBioreactorInfo(routineName, time, flow, pump); //Write all data to microSD
