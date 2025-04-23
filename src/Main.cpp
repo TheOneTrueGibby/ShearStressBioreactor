@@ -11,7 +11,7 @@ Where we call all functions and run all code
 #include <Update.h>
 #include <Wire.h>
 #include <TaskScheduler.h>
-//#include <Ticker.h>
+#include <Ticker.h>
 
 //all file includes
 #include "WebHosting.hpp"
@@ -21,7 +21,7 @@ Where we call all functions and run all code
 #include "StepperMotor.hpp"
 #include "Routine.hpp"
 #include "MicrosdCard.hpp"
-#include "FeedBackControl.hpp"
+//#include "FeedBackControl.hpp"
 
 //Start Running
 void setup() {

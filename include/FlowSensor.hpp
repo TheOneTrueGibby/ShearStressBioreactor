@@ -10,11 +10,32 @@ Holds all commands necessry to use the flow sensor, and declerations of the flow
 #include <deque>
 #include <Ticker.h> //Ensure the Ticker library is included
 
+//inclusion of necessary files/functions
+#include "sensirion-lf.h"
+#include "sensirion-lf.cpp"
+#include "BioreactorVariables.hpp"
+#include "FeedBackControl.hpp"
+#include "Pump.hpp"
+
+void flowSensorSetup(SensirionLF flowSensor);
+float readFlowSensor(SensirionLF flowSensor, bool printTerminal);
+String getFlowsensorData();
+float calculateRollingAverage(float newReading);
+void updateRollingAverage();
+float calculatePID(float setpoint, float measuredValue);
+int smoothPumpSpeed(int currentSpeed, int targetSpeed, int maxChange);
+void controlPumpSpeed(float setpoint);
+
+//set up low flow sensor with appropriate varibiles
+SensirionLF flowSensor(SLF3X_SCALE_FACTOR_FLOW, SLF3X_SCALE_FACTOR_TEMP, SLF3X_I2C_ADDRESS);
+
 //Ticker decleration
 Ticker rollingAverageUpdater;
 
 //Rolling average buffer for flow readings
 std::deque<float> flowReadings;
+
+float tempStore;
 
 bool varPush = false;
 
@@ -33,22 +54,6 @@ float kd = 0.01; //Derivative gain
 //PID state variables
 float previousError = 0.0;
 float integral = 0.0;
-
-//inclusion of necessary files/functions
-#include "sensirion-lf.h"
-#include "sensirion-lf.cpp"
-#include "BioreactorVariables.hpp"
-#include "FeedBackControl.hpp"
-#include "Pump.hpp"
-
-void flowSensorSetup(SensirionLF flowSensor);
-float readFlowSensor(SensirionLF flowSensor, bool printTerminal);
-String getFlowsensorData();
-
-//set up low flow sensor with appropriate varibiles
-SensirionLF flowSensor(SLF3X_SCALE_FACTOR_FLOW, SLF3X_SCALE_FACTOR_TEMP, SLF3X_I2C_ADDRESS);
-
-float tempStore;
 
 //sets up the flowsensor to be used
 void flowSensorSetup(SensirionLF flowSensor) {
