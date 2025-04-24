@@ -86,9 +86,6 @@ function drawChart(csvData) {
         window.myChart.destroy(); // Prevent multiple charts layering
     }
 
-    canvas.width = window.innerWidth * 0.75;
-    canvas.height = canvas.width / 2;
-
     window.myChart = new Chart(ctx, {
         type: 'line',
         data: {

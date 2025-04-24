@@ -23,7 +23,7 @@ float RHO = 993; // kg / m^3
 void pushCurrentVariables() {
     String height = "channelHeight; Channel Height: " + String(CHANNEL_HEIGHT) + " mm";
     String width = "channelWidth; Channel Width: " + String(CHANNEL_WIDTH) + " mm";
-    String mu = "MU; MU: " + String(MU) + " mPa * min";
+    String mu = "MU; MU: " + String(MU, 5) + " mPa * min";
     String rho = "RHO; RHO: " + String(RHO) + " kg / m^3";
  
     ws.textAll(height);
