@@ -198,11 +198,11 @@ void writeBioreactorInfo(String routineName, String timeRoutine, String flowrate
   if(!file) {
     Serial.println("File doesn't exist");
     Serial.println("Creating file...");
-    writeFile(SD, routineNameFile.c_str(), "Routine Name, Time (seconds), Flow (ml/min), Temp (F), Shear Stress (Pa), Pump (On/Off)\r\n");
+    writeFile(SD, routineNameFile.c_str(), "Routine Name, Time (seconds), Flow (ml/min), Temp (F), Shear Stress (nPa), Pump (On/Off)\r\n");
   }
   else {
     //Do nothing
-    Serial.println("File already exists");  
+    //Serial.println("File already exists");  
   }
   file.close();
   String message = routineName + ", " + timeRoutine + ", " + flowrate + ", " + pumpStatus +"\r\n";

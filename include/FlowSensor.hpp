@@ -1,7 +1,8 @@
 /************************************************************************
 Gibson Moseley - FlowSensor.hpp
 
-Holds all commands necessry to use the flow sensor, and declerations of the flow sensor
+Holds all commands necessry to use the flow sensor, and declerations of 
+the flow sensor and used those readings to control the pump
 *************************************************************************/
 
 #ifndef FLOWSENSOR_HPP
