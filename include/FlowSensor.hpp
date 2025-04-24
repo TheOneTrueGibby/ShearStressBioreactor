@@ -120,7 +120,7 @@ String getFlowsensorData () {
     String flowAll = flowData + ", " + flowTemp + ", " + flowShear;
 
     String flowAllWeb = " flowData; Flow: " + flowData + " ml/min, " + "Temp: " + flowTemp + " deg C";
-    String flowShearWebsite = "shearStress; Shear Stress: " + flowShear + " Pa";
+    String flowShearWebsite = "shearStress; Shear Stress: " + flowShear + " nPa";
 
     ws.textAll(flowAllWeb);
     ws.textAll(flowShearWebsite);
