@@ -156,10 +156,11 @@ float calculateRollingAverage(float newReading) {
 //Ensure the rollingAverageFlow variable is updated globally
 void updateRollingAverage() {
     float newFlowReading = readFlowSensor(flowSensor, false);
+    Serial.printf("Current flow: %f", newFlowReading);
 
     rollingAverageFlow = calculateRollingAverage(newFlowReading);
-    //Serial.print("Updated Rolling Average Flow: ");
-    //Serial.println(rollingAverageFlow); //Debug print to verify rolling average update
+    Serial.print("Updated Rolling Average Flow: ");
+    Serial.println(rollingAverageFlow); //Debug print to verify rolling average update
 }
 
 // Function to calculate PID output
