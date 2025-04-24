@@ -171,6 +171,25 @@ void testFileIO(fs::FS &fs, const char * path){
   file.close();
 }
 
+void readCSVFilesToWebsite(String filename) {
+  File file = SD.open(("/" + filename + ".csv").c_str());
+  if (!file) {
+      Serial.println("Failed to open file");
+      return;
+  }
+
+  ws.textAll("csvdata;start");
+
+  while (file.available()) {
+      String line = file.readStringUntil('\n');
+      ws.textAll("csvdata;" + line);
+      delay(10); //Throttle to avoid overloading
+  }
+
+  ws.textAll("csvdata;done");
+  file.close();
+}
+
 //Function to make new routine files and append all necessary data to them
 void writeBioreactorInfo(String routineName, String timeRoutine, String flowrate, String pumpStatus) {
   String routineNameFile = "/" + routineName + ".csv";

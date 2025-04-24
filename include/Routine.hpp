@@ -113,7 +113,8 @@ void setRoutine(String routineName, double timeRun, double timeBreak, double she
         }
     }
 
-    //Denote routine is over
+    //Denote routine is over and send data to website
+    readCSVFilesToWebsite(routineName);
     Serial.printf("Routine %s Done\n", routineName);
 }
 
