@@ -21,6 +21,7 @@ Where we call all functions and run all code
 #include "StepperMotor.hpp"
 #include "Routine.hpp"
 #include "MicrosdCard.hpp"
+#include "FeedBackControl.hpp"
 
 Ticker rollingAverageUpdater;
 
@@ -31,12 +32,12 @@ float currentFlowRate = 0.0; // Variable to store the rolling average flow rate
 
 void updateRollingAverage() {
   currentFlowRate = getRawFlow(flowSensor); // Function to get the current flow rate from the sensor
-   //Serial.print("Current Flow Rate: ");
-   //Serial.println(currentFlowRate); // Debug print to verify sensor reading
+   Serial.print("Current Flow Rate: ");
+   Serial.println(currentFlowRate); // Debug print to verify sensor reading
 
   rollingAverageFlow = calculateRollingAverage(currentFlowRate);
-   //Serial.print("Updated Rolling Average Flow: ");
-   //Serial.println(rollingAverageFlow); // Debug print to verify rolling average update
+   Serial.print("Updated Rolling Average Flow: ");
+   Serial.println(rollingAverageFlow); // Debug print to verify rolling average update
 }
 
 //Start Running
@@ -54,9 +55,6 @@ void setup() {
   //Set up microSD card
   setupMicroSDcard(); //Function in MicrosdCard.hpp
 
-  //Set bioreactor vars
-  setBioreactorSettings(); //Function in BioreactorVariables.hpp
-
   //Setup TaskScheduler
   scheduler.init();
 
@@ -65,6 +63,9 @@ void setup() {
   
   //Set up Flow Sensor
   flowSensorSetup(flowSensor); //Function in FlowSensor.hpp
+
+    //Set bioreactor vars
+    setBioreactorSettings(); //Function in BioreactorVariables.hpp
 
   //Set up Stepper Motor
   //stepperSetup(stepper); //Function in StepperMotor.hpp

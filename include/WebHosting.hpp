@@ -39,7 +39,7 @@ Task settingsTask(100, TASK_ONCE, settingsTaskFunction);
 //Task Scheduler object & temp storage of submitted routines
 Scheduler scheduler;
 String routineDetails = "";
-String seetingsDetails = "";
+String settingsDetails = "";
 
 //Call all necassry function to setup website/websocket hosting
 void initWebSetup() {
@@ -105,7 +105,7 @@ void routineTaskFunction() {
 
 void settingsTaskFunction() {
   //Access the routine details from the global variable
-  String settingsDetailsLocal = seetingsDetails;
+  String settingsDetailsLocal = settingsDetails;
 
   //Parse routine details
   int separator1 = settingsDetailsLocal.indexOf(';');
@@ -132,7 +132,7 @@ void settingsTaskFunction() {
   saveBioreactorSettings(height, width, mu, rho);
 
   //After the task is executed, we can reset the global variable to avoid running the same routine again
-  seetingsDetails = "";
+  settingsDetails = "";
   settingsTask.disable();
 }
 
@@ -152,8 +152,8 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
       int semicolonIndex = incomingMessageDetails.indexOf(';');
       mode = incomingMessageDetails.substring(0, semicolonIndex); //Before the first semicolon
       message = incomingMessageDetails.substring(semicolonIndex + 1); //After the first semicolon
-      //Serial.printf("The mode is: %s\n", mode);
-      //Serial.printf("The message is: %s\n", message);
+      Serial.printf("The mode is: %s\n", mode);
+      Serial.printf("The message is: %s\n", message);
 
 
       //if the mode is for routine or settings do which is appropriate
@@ -173,7 +173,7 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
         //Serial.printf("The message is: %s\n", message);
         //Parse the incoming message, and make sure it is in the format: channelHeightValue;channelWidthValue;MUValue;RHOValue
         //Set the global seetings variable to store routine details
-        seetingsDetails = message;
+        settingsDetails = message;
 
         //Add the task to the scheduler (it will run once based on the task's configuration)
         scheduler.addTask(settingsTask);

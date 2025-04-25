@@ -70,7 +70,7 @@ String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
     if (ret == 0) {
 
         //get both flow and temp, and calculate shear stress based on flow rate
-        //float flowReading = flowSensor.getFlow();
+        //float flowReading = rollingAverageFlow;
         float flowTempReading = flowSensor.getTemp();
         float flowShearStress = shearStressCalc(rollingAverageFlow);
 
@@ -91,7 +91,7 @@ String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
         }
 
         //Put flow data & temp into string varibile using rolling average from the feed back control
-        flowData = String(rollingAverageFlow);  //This is pulled from FeedBackControl.hpp
+        flowData = String(rollingAverageFlow;  //This is pulled from FeedBackControl.hpp
         flowTemp = String(flowTempReading, 1);
 
         //Put shear stress data into string varibile
@@ -104,9 +104,9 @@ String readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
 
         //Make website strings
         flowAllWeb += " flowData; Flow: " + flowData + " ml/min, " + "Temp: " + flowTemp + " deg C";
-        flowShearWebsite = "shearStress; Shear Stress: " + flowShear + " Pa";
+        flowShearWebsite = "shearStress; Shear Stress: " + flowShear + " mPa";
     } else {
-        //if unable to read set string varibile as error message
+        //if unable to read, set string variable as error message
         Serial.print("Error in flowsensor.readSample(): ");
         Serial.println(ret);
         Serial.print("\n");

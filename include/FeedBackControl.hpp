@@ -8,6 +8,7 @@ Way to smoothly control the pump and a nice feedback loop
 
 #include <deque>
 #include <Ticker.h> //Ensure the Ticker library is included
+#include "FlowSensor.hpp"
 
 #include "Pump.hpp"
 
@@ -18,7 +19,7 @@ std::deque<float> flowReadings;
 
 extern float rollingAverageFlow; //Declare the rolling average flow variable as external
 
-const int rollingWindowSize = 20; //Size of the rolling window for average flow rate
+const int rollingWindowSize = 25; //Size of the rolling window for average flow rate
 
 bool flowInRange = false; //Flag to indicate if flow is within range
 
@@ -56,13 +57,6 @@ float calculateRollingAverage(float newReading) {
     //Serial.print("Calculated Rolling Average: ");
     //Serial.println(average); // Debug print to verify calculation
     return average;
-}
-
-//Ensure the rollingAverageFlow variable is updated globally
-void updateRollingAverage(float newFlowReading) {
-    rollingAverageFlow = calculateRollingAverage(newFlowReading);
-    //Serial.print("Updated Rolling Average Flow: ");
-    //Serial.println(rollingAverageFlow); //Debug print to verify rolling average update
 }
 
 // Function to calculate PID output
