@@ -31,7 +31,7 @@ void controlPumpSpeed(float setpoint);
 SensirionLF flowSensor(SLF3X_SCALE_FACTOR_FLOW, SLF3X_SCALE_FACTOR_TEMP, SLF3X_I2C_ADDRESS);
 
 //Ticker decleration
-Ticker rollingAverageUpdater;
+//Ticker rollingAverageUpdater;
 
 //Rolling average buffer for flow readings
 std::deque<float> flowReadings;
@@ -156,7 +156,7 @@ float calculateRollingAverage(float newReading) {
 //Ensure the rollingAverageFlow variable is updated globally
 void updateRollingAverage() {
     float newFlowReading = readFlowSensor(flowSensor, false);
-    Serial.printf("Current flow: %f", newFlowReading);
+    Serial.printf("Current flow: %f\n", newFlowReading);
 
     rollingAverageFlow = calculateRollingAverage(newFlowReading);
     Serial.print("Updated Rolling Average Flow: ");

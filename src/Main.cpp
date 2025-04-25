@@ -23,6 +23,9 @@ Where we call all functions and run all code
 #include "MicrosdCard.hpp"
 //#include "FeedBackControl.hpp"
 
+//Ticker decleration
+Ticker rollingAverageUpdater;
+
 //Start Running
 void setup() {
   //Start Serial Communication
