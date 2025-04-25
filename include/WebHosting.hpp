@@ -21,7 +21,7 @@ AsyncWebSocket ws("/ws");
 
 //File includes
 #include "Routine.hpp"
-//#include "BioreactorVariables.hpp"
+#include "BioreactorVariables.hpp"
 
 //Function delcerations
 void initSPIFFS();
