@@ -11,6 +11,13 @@ This holds all equations and varbilies about bioreactor setup to calculate value
 //Library includes
 #include <Preferences.h>
 
+void pushCurrentVariables();
+void setBioreactorSettings();
+void saveBioreactorSettings(float height, float width, float mu, float rho);
+float shearStressCalc(float flowRate);
+float flowRateBasedOnShearStressCalc(float shearStress);
+float reynoldsCalc(float flowRate);
+
 Preferences preferences;
 
 extern float rollingAverageFlow;
@@ -92,18 +99,6 @@ void saveBioreactorSettings(float height, float width, float mu, float rho) {
 
     pushCurrentVariables();
 }
-
-//Calculates flowrate based on sensor value given
-// float flowRateCalc(float sensorValue) {
-//     float fl = (((CHANNEL_WIDTH * CHANNEL_HEIGHT * CHANNEL_HEIGHT * sensorValue) / (6 * MU * 1000)));
-//     return fl;
-// }
-
-// //Calculates the shear stress in Pa that will result from the provided flow rate in ml/min.
-// float shearStressCalc(float flowRate) {
-//     float sh = (flowRate / 6e7) * (6 * MU) / (CHANNEL_WIDTH * CHANNEL_HEIGHT * CHANNEL_HEIGHT);
-//     return sh;
-// }
 
 //Calculates the shear stress in Pa that will result from the provided flow rate in ml/min.
 float shearStressCalc(float flowRate) {
