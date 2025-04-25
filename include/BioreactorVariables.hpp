@@ -70,22 +70,22 @@ void saveBioreactorSettings(float height, float width, float mu, float rho) {
     preferences.begin("bioreactor", false);
 
     //Only save if value is diffrent
-    if ((height != CHANNEL_HEIGHT) && (height != 0)) {
+    if ((height != CHANNEL_HEIGHT) && (height > 0)) {
         preferences.putFloat("height", height);
         CHANNEL_HEIGHT = height; // Update the in-memory value
     }
 
-    if ((width != CHANNEL_WIDTH) && (width != 0)) {
+    if ((width != CHANNEL_WIDTH) && (width > 0)) {
         preferences.putFloat("width", width);
         CHANNEL_WIDTH = width;
     }
 
-    if ((mu != MU) && (mu != 0)) {
+    if ((mu != MU) && (mu > 0)) {
         preferences.putFloat("mu", mu);
         MU = mu;
     }
 
-    if ((rho != RHO) && (rho != 0)) {
+    if ((rho != RHO) && (rho > 0)) {
         preferences.putFloat("rho", rho);
         RHO = rho;
     }
