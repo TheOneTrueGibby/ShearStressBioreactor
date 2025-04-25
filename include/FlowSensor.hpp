@@ -41,8 +41,8 @@ float tempStore;
 bool varPush = false;
 
 float rollingAverageFlow = 0.0;
-float currentFlowRate = 0.0; // Variable to store the rolling average flow rate
-const int rollingWindowSize = 20; //Size of the rolling window for average flow rate
+float newFlowReading = 0.0;
+const int rollingWindowSize = 50; //Size of the rolling window for average flow rate
 bool flowInRange = false; //Flag to indicate if flow is within range
 
 //PID parameters
@@ -74,13 +74,14 @@ void flowSensorSetup(SensirionLF flowSensor) {
 float readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
     //read the flow sensor
     int ret = flowSensor.readSample();
-    float flowReading;
-
+    float flowReading = 0.0;
+    float lastFlowReading;
     //if we were able to read flowsensor then we can get temp and flow otherwose there is an error
     if (ret == 0) {
 
         //get both flow and temp, and calculate shear stress based on flow rate
         flowReading = flowSensor.getFlow();
+        lastFlowReading = flowReading; // Store the latest flow rate reading
 
         float flowTempReading = flowSensor.getTemp();
         tempStore = flowTempReading;
@@ -103,8 +104,9 @@ float readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
         Serial.print("Error in flowsensor.readSample(): ");
         Serial.println(ret);
         Serial.print("\n");
-    }
+        flowReading = lastFlowReading; // If an error occurs, return the last known flow reading to not mess up the rolling average
 
+    }
     //return flow data as a float value
     return flowReading;
 }
@@ -119,8 +121,8 @@ String getFlowsensorData () {
 
     String flowAll = flowData + ", " + flowTemp + ", " + flowShear;
 
-    String flowAllWeb = " flowData; Flow: " + flowData + " ml/min, " + "Temp: " + flowTemp + " deg C";
-    String flowShearWebsite = "shearStress; Shear Stress: " + flowShear + " nPa";
+    String flowAllWeb = " flowData; Flow: " + flowData + " mL/min, " + "Temp: " + flowTemp + " deg C";
+    String flowShearWebsite = "shearStress; Shear Stress: " + flowShear + " mPa";
 
     ws.textAll(flowAllWeb);
     ws.textAll(flowShearWebsite);
@@ -155,7 +157,7 @@ float calculateRollingAverage(float newReading) {
 
 //Ensure the rollingAverageFlow variable is updated globally
 void updateRollingAverage() {
-    float newFlowReading = readFlowSensor(flowSensor, false);
+    newFlowReading = readFlowSensor(flowSensor, false);
     Serial.printf("Current flow: %f\n", newFlowReading);
 
     rollingAverageFlow = calculateRollingAverage(newFlowReading);
@@ -194,9 +196,9 @@ int smoothPumpSpeed(int currentSpeed, int targetSpeed, int maxChange) {
 //Updated function to control pump speed using PID with smooth ramping
 void controlPumpSpeed(float setpoint) {
     float difference = setpoint*0.05;
-    float currentFlowRate = rollingAverageFlow;
+    //float currentFlowRate = rollingAverageFlow;
     //Check if the flow rate is within the acceptable range
-    if (difference > abs(setpoint - currentFlowRate) && currentFlowRate > 0) {
+    if (difference > abs(setpoint - rollingAverageFlow) && rollingAverageFlow > 0) {
         flowInRange = true; // Set the flag to indicate flow is in range
         //Serial.println("Flow is in range.");
     } else {
@@ -206,7 +208,7 @@ void controlPumpSpeed(float setpoint) {
 
     if (!flowInRange) {
 
-        float pidOutput = calculatePID(setpoint, currentFlowRate);
+        float pidOutput = calculatePID(setpoint, rollingAverageFlow);
 
         //Convert PID output to a valid pump speed
         int targetSpeed = constrain((int)pidOutput, 8, 400); // Ensure speed is within pump range
@@ -221,7 +223,7 @@ void controlPumpSpeed(float setpoint) {
         setPumpSpeed(newSpeed, true);
 
         //Serial.print("Current Flow: ");
-        //Serial.print(currentFlowRate);
+        //Serial.print(rollingAverageFlow);
         //Serial.print(" | Target Speed: ");
         //Serial.print(targetSpeed);
         //Serial.print(" | Current Speed: ");

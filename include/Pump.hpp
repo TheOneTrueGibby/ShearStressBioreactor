@@ -186,32 +186,59 @@ bool setPumpSpeed(int flow, bool force) {
     uint16_t low = 0;
     uint16_t high = 0;
 
-    // TODO: currently only integer flow rates are possible, but the high bytes can be used to 
-    // achieve decimal values, following the calculations done for flow rates over 256 ml/min
+    // Separate the integer and fractional parts of the flow rate
+    int integerPart = static_cast<int>(flow);
+    float fractionalPart = flow - integerPart;
 
     // Start with the known register value at the edge of the precision level, then add the needed steps
-    if (flow <= STEP_1) {
-        low = STEP_0_CMD + ((flow - STEP_0) * RATE_0);
+    if (integerPart <= STEP_1) {
+        low = STEP_0_CMD + ((integerPart - STEP_0) * RATE_0);
+    } else if (integerPart > STEP_1 && integerPart <= STEP_2) {
+        low = STEP_1_CMD + ((integerPart - STEP_1) * RATE_1);
+    } else if (integerPart > STEP_2 && integerPart <= STEP_3) {
+        low = STEP_2_CMD + ((integerPart - STEP_2) * RATE_2);
+    } else if (integerPart > STEP_3 && integerPart <= STEP_4) {
+        low = STEP_3_CMD + ((integerPart - STEP_3) * RATE_3);
+    } else if (integerPart > STEP_4 && integerPart <= STEP_5) {
+        low = STEP_4_CMD + ((integerPart - STEP_4) * RATE_4);
+    } else if (integerPart > STEP_5) {
+        low = STEP_5_CMD + static_cast<int>((integerPart - STEP_5) * RATE_5);
     }
-    else if (flow > STEP_1 && flow <= STEP_2) {
-        low = STEP_1_CMD + ((flow - STEP_1) * RATE_1);
-    }
-    else if (flow > STEP_2 && flow <= STEP_3) {
-        low = STEP_2_CMD + ((flow - STEP_2) * RATE_2);
-    }
-    else if (flow > STEP_3 && flow <= STEP_4) {
-        low = STEP_3_CMD + ((flow - STEP_3) * RATE_3);
-    }
-    else if (flow > STEP_4 && flow <= STEP_5) {
-        low = STEP_4_CMD + ((flow - STEP_4) * RATE_4);
-    }
-    else if (flow > STEP_5) {
-        low = STEP_5_CMD + (int) ((flow - STEP_5) * RATE_5);
-        high = (flow % 2) * (0x8000); // add half of a step to achieve odd numbers
+
+    // Encode the fractional part into the high byte
+    if (fractionalPart > 0) {
+        high = static_cast<uint16_t>(fractionalPart * 0x8000); // Scale fractional part to high byte
     }
 
     return setPumpSpeed(high, low, force);
 }
+
+//     // TODO: currently only integer flow rates are possible, but the high bytes can be used to 
+//     // achieve decimal values, following the calculations done for flow rates over 256 ml/min
+
+//     // Start with the known register value at the edge of the precision level, then add the needed steps
+//     if (flow <= STEP_1) {
+//         low = STEP_0_CMD + ((flow - STEP_0) * RATE_0);
+//     }
+//     else if (flow > STEP_1 && flow <= STEP_2) {
+//         low = STEP_1_CMD + ((flow - STEP_1) * RATE_1);
+//     }
+//     else if (flow > STEP_2 && flow <= STEP_3) {
+//         low = STEP_2_CMD + ((flow - STEP_2) * RATE_2);
+//     }
+//     else if (flow > STEP_3 && flow <= STEP_4) {
+//         low = STEP_3_CMD + ((flow - STEP_3) * RATE_3);
+//     }
+//     else if (flow > STEP_4 && flow <= STEP_5) {
+//         low = STEP_4_CMD + ((flow - STEP_4) * RATE_4);
+//     }
+//     else if (flow > STEP_5) {
+//         low = STEP_5_CMD + (int) ((flow - STEP_5) * RATE_5);
+//         high = (flow % 2) * (0x8000); // add half of a step to achieve odd numbers
+//     }
+
+//     return setPumpSpeed(high, low, force);
+// }
 //Returns current pump speed
 int32_t getPumpSpeed() {
     static int32_t lastPumpSpeed = 0; // Store the last valid pump speed

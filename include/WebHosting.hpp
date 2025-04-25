@@ -107,7 +107,7 @@ void routineTaskFunction() {
 void settingsTaskFunction() {
   //Access the routine details from the global variable
   String settingsDetailsLocal = settingsDetails;
-  String settingsDetailsLocal = settingsDetails;
+ // String settingsDetailsLocal = settingsDetails;
 
   //Parse routine details
   int separator1 = settingsDetailsLocal.indexOf(';');

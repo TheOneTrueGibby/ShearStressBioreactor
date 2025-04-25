@@ -18,7 +18,7 @@ Where we call all functions and run all code
 #include "FlowSensor.hpp"
 #include "Pump.hpp"
 #include "BioreactorVariables.hpp"
-#include "StepperMotor.hpp"
+//#include "StepperMotor.hpp"
 #include "Routine.hpp"
 #include "MicrosdCard.hpp"
 //#include "FeedBackControl.hpp"
@@ -51,10 +51,7 @@ void setup() {
   flowSensorSetup(flowSensor); //Function in FlowSensor.hpp
 
     //Set bioreactor vars
-    setBioreactorSettings(); //Function in BioreactorVariables.hpp
-
-  //Set up Stepper Motor
-  //stepperSetup(stepper); //Function in StepperMotor.hpp
+  setBioreactorSettings(); //Function in BioreactorVariables.hpp
 
   //Testing routine and adds dummy test to test file
   //setRoutine("test", 0, 0, 0, 1);
@@ -63,9 +60,6 @@ void setup() {
 }
 
 void loop() {
-  //delay();
-  //yield();
-
   //Refresh websocket
   ws.cleanupClients();
 
