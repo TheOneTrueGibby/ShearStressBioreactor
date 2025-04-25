@@ -41,9 +41,6 @@ void setup() {
   //Set up microSD card
   setupMicroSDcard(); //Function in MicrosdCard.hpp
 
-  //Set bioreactor vars
-  setBioreactorSettings(); //Function in BioreactorVariables.hpp
-
   //Setup TaskScheduler
   scheduler.init();
 
@@ -52,6 +49,9 @@ void setup() {
   
   //Set up Flow Sensor
   flowSensorSetup(flowSensor); //Function in FlowSensor.hpp
+
+    //Set bioreactor vars
+    setBioreactorSettings(); //Function in BioreactorVariables.hpp
 
   //Set up Stepper Motor
   //stepperSetup(stepper); //Function in StepperMotor.hpp

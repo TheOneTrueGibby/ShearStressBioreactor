@@ -125,9 +125,11 @@ function onSubmitRoutine(event) {
     var runTime = document.getElementById('runTimeValue').value.trim();
     var breakTime = document.getElementById('breakTimeValue').value.trim();
     var repetitions = document.getElementById('repeationValue').value.trim();
+   // var routine = String(routine);
 
     //Create a message string to send to the ESP32
-    var message = "routine;" + routineName + ";" + shearStress + ";" + runTime + ";" + breakTime + ";" + repetitions;
+    var message = "routine" + ";" + routineName + ";" + shearStress + ";" + runTime + ";" + breakTime + ";" + repetitions;
+    //var messageSend = "routine;" + message;
 
     //Send the message to the WebSocket server
     websocket.send(message);
@@ -146,7 +148,8 @@ function onSubmitSettings(event) {
     var RHO = document.getElementById('RHOValue').value.trim();
     
     //Create a message string to send to the ESP32
-    var message = "settings;" + channelHeight + ";" + channelWidth + ";" + MU + ";" + RHO;
+    var message = "settings" + ";" + channelHeight + ";" + channelWidth + ";" + MU + ";" + RHO;
+    //var messageSend = "settings;" + message;
 
     //Send the message to the WebSocket server
     websocket.send(message);

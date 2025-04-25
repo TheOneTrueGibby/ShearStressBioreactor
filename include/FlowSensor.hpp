@@ -99,7 +99,7 @@ float readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
         }
 
     } else {
-        //if unable to read set string varibile as error message
+        //if unable to read, set string variable as error message
         Serial.print("Error in flowsensor.readSample(): ");
         Serial.println(ret);
         Serial.print("\n");

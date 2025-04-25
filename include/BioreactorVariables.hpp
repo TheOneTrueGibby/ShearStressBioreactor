@@ -13,17 +13,28 @@ This holds all equations and varbilies about bioreactor setup to calculate value
 
 Preferences preferences;
 
+extern float rollingAverageFlow;
+
 //All bioreactor varibiles needed for calculation (change as needed)
 float CHANNEL_HEIGHT = 1; // mm
 float CHANNEL_WIDTH = 25; // mm
-float MU = (0.93/60); // mPa * min
+float MU = 0.0155; // mPa * min
 float RHO = 993; // kg / m^3
 
 //Push current bioreactor vars
 void pushCurrentVariables() {
+    preferences.begin("bioreactor", true);
+
+    CHANNEL_HEIGHT = preferences.getFloat("height", 1);
+    CHANNEL_WIDTH = preferences.getFloat("width", 25);
+    MU = preferences.getFloat("mu", 0.0155);
+    RHO = preferences.getFloat("rho", 993);
+
+    preferences.end();
+
     String height = "channelHeight; Channel Height: " + String(CHANNEL_HEIGHT) + " mm";
     String width = "channelWidth; Channel Width: " + String(CHANNEL_WIDTH) + " mm";
-    String mu = "MU; MU: " + String(MU, 5) + " mPa * min";
+    String mu = "MU; MU: " + String(MU, 5) + " mPa * min"; // Specify number of decimal places
     String rho = "RHO; RHO: " + String(RHO) + " kg / m^3";
  
     ws.textAll(height);
@@ -31,7 +42,7 @@ void pushCurrentVariables() {
     ws.textAll(mu);
     ws.textAll(rho);
 
-    //Serial.print("Pushing Current Vars\n");
+    Serial.print("Pushing Current Vars\n");
     return;
 }
 
@@ -40,7 +51,7 @@ void setBioreactorSettings() {
 
     CHANNEL_HEIGHT = preferences.getFloat("height", 1);
     CHANNEL_WIDTH  = preferences.getFloat("width", 25);
-    MU             = preferences.getFloat("mu", 0.93 / 60);
+    MU             = preferences.getFloat("mu", 0.0155);
     RHO            = preferences.getFloat("rho", 993);
 
     preferences.end();
@@ -73,6 +84,11 @@ void saveBioreactorSettings(float height, float width, float mu, float rho) {
     }
 
     preferences.end();
+
+    // CHANNEL_HEIGHT = height;
+    // CHANNEL_WIDTH  = width;
+    // MU             = mu;
+    // RHO            = rho;
 
     pushCurrentVariables();
 }
