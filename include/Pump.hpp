@@ -9,7 +9,14 @@ Some code used from last years team - Carson Sloan (pump.hpp/pump.cpp)
 
 #include <ModbusMaster.h>
 
-//#include "WebHosting.hpp"
+void preTransmission();
+void postTransmission();
+void pumpSetup();
+String checkPumpStatus(bool printSerial);
+bool setPump(bool option);
+bool setPumpSpeed(uint16_t high, uint16_t low, bool start/* = false*/);
+bool setPumpSpeed(int flow, bool force);
+int32_t getPumpSpeed();
 
 ModbusMaster node;
 

@@ -8,6 +8,9 @@ All vaibiles and functions needed to setup and control a stepper motor
 
 #include <ESP_FlexyStepper.h>
 
+void stepperSetup(ESP_FlexyStepper stepper);
+void moveStepper(int moveDistnace);
+
 //Pins for Stepper Motor
 int HIGH_MOTOR_DIRPIN = 27;
 int HIGH_MOTOR_STEPPIN = 26;
