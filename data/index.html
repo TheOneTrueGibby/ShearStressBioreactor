@@ -11,6 +11,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>ESP32 WebServer</title>
         <link rel="stylesheet" type="text/xss" href="style.css">
+        <script src="/chart.min.js"></script>
         <script src="websocket.js"></script>
     </head>
     <body>
@@ -18,7 +19,7 @@
         
         <!-- Project Running Time -->
         <section>
-            <h2>Status & Data</h2>
+            <h2>Current Status & Data</h2>
             <div id="pumpStatus">Waiting for pump data...</div>
             <div id="runningTime">Waiting for time data</div>
             <div id="flowData">Waiting for flow data...</div></h1>
@@ -29,48 +30,67 @@
         <section>
             <h2>Running Paramaters</h2>
             <div>
-                <label for="shearStressRoutine">Shear Stress: </label>
-                <input type="number" id="shearStressValue" placeholder="Shear Stress Value">
+                <label for="routineName">Routine Name: </label>
+                <input type="string" id="routineNameValue" placeholder="Routine Name">
+            </div>
+            <div>
+                <label for="shearStress">Shear Stress: </label>
+                <input type="number" id="shearStressValue" placeholder="Shear Stress Value (mPa)">
             </div>
             <div>
                 <label for="runTime">Run Time: </label>
-                <input type="text" id="runTime" placeholder="Enter Run time (Hr)">
+                <input type="number" id="runTimeValue" placeholder="Enter Run time (Hr)">
             </div>
             <div>
                 <label for="breakTime">Break Time: </label>
-                <input type="text" id="breakTime" placeholder="Enter Break time (Hr)">
+                <input type="number" id="breakTimeValue" placeholder="Enter Break time (Hr)">
             </div>
             <div>
-                <label for="runTime">Number of cycles: </label>
-                <input type="number" id="repeation" placeholder="Enter Repeation Amount">
+                <label for="repeation">Number of cycles: </label>
+                <input type="number" id="repeationValue" placeholder="Enter Number of Cycles">
             </div>
             <div>
-                <button id="submitButton">Submit</button>
+                <button type="button" id="submitButton">Submit</button>
             </div>
         </section>
 
         <!-- Settings -->
+        <h2>Bioreactor Paramaters/Settings</h2>
         <section>
-            <h2>Bioreactor Paramaters/Settings</h2>
+            <h3>Current Settings</h3>
+            <div id="channelHeight">Waiting for Height data...</div>
+            <div id="channelWidth">Waiting for Width data</div>
+            <div id="MU">Waiting for media viscosity data...</div></h1>
+            <div id="RHO">Waiting for media density data...</div>
+        </section>
+        <section>
+            <h3>Set New Settings</h3>
             <div>
                 <label for="channelHeight">Channel Height: </label>
-                <input type="number" id="channelHeightValue" placeholder="Channel Height (m)">
+                <input type="number" id="channelHeightValue" placeholder="Channel Height (mm)">
             </div>
             <div>
                 <label for="channelWidth">Channel Width: </label>
-                <input type="number" id="channelWidthValue" placeholder="Channel Width (m)">
+                <input type="number" id="channelWidthValue" placeholder="Channel Width (mm)">
             </div>
             <div>
-                <label for="MU">MU: </label>
-                <input type="number" id="MUValue" placeholder="MU (Pa * s)">
+                <label for="Mu">MU: </label>
+                <input type="number" id="MUValue" placeholder="Media Viscosity (mPa*min)">
             </div>
             <div>
-                <label for="RHO">RHO: </label>
-                <input type="number" id="RHOValue" placeholder="RHO (kg / m^3)">
+                <label for="Rho">RHO: </label>
+                <input type="number" id="RHOValue" placeholder="Media Density (kg/m^3)">
             </div>
             <div>
-                <button id="valueSetButton">Set Bioreactor Values</button>
+                <button type="button" id="valueSetButton">Set Bioreactor Values</button>
             </div>
         </section>
+
+        <!-- Section for routine graph -->
+        <section>
+            <h2>Flow Rate Chart</h2>
+            <canvas id="dataChart" width="600" height="400"></canvas>
+        </section>
+        
     </body>
 </html>

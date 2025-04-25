@@ -10,15 +10,21 @@ Where we call all functions and run all code
 #include <DNSServer.h>
 #include <Update.h>
 #include <Wire.h>
+#include <TaskScheduler.h>
+#include <Ticker.h>
 
 //all file includes
 #include "WebHosting.hpp"
 #include "FlowSensor.hpp"
 #include "Pump.hpp"
-#include "BioreactorVaribiles.hpp"
-#include "StepperMotor.hpp"
+#include "BioreactorVariables.hpp"
+//#include "StepperMotor.hpp"
 #include "Routine.hpp"
 #include "MicrosdCard.hpp"
+//#include "FeedBackControl.hpp"
+
+//Ticker decleration
+Ticker rollingAverageUpdater;
 
 //Start Running
 void setup() {
@@ -30,10 +36,13 @@ void setup() {
   
   //Setup modbus for pump communication
   pumpSetup(); //Function in Pump.hpp
-  setPump(0);
+  setPump(0); //Function in Pump.hpp
 
   //Set up microSD card
   setupMicroSDcard(); //Function in MicrosdCard.hpp
+
+  //Setup TaskScheduler
+  scheduler.init();
 
   //Begin wire communication
   Wire.begin();
@@ -41,14 +50,19 @@ void setup() {
   //Set up Flow Sensor
   flowSensorSetup(flowSensor); //Function in FlowSensor.hpp
 
-  //Set up Stepper Motor
-  //stepperSetup(stepper); //Function in StepperMotor.hpp
+    //Set bioreactor vars
+  setBioreactorSettings(); //Function in BioreactorVariables.hpp
 
-  setRoutine("Test", 0.001, 0.001, 1, 1);
+  //Testing routine and adds dummy test to test file
+  //setRoutine("test", 0, 0, 0, 1);
+
+  rollingAverageUpdater.attach(0.1, updateRollingAverage); // Update rolling average every 0.1 seconds
 }
 
 void loop() {
-  //refresh data on the website 
-  delay(100);
+  //Refresh websocket
   ws.cleanupClients();
+
+  //Run the task scheduler
+  scheduler.execute();
 }
