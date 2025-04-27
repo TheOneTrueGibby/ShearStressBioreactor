@@ -1,5 +1,5 @@
 /************************************************************************
-Gibson Moseley  - Pump.hpp
+Gibson Moseley & Dillon West  - Pump.hpp
 All functions to setup and control the pump
 Some code used from last years team - Carson Sloan (pump.hpp/pump.cpp)
 *************************************************************************/

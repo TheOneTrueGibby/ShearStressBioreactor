@@ -1,5 +1,5 @@
 /************************************************************************
-Gibson Moseley - BioreactorVaribiles.hpp
+Gibson Moseley & Dillon West - BioreactorVaribiles.hpp
 Some code used from last years team - Carson Sloan (utils.hpp/utils.cpp)
 
 This holds all equations and varbilies about bioreactor setup to calculate values correctly

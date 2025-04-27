@@ -1,5 +1,5 @@
 /************************************************************************
-Gibson Moseley - FlowSensor.hpp
+Gibson Moseley & Dillon West - FlowSensor.hpp
 
 Holds all commands necessry to use the flow sensor, and declerations of 
 the flow sensor and used those readings to control the pump
