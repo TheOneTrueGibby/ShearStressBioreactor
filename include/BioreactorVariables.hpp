@@ -11,6 +11,7 @@ This holds all equations and varbilies about bioreactor setup to calculate value
 //Library includes
 #include <Preferences.h>
 
+//All function declerations
 void pushCurrentVariables();
 void setBioreactorSettings();
 void saveBioreactorSettings(float height, float width, float mu, float rho);
@@ -18,9 +19,8 @@ float shearStressCalc(float flowRate);
 float flowRateBasedOnShearStressCalc(float shearStress);
 float reynoldsCalc(float flowRate);
 
+//Prefrences object (used to save settings)
 Preferences preferences;
-
-extern float rollingAverageFlow;
 
 //All bioreactor varibiles needed for calculation (change as needed)
 float CHANNEL_HEIGHT = 1; // mm
@@ -53,6 +53,7 @@ void pushCurrentVariables() {
     return;
 }
 
+//This starts the prefrences objects and vars and sets them as these base values
 void setBioreactorSettings() {
     preferences.begin("bioreactor", true);
 
@@ -66,10 +67,11 @@ void setBioreactorSettings() {
     pushCurrentVariables();
 }
 
+//This sets the current prefrences vars to new values (they will persist through power cycles)
 void saveBioreactorSettings(float height, float width, float mu, float rho) {
     preferences.begin("bioreactor", false);
 
-    //Only save if value is diffrent
+    //Only save if value is diffrent & above zero for all values
     if ((height != CHANNEL_HEIGHT) && (height > 0)) {
         preferences.putFloat("height", height);
         CHANNEL_HEIGHT = height; // Update the in-memory value
@@ -97,6 +99,7 @@ void saveBioreactorSettings(float height, float width, float mu, float rho) {
     // MU             = mu;
     // RHO            = rho;
 
+    //pushes new saved settings
     pushCurrentVariables();
 }
 

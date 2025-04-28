@@ -29,9 +29,6 @@ void controlPumpSpeed(float setpoint);
 //set up low flow sensor with appropriate varibiles
 SensirionLF flowSensor(SLF3X_SCALE_FACTOR_FLOW, SLF3X_SCALE_FACTOR_TEMP, SLF3X_I2C_ADDRESS);
 
-//Ticker decleration
-//Ticker rollingAverageUpdater;
-
 //Rolling average buffer for flow readings
 std::deque<float> flowReadings;
 
