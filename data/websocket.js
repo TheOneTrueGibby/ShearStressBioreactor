@@ -5,18 +5,23 @@ handles webscoket data handling for website side
 helped with tutorial: https://m1cr0lab-esp32.github.io/remote-control-with-websocket/
 *************************************************************************/
 
+//WebSocket endpoint dynamically based on server IP
 var gateway = `ws://${window.location.hostname}/ws`;
 var websocket;
 
+//Array to store incoming CSV lines for graph plotting
 let csvLines = [];
 
+//Run once page loads
 window.addEventListener('load', onLoad);
 
+//Initial load setup
 function onLoad(event) {
     initWebSocket();
     initFormSubmit();
 }
 
+//Open a new WebSocket connection
 function initWebSocket() {
     console.log('Trying to open a WebSocket connection...');
     websocket = new WebSocket(gateway);
@@ -25,10 +30,12 @@ function initWebSocket() {
     websocket.onmessage = onMessage;
 }
 
+//Say when connected
 function onOpen(event) {
     console.log('Connection opened');
 }
 
+//Say when disconnected
 function onClose(event) {
     console.log('Connection closed');
     setTimeout(initWebSocket, 2000);
@@ -37,10 +44,13 @@ function onClose(event) {
 //This allows string varibiles to be sent to the websever in the format of "[varibleHTMLName]; data you want to send"
 //Example: "flowdata; Flow is not set" is broken into varName = flowdata, value = "Flow is not set"
 function onMessage(event) {
+    //Say what data was recived
     console.log('Received: ', event.data);
 
+    //Split incoming message into variable name and value
     let [variableName, value] = event.data.split(';');
 
+    //Clear all data and only display once all data has been sent and if not for graph push it to the website
     if (variableName === "csvdata") {
         if (value === "start") {
             csvLines = [];
@@ -67,12 +77,12 @@ function drawChart(csvData) {
     let labels = [];
     let flowData = [];
 
-    // Skip header (first line)
+    //Skip header (first line)
     csvData.slice(1).forEach(line => {
         let parts = line.split(',');
         if (parts.length >= 3) {
-            let time = parts[1].trim();  // Time column
-            let flow = parseFloat(parts[2]); // Flow (ml/min)
+            let time = parts[1].trim();  //Time column
+            let flow = parseFloat(parts[2]); //Flow (ml/min)
 
             if (!isNaN(flow)) {
                 labels.push(time);
@@ -83,7 +93,7 @@ function drawChart(csvData) {
 
     const ctx = document.getElementById('dataChart').getContext('2d');
     if (window.myChart) {
-        window.myChart.destroy(); // Prevent multiple charts layering
+        window.myChart.destroy(); //Prevent multiple charts layering
     }
 
     window.myChart = new Chart(ctx, {
@@ -115,6 +125,7 @@ function initFormSubmit() {
     document.getElementById('valueSetButton').addEventListener('click', onSubmitSettings);
 }
 
+//Handle submission of routine form
 function onSubmitRoutine(event) {
     //Prevent form from reloading the page
     event.preventDefault();
@@ -125,11 +136,11 @@ function onSubmitRoutine(event) {
     var runTime = document.getElementById('runTimeValue').value.trim();
     var breakTime = document.getElementById('breakTimeValue').value.trim();
     var repetitions = document.getElementById('repeationValue').value.trim();
-   // var routine = String(routine);
+    // var routine = String(routine);
 
     //Create a message string to send to the ESP32
     var message = "routine" + ";" + routineName + ";" + shearStress + ";" + runTime + ";" + breakTime + ";" + repetitions;
-    //var messageSend = "routine;" + message;
+    // var messageSend = "routine;" + message;
 
     //Send the message to the WebSocket server
     websocket.send(message);
@@ -137,6 +148,7 @@ function onSubmitRoutine(event) {
     console.log('Sending data:', message);
 }
 
+//Handle submission of settings form
 function onSubmitSettings(event) {
     //Prevent form from reloading the page
     event.preventDefault();
@@ -149,7 +161,7 @@ function onSubmitSettings(event) {
     
     //Create a message string to send to the ESP32
     var message = "settings" + ";" + channelHeight + ";" + channelWidth + ";" + MU + ";" + RHO;
-    //var messageSend = "settings;" + message;
+    // var messageSend = "settings;" + message;
 
     //Send the message to the WebSocket server
     websocket.send(message);
