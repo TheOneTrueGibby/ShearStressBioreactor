@@ -46,7 +46,7 @@ Task settingsTask(0, TASK_FOREVER, settingsTaskFunction);
 void initWebSetup() {
   initSPIFFS();
   //wifiManager.startConfigPortal(); //used to force setup page if needing change wifi
-  wifiManager.setSTAStaticIPConfig(IPAddress(192,168,1,141), IPAddress(192,168,1,142), IPAddress(255,255,255,0));
+  //wifiManager.setSTAStaticIPConfig(IPAddress(192,168,1,141), IPAddress(192,168,1,142), IPAddress(255,255,255,0));
   wifiManager.autoConnect("BioCapstoneESP"); //first parameter is name of access point, second is the password (if used) for the autoconnect feild
   initWebSocket();
   initWebServer();

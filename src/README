@@ -1,2 +1,8 @@
 # Shear Stress Bioreactor - Main
 All files in here are intended to run and intilize all functions and programs within setup
+
+# Setup
+    - This runs all setup function from each hpp file
+
+# Loop
+    - This cleanups webscoket clients and make sure that all tasks put into the task scheduler are run
