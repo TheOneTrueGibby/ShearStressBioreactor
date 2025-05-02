@@ -18,12 +18,12 @@
     - Overhaul Website - Make it look nicer and better layed out (bootstrap)
     - Add password protection for routines (one time use)
 
-# Setup Instructions (in order)
-    - Make sure to download the necessary communication drivers "CP210x USB to UART Bridge VCP Drivers" located at https://www.silabs.com/developer-tools/usb-to-uart-bridge-vcp-drivers?tab=downloads. This allows for communication between the ESP32 and your computer.
-    - You will need to upload all this code onto your ESP32 Microcontroller.
-        - Make sure when uploading and you see the connection message within the terminal that you press the "BOOT" button on the ESP32 the first time to make sure it is able to recive data.
-        - Using platofrom IO upload the filesystem image by clicking on the PlatformIO Icon and selecting "Upload Filesystem Image" under the "Platform" folder.
-        - Then upload all the ESP32 code using the PlatformIO upload button.
-    - Next you will need to setup wificommunication between your router and the ESP32, after you finish uploading your code for the first time you will need to go into your wifi setting on your device and connect to "BioCapstoneESP". Then select your router form the list of devices and input the password. The ESP32 will then attempt to connecto to the router. In the vscode terminal it will display what IP adress the ESP32 is hosting to on that router. That is the website adress you will need to connect to run the Bioreactor. You can set an IP adress you want by going to the "WebHosting.hpp" file and setting it in the "wifiManager.setSTAStaticIPConfig()" function in the "initWebSetup()" function.
-        - More setting and instructions can be found at https://github.com/tzapu/WiFiManager
-    - Now you can run the ESP32 Bioreactor by connection to the IP adress on your router and adding all your approperiate settings. If you wish data to be saved on a MicroSD card make sure to slot one in that is formatted and no greater that 16gb. 
+# Setup Instructions
+    1. Make sure to download the necessary communication drivers "CP210x USB to UART Bridge VCP Drivers" located at https://www.silabs.com/developer-tools/usb-to-uart-bridge-vcp-drivers?tab=downloads. This allows for communication between the ESP32 and your computer.
+    2. You will need to upload all this code onto your ESP32 Microcontroller.
+        2.1. Make sure when uploading and you see the connection message within the terminal that you press the "BOOT" button on the ESP32 the first time to make sure it is able to recive data.
+        2.2. Using platofrom IO upload the filesystem image by clicking on the PlatformIO Icon and selecting "Upload Filesystem Image" under the "Platform" folder.
+        2.3. Then upload all the ESP32 code using the PlatformIO upload button.
+    3. Next you will need to setup wificommunication between your router and the ESP32, after you finish uploading your code for the first time you will need to go into your wifi setting on your device and connect to "BioCapstoneESP". Then select your router form the list of devices and input the password. The ESP32 will then attempt to connecto to the router. In the vscode terminal it will display what IP adress the ESP32 is hosting to on that router. That is the website adress you will need to connect to run the Bioreactor. You can set an IP adress you want by going to the "WebHosting.hpp" file and setting it in the "wifiManager.setSTAStaticIPConfig()" function in the "initWebSetup()" function.
+        3.1 More setting and instructions can be found at https://github.com/tzapu/WiFiManager
+    4. Now you can run the ESP32 Bioreactor by connection to the IP adress on your router and adding all your approperiate settings. If you wish data to be saved on a MicroSD card make sure to slot one in that is formatted and no greater that 16gb. 
