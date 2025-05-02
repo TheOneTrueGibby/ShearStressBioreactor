@@ -1,5 +1,6 @@
 /************************************************************************
 Gibson Moseley - StepperMotor.hpp
+
 All vaibiles and functions needed to setup and control a stepper motor
 *************************************************************************/
 
@@ -27,6 +28,7 @@ const float MAX_SPEED = 1000;
 const float ACCELERATION = 1000;
 const float MOVE_DISTANCE = 5; 
 
+//Sets up the stepper motor with predefined parameters
 void stepperSetup(ESP_FlexyStepper stepper) {
     //Setup Stepper Motor Paramaters
     stepper.connectToPins(HIGH_MOTOR_STEPPIN, HIGH_MOTOR_DIRPIN);
@@ -39,6 +41,7 @@ void stepperSetup(ESP_FlexyStepper stepper) {
     stepper.startAsService(1);
 }
 
+//Moves the stepper motor by a relative distance in millimeters
 void moveStepper(int moveDistnace) {
     stepper.moveRelativeInMillimeters(moveDistnace);
 }
