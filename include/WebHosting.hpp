@@ -1,5 +1,6 @@
 /************************************************************************
 Gibson Moseley - WebHosting.hpp
+
 set up to host website and data exchange between esp32 hosted website and software
 used this tutorial: https://m1cr0lab-esp32.github.io/remote-control-with-websocket/web-server-setup/ for starting point
 *************************************************************************/
@@ -26,7 +27,6 @@ AsyncWebSocket ws("/ws");
 //Function delcerations
 void initSPIFFS();
 void initWebServer();
-void initWebServer();
 void initWebSocket();
 void routineTaskFunction();
 void settingsTaskFunction();
@@ -45,29 +45,33 @@ Task settingsTask(0, TASK_FOREVER, settingsTaskFunction);
 //Call all necassry function to setup website/websocket hosting
 void initWebSetup() {
   initSPIFFS();
-  //wifiManager.startConfigPortal(); //used to force setup page if needing change wifi
-  //wifiManager.setSTAStaticIPConfig(IPAddress(192,168,1,141), IPAddress(192,168,1,142), IPAddress(255,255,255,0));
-  wifiManager.autoConnect("BioCapstoneESP"); //first parameter is name of access point, second is the password (if used) for the autoconnect feild
+  // wifiManager.startConfigPortal(); //used to force setup page if needing change wifi
+  // wifiManager.setSTAStaticIPConfig(IPAddress(192,168,1,141), IPAddress(192,168,1,142), IPAddress(255,255,255,0));
+  wifiManager.autoConnect("BioCapstoneESP"); //First parameter is name of access point, second is the password (if used) for the autoconnect feild
   initWebSocket();
   initWebServer();
 }
 
+//Intialize SPIFFS
 void initSPIFFS() {
   if (!SPIFFS.begin()) {
     Serial.println("Cannot mount SPIFFS volume...");
   }
 }
 
+//When we have root request SPIFFS necessary files
 void onRootRequest(AsyncWebServerRequest *request) {
   request->send(SPIFFS, "/index.html", "text/html", false);
 }
 
+//Intilizes web server
 void initWebServer() {
   server.on("/", onRootRequest);
   server.serveStatic("/", SPIFFS, "/");
   server.begin();
 }
 
+//Intilizes websocket
 void initWebSocket() {
   ws.onEvent(onEvent);
   server.addHandler(&ws);
@@ -107,7 +111,7 @@ void routineTaskFunction() {
 void settingsTaskFunction() {
   //Access the routine details from the global variable
   String settingsDetailsLocal = settingsDetails;
- // String settingsDetailsLocal = settingsDetails;
+  // String settingsDetailsLocal = settingsDetails;
 
   //Parse routine details
   int separator1 = settingsDetailsLocal.indexOf(';');
@@ -125,16 +129,16 @@ void settingsTaskFunction() {
   float mu = muStr.toFloat();
   float rho = rhoStr.toFloat();
 
-  //Serial.printf("%f\n", height);
-  //Serial.printf("%f\n", width);
-  //Serial.printf("%f\n", mu);
-  //Serial.printf("%f\n", rho);
+  //Debug
+  // Serial.printf("%f\n", height);
+  // Serial.printf("%f\n", width);
+  // Serial.printf("%f\n", mu);
+  // Serial.printf("%f\n", rho);
 
   //Call the saveBioreactorSettings function with the extracted values
   saveBioreactorSettings(height, width, mu, rho);
 
   //After the task is executed, we can reset the global variable to avoid running the same routine again
-  settingsDetails = "";
   settingsDetails = "";
   settingsTask.disable();
 }
@@ -142,7 +146,7 @@ void settingsTaskFunction() {
 //Function to handle WebSocket messages and schedule tasks using TaskScheduler library
 void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
   AwsFrameInfo *info = (AwsFrameInfo*)arg;
-  //Serial.print("Message webscoket");
+  // Serial.print("Message webscoket");
 
   if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
       data[len] = 0;
@@ -159,9 +163,9 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
       Serial.printf("The message is: %s\n", message);
 
 
-      //if the mode is for routine or settings do which is appropriate
+      //If the mode is for routine or settings do which is appropriate
       if (mode == "routine") {
-        //Serial.printf("The message is: %s\n", message);
+        // Serial.printf("The message is: %s\n", message);
         //Parse the incoming message, and make sure it is in the format: routineName;shearStress;runTime;breakTime;repetitions
         //Set the global routine variable to store routine details and that it runs only once
         routineDetails = message;
@@ -173,7 +177,7 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
         routineTask.enable();
       }
       else if (mode == "settings") {
-        //Serial.printf("The message is: %s\n", message);
+        // Serial.printf("The message is: %s\n", message);
         //Parse the incoming message, and make sure it is in the format: channelHeightValue;channelWidthValue;MUValue;RHOValue
         //Set the global settings variable to store routine details
         settingsDetails = message;
@@ -187,6 +191,7 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
   }
 }
 
+//Handles whats called during events
 void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
 
   switch (type) {
