@@ -13,7 +13,7 @@ Where we call all functions and run all code
 #include <TaskScheduler.h>
 #include <Ticker.h>
 
-//all file includes
+//All file includes
 #include "WebHosting.hpp"
 #include "FlowSensor.hpp"
 #include "Pump.hpp"
@@ -49,11 +49,11 @@ void setup() {
   //Set up Flow Sensor
   flowSensorSetup(flowSensor); //Function in FlowSensor.hpp
 
-    //Set bioreactor vars
+  //Set bioreactor vars
   setBioreactorSettings(); //Function in BioreactorVariables.hpp
 
   //Testing routine and adds dummy test to test file
-  //setRoutine("test", 0, 0, 0, 1);
+  // setRoutine("test", 0, 0, 0, 1);
 
   rollingAverageUpdater.attach(0.1, updateRollingAverage); // Update rolling average every 0.1 seconds
 }
