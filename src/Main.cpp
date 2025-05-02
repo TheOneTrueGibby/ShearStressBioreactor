@@ -25,7 +25,7 @@ Where we call all functions and run all code
 //Ticker decleration
 Ticker rollingAverageUpdater;
 
-//Start Running
+//Start Running and set up all componets
 void setup() {
   //Start Serial Communication
   Serial.begin(115200);
@@ -58,6 +58,8 @@ void setup() {
   rollingAverageUpdater.attach(0.1, updateRollingAverage); // Update rolling average every 0.1 seconds
 }
 
+
+//Makes sure to run all tasks scheduled
 void loop() {
   //Refresh websocket
   ws.cleanupClients();

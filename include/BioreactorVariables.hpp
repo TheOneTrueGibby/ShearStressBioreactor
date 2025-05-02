@@ -11,6 +11,7 @@ This holds all equations and varbilies about bioreactor setup to calculate value
 //Library includes
 #include <Preferences.h>
 
+//Function Declerations
 void pushCurrentVariables();
 void setBioreactorSettings();
 void saveBioreactorSettings(float height, float width, float mu, float rho);

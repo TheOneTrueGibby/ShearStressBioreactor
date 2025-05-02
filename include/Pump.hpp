@@ -7,8 +7,10 @@ Some code used from last years team - Carson Sloan (pump.hpp/pump.cpp)
 #ifndef PUMP_HPP
 #define PUMP_HPP
 
+//Included Libraries
 #include <ModbusMaster.h>
 
+//Functions Decleration
 void preTransmission();
 void postTransmission();
 void pumpSetup();

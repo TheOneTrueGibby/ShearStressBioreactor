@@ -17,6 +17,7 @@ the flow sensor and used those readings to control the pump
 #include "BioreactorVariables.hpp"
 #include "Pump.hpp"
 
+//Function Declerations
 void flowSensorSetup(SensirionLF flowSensor);
 float readFlowSensor(SensirionLF flowSensor, bool printTerminal);
 String getFlowsensorData();

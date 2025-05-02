@@ -24,6 +24,7 @@ void setRoutine(String routineName, float timeRun, float timeBreak, float shearS
 using namespace std;
 using namespace std::chrono;
 
+//Var to make sure all delays are the same value
 const int oneSecondDelay = 1000;
 
 //This converts the amount of time running in seconds to a String with Hr:Min:Sec
