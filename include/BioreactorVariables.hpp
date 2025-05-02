@@ -31,73 +31,93 @@ float RHO = 993; // kg / m^3
 
 //Push current bioreactor vars
 void pushCurrentVariables() {
+    //Read-only access to preferences
     preferences.begin("bioreactor", true);
 
+    //Retrieve all saved prefrences
     CHANNEL_HEIGHT = preferences.getFloat("height", 1);
     CHANNEL_WIDTH = preferences.getFloat("width", 25);
     MU = preferences.getFloat("mu", 0.0155);
     RHO = preferences.getFloat("rho", 993);
 
+    //Close preferences
     preferences.end();
 
+    //Put all saved prefrences into strings
     String height = "channelHeight; Channel Height: " + String(CHANNEL_HEIGHT) + " mm";
     String width = "channelWidth; Channel Width: " + String(CHANNEL_WIDTH) + " mm";
     String mu = "MU; MU: " + String(MU, 5) + " mPa * min"; // Specify number of decimal places
     String rho = "RHO; RHO: " + String(RHO) + " kg / m^3";
  
+    //Send all the strings to the website
     ws.textAll(height);
     ws.textAll(width);
     ws.textAll(mu);
     ws.textAll(rho);
 
+    //Denotion that function was ran
     Serial.print("Pushing Current Vars\n");
     return;
 }
 
+//Load default bioreactor settings and update website
 void setBioreactorSettings() {
+    //Read-only access to preferences
     preferences.begin("bioreactor", true);
 
+    //Set all prefrences
     CHANNEL_HEIGHT = preferences.getFloat("height", 1);
-    CHANNEL_WIDTH  = preferences.getFloat("width", 25);
-    MU             = preferences.getFloat("mu", 0.0155);
-    RHO            = preferences.getFloat("rho", 993);
+    CHANNEL_WIDTH = preferences.getFloat("width", 25);
+    MU = preferences.getFloat("mu", 0.0155);
+    RHO = preferences.getFloat("rho", 993);
 
+    //Close preferences
     preferences.end();
 
+    //Update Website
     pushCurrentVariables();
 }
 
+//Save new bioreactor settings if they are different and bigger than zero
 void saveBioreactorSettings(float height, float width, float mu, float rho) {
+    //Read and write access to preferences
     preferences.begin("bioreactor", false);
 
-    //Only save if value is diffrent
+    //Only save if value is diffrent and greater than zero
     if ((height != CHANNEL_HEIGHT) && (height > 0)) {
+        //Save new height & update memory value
         preferences.putFloat("height", height);
-        CHANNEL_HEIGHT = height; // Update the in-memory value
+        CHANNEL_HEIGHT = height;
     }
 
     if ((width != CHANNEL_WIDTH) && (width > 0)) {
+        //Save new width & update memory value
         preferences.putFloat("width", width);
         CHANNEL_WIDTH = width;
     }
 
     if ((mu != MU) && (mu > 0)) {
+        //Save new mu & update memory value
         preferences.putFloat("mu", mu);
         MU = mu;
     }
 
     if ((rho != RHO) && (rho > 0)) {
+        //Save new rho & update memory value
         preferences.putFloat("rho", rho);
         RHO = rho;
     }
 
+    //Close preferences
     preferences.end();
 
+    //Debug
     // CHANNEL_HEIGHT = height;
     // CHANNEL_WIDTH  = width;
     // MU             = mu;
     // RHO            = rho;
 
+    //Update Website
     pushCurrentVariables();
 }
 
