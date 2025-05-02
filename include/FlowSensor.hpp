@@ -8,10 +8,11 @@ the flow sensor and used those readings to control the pump
 #ifndef FLOWSENSOR_HPP
 #define FLOWSENSOR_HPP
 
+//Library Includes
 #include <deque>
-#include <Ticker.h> //Ensure the Ticker library is included
+#include <Ticker.h>
 
-//inclusion of necessary files/functions
+//Inclusion of necessary files/functions
 #include "sensirion-lf.h"
 #include "sensirion-lf.cpp"
 #include "BioreactorVariables.hpp"
@@ -27,21 +28,21 @@ float calculatePID(float setpoint, float measuredValue);
 int smoothPumpSpeed(int currentSpeed, int targetSpeed, int maxChange);
 void controlPumpSpeed(float setpoint);
 
-//set up low flow sensor with appropriate varibiles
+//Set up low flow sensor with appropriate varibiles
 SensirionLF flowSensor(SLF3X_SCALE_FACTOR_FLOW, SLF3X_SCALE_FACTOR_TEMP, SLF3X_I2C_ADDRESS);
-
-//Ticker decleration
-//Ticker rollingAverageUpdater;
 
 //Rolling average buffer for flow readings
 std::deque<float> flowReadings;
 
+//Stores last temp reading
 float tempStore;
 
+//Flag for pushing var changes
 bool varPush = false;
 
-float rollingAverageFlow = 0.0;
-float newFlowReading = 0.0;
+
+float rollingAverageFlow = 0.0; //Global rolling average of flow rate
+float newFlowReading = 0.0; //Temp holder for each new reading
 const int rollingWindowSize = 50; //Size of the rolling window for average flow rate
 bool flowInRange = false; //Flag to indicate if flow is within range
 
@@ -56,11 +57,12 @@ float kd = 0.01; //Derivative gain
 float previousError = 0.0;
 float integral = 0.0;
 
-//sets up the flowsensor to be used
+//Sets up the flowsensor to be used
 void flowSensorSetup(SensirionLF flowSensor) {
-    //run the intilizing command and save result
+    //Run the intilizing command and save result
     uint16_t reset = flowSensor.init();
-    //if result is zero then error happened otherwise it was reset/setup
+
+    //If result is zero then error happened otherwise it was reset/setup
     if (reset != 0) {
         Serial.print("Error initializing the flow sensor: ");
         Serial.println(reset);
@@ -70,66 +72,73 @@ void flowSensorSetup(SensirionLF flowSensor) {
     }
 }
 
-//reads the provided flowsensor provided and prints out in serial if set to true
+//Reads the provided flowsensor provided and prints out in serial if set to true
 float readFlowSensor(SensirionLF flowSensor, bool printTerminal) {
-    //read the flow sensor
+    //Read the flow sensor
     int ret = flowSensor.readSample();
     float flowReading = 0.0;
     float lastFlowReading;
-    //if we were able to read flowsensor then we can get temp and flow otherwose there is an error
+
+    //If we were able to read flowsensor then we can get temp and flow otherwose there is an error
     if (ret == 0) {
 
-        //get both flow and temp, and calculate shear stress based on flow rate
+        //Get both flow and temp, and calculate shear stress based on flow rate
         flowReading = flowSensor.getFlow();
-        lastFlowReading = flowReading; // Store the latest flow rate reading
+        lastFlowReading = flowReading; //Store the latest flow rate reading
 
         float flowTempReading = flowSensor.getTemp();
         tempStore = flowTempReading;
 
-        //if set to true, prints readings in terminal
+        //If set to true, prints readings in terminal
         if (printTerminal == 1) {
-            // //Print flow and temp  to terminal
+            //Print flow and temp  to terminal
             Serial.print("Flow: ");
             Serial.print(rollingAverageFlow, 2);
             Serial.print(" ml/min");
 
-            // Print temp to terminal
+            //Print temp to terminal
             Serial.print(" | Temp: ");
             Serial.print(flowTempReading, 1);
             Serial.print(" deg C\n");
         }
 
     } else {
-        //if unable to read, set string variable as error message
+        //If unable to read, set string variable as error message
         Serial.print("Error in flowsensor.readSample(): ");
         Serial.println(ret);
         Serial.print("\n");
-        flowReading = lastFlowReading; // If an error occurs, return the last known flow reading to not mess up the rolling average
+        flowReading = lastFlowReading; //If an error occurs, return the last known flow reading to not mess up the rolling average
 
     }
-    //return flow data as a float value
+    //Return flow data as a float value
     return flowReading;
 }
 
+//Returns a string of formatted flow data and pushes to website
 String getFlowsensorData () {
-    //Put flow data & temp into string varibile using rolling average from the feed back control
-    String flowData = String(rollingAverageFlow);  //This is pulled from FeedBackControl.hpp
+    //Put flow data & temp into string varibile using rolling average
+    String flowData = String(rollingAverageFlow);
     String flowTemp = String(tempStore);
 
     //Put shear stress data into string varibile
     String flowShear = String(shearStressCalc(rollingAverageFlow));
 
+    //Combine them all for MicroSD card use from return
     String flowAll = flowData + ", " + flowTemp + ", " + flowShear;
 
+    //Make strngs to push to website
     String flowAllWeb = " flowData; Flow: " + flowData + " mL/min, " + "Temp: " + flowTemp + " deg C";
     String flowShearWebsite = "shearStress; Shear Stress: " + flowShear + " mPa";
 
+    //Push strings to website
     ws.textAll(flowAllWeb);
     ws.textAll(flowShearWebsite);
 
+    //Return all data as a string
     return flowAll;
 }
 
+//Calculate the rolling average from a stream of flow readings
 float calculateRollingAverage(float newReading) {
     //Debug print to verify new reading
     //Serial.print("New Reading for Rolling Average: ");
@@ -152,20 +161,24 @@ float calculateRollingAverage(float newReading) {
     float average = sum / flowReadings.size();
     //Serial.print("Calculated Rolling Average: ");
     //Serial.println(average); // Debug print to verify calculation
+
+    //Return the average
     return average;
 }
 
-//Ensure the rollingAverageFlow variable is updated globally
+//Ensure the rollingAverageFlow variable is updated
 void updateRollingAverage() {
+    //Get flow data
     newFlowReading = readFlowSensor(flowSensor, false);
     Serial.printf("Current flow: %f\n", newFlowReading);
 
+    //Update rollingAverageFlow
     rollingAverageFlow = calculateRollingAverage(newFlowReading);
     Serial.print("Updated Rolling Average Flow: ");
     Serial.println(rollingAverageFlow); //Debug print to verify rolling average update
 }
 
-// Function to calculate PID output
+//Function to calculate PID output
 float calculatePID(float setpoint, float measuredValue) {
     float error = setpoint - measuredValue;
     integral += error*1; //Integral term (adjust the time step as needed)
@@ -177,8 +190,9 @@ float calculatePID(float setpoint, float measuredValue) {
     return (kp * error) + (ki * integral);
 }
 
-// Function to smoothly ramp the pump speed
+//Function to smoothly ramp the pump speed
 int smoothPumpSpeed(int currentSpeed, int targetSpeed, int maxChange) {
+    //Increases and decreases pump speed gradually based on the diffrence between current and target speed
     if (abs(targetSpeed - currentSpeed) > maxChange) {
         if (targetSpeed > currentSpeed) {
             targetSpeed =  currentSpeed + maxChange;
@@ -188,8 +202,11 @@ int smoothPumpSpeed(int currentSpeed, int targetSpeed, int maxChange) {
         }
     }
     else {
-        currentSpeed = targetSpeed; //If within range, set to target speed 
+        //If within range, set to target speed 
+        currentSpeed = targetSpeed;
     }
+
+    //Return the target speed
     return targetSpeed;
 }
 
@@ -197,12 +214,13 @@ int smoothPumpSpeed(int currentSpeed, int targetSpeed, int maxChange) {
 void controlPumpSpeed(float setpoint) {
     float difference = setpoint*0.05;
     //float currentFlowRate = rollingAverageFlow;
+
     //Check if the flow rate is within the acceptable range
     if (difference > abs(setpoint - rollingAverageFlow) && rollingAverageFlow > 0) {
-        flowInRange = true; // Set the flag to indicate flow is in range
+        flowInRange = true; //Set the flag to indicate flow is in range
         //Serial.println("Flow is in range.");
     } else {
-        flowInRange = false; // Set the flag to indicate flow is not in range
+        flowInRange = false; //Set the flag to indicate flow is not in range
         //Serial.println("Flow is not in range.");
     }
 
@@ -211,17 +229,18 @@ void controlPumpSpeed(float setpoint) {
         float pidOutput = calculatePID(setpoint, rollingAverageFlow);
 
         //Convert PID output to a valid pump speed
-        int targetSpeed = constrain((int)pidOutput, 8, 400); // Ensure speed is within pump range
+        int targetSpeed = constrain((int)pidOutput, 8, 400); //Ensure speed is within pump range
 
         //Get the current pump speed
         int currentSpeed = getPumpSpeed();
 
         //Smoothly ramp the pump speed
-        int newSpeed = smoothPumpSpeed(currentSpeed, targetSpeed, 25); // Limit speed change to 25 units per loop
+        int newSpeed = smoothPumpSpeed(currentSpeed, targetSpeed, 25); //Limit speed change to 25 units per loop
 
         //Set the pump speed
         setPumpSpeed(newSpeed, true);
 
+        //Debug
         //Serial.print("Current Flow: ");
         //Serial.print(rollingAverageFlow);
         //Serial.print(" | Target Speed: ");
