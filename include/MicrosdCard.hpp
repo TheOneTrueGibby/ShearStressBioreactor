@@ -10,10 +10,12 @@ Used tutorial: https://randomnerdtutorials.com/esp32-microsd-card-arduino/
 #ifndef MICROCARD_HPP
 #define MICROCARD_HPP
 
+//Library Includes
 #include "FS.h"
 #include "SD.h"
 #include "SPI.h"
 
+//Function declerations
 void listDir(fs::FS &fs, const char * dirname, uint8_t levels);
 void createDir(fs::FS &fs, const char * path);
 void removeDir(fs::FS &fs, const char * path);
