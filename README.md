@@ -17,13 +17,19 @@
 # ToDo Goals
 	- Overhaul Website - Make it look nicer and better laid out (bootstrap)
 	- Add password protection for routines (one time use)
+    - Make pump use decimal/float speeds rather than only integers
 
 # Setup Instructions
 	1. Make sure to download the necessary communication drivers "CP210x USB to UART Bridge VCP Drivers" located at https://www.silabs.com/developer-tools/usb-to-uart-bridge-vcp-drivers?tab=downloads. This allows for communication between the ESP32 and your computer.
+
 	2. You will need to upload all this code onto your ESP32 Microcontroller.
     	2.1. Make sure when uploading and you see the connection message within the terminal that you press the "BOOT" button on the ESP32 the first time to make sure it is able to receive data.
+
     	2.2. Using platformIO, upload the file system image by clicking on the PlatformIO Icon and selecting "Upload Filesystem Image" under the "Platform" folder.
+
     	2.3. Then upload all the ESP32 code using the PlatformIO upload button.
+
 	3. Next you will need to setup wifi communication between your router and the ESP32, after you finish uploading your code for the first time you will need to go into your wifi setting on your device and connect to "BioCapstoneESP". Then select your router from the list of devices and input the password. The ESP32 will then attempt to connect to the router. In the vscode terminal it will display what IP address the ESP32 is hosting to on that router. That is the website address you will need to connect to run the Bioreactor. You can set an IP address you want by going to the "WebHosting.hpp" file and setting it in the "wifiManager.setSTAStaticIPConfig()" function in the "initWebSetup()" function.
     	3.1 More setting and instructions can be found at https://github.com/tzapu/WiFiManager
+        
 	4. Now you can run the ESP32 Bioreactor by connection to the IP address on your router and adding all your appropriate settings. If you wish data to be saved on a MicroSD card make sure to slot one in that is formatted and no greater than 16gb.
