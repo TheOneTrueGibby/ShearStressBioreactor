@@ -29,7 +29,7 @@ void readCSVFilesToWebsite(String filename);
 void writeBioreactorInfo(String routineName, String timeRoutine, String flowrate, String pumpStatus);
 void setupMicroSDcard();
 
-
+//List all files and directories from given directory
 void listDir(fs::FS &fs, const char * dirname, uint8_t levels){
   Serial.printf("Listing directory: %s\n", dirname);
 
@@ -61,6 +61,7 @@ void listDir(fs::FS &fs, const char * dirname, uint8_t levels){
   }
 }
 
+//Create new directory on SD card
 void createDir(fs::FS &fs, const char * path){
   Serial.printf("Creating Dir: %s\n", path);
   if(fs.mkdir(path)){
@@ -70,6 +71,7 @@ void createDir(fs::FS &fs, const char * path){
   }
 }
 
+//Remove directory from SD card
 void removeDir(fs::FS &fs, const char * path){
   //Serial.printf("Removing Dir: %s\n", path);
   if(fs.rmdir(path)){
@@ -79,6 +81,7 @@ void removeDir(fs::FS &fs, const char * path){
   }
 }
 
+//Read and print contents of file from SD card
 void readFile(fs::FS &fs, const char * path){
   //Serial.printf("Reading file: %s\n", path);
 
@@ -95,6 +98,7 @@ void readFile(fs::FS &fs, const char * path){
   file.close();
 }
 
+//Write message to a file, overwriting existing contents
 void writeFile(fs::FS &fs, const char * path, const char * message){
   //Serial.printf("Writing file: %s\n", path);
 
@@ -111,6 +115,7 @@ void writeFile(fs::FS &fs, const char * path, const char * message){
   file.close();
 }
 
+//Append message to existing file on SD card
 void appendFile(fs::FS &fs, const char * path, const char * message){
   //Serial.printf("Appending to file: %s\n", path);
 
@@ -127,6 +132,7 @@ void appendFile(fs::FS &fs, const char * path, const char * message){
   file.close();
 }
 
+//Rename a file on the SD card
 void renameFile(fs::FS &fs, const char * path1, const char * path2){
   //Serial.printf("Renaming file %s to %s\n", path1, path2);
   if (fs.rename(path1, path2)) {
@@ -136,6 +142,7 @@ void renameFile(fs::FS &fs, const char * path1, const char * path2){
   }
 }
 
+//Delete file from SD card
 void deleteFile(fs::FS &fs, const char * path){
   //Serial.printf("Deleting file: %s\n", path);
   if(fs.remove(path)){
@@ -145,6 +152,7 @@ void deleteFile(fs::FS &fs, const char * path){
   }
 }
 
+//Test file read/write performance
 void testFileIO(fs::FS &fs, const char * path){
   File file = fs.open(path);
   static uint8_t buf[512];
@@ -187,6 +195,7 @@ void testFileIO(fs::FS &fs, const char * path){
   file.close();
 }
 
+//Read CSV file and send each line to the website
 void readCSVFilesToWebsite(String filename) {
   File file = SD.open(("/" + filename + ".csv").c_str());
   if (!file) {
@@ -225,19 +234,23 @@ void writeBioreactorInfo(String routineName, String timeRoutine, String flowrate
   appendFile(SD, routineNameFile.c_str(), message.c_str());
 }
 
+//Initial setup function to mount the SD card and verify/test
 void setupMicroSDcard() {
+  //Mount SD card
   if(!SD.begin(5)){
     Serial.println("Card Mount Failed");
     return;
   }
   uint8_t cardType = SD.cardType();
 
+  //Say if none is connected
   if(cardType == CARD_NONE){
    Serial.println("No SD card attached");
     return;
   }
 
-  // Serial.print("SD Card Type: ");
+  //Say card type
+  //Serial.print("SD Card Type: ");
   if(cardType == CARD_MMC){
     //Serial.println("MMC");
   } else if(cardType == CARD_SD){
@@ -248,9 +261,11 @@ void setupMicroSDcard() {
     // Serial.println("UNKNOWN");
   }
 
+  //Calculates size
   uint64_t cardSize = SD.cardSize() / (1024 * 1024);
   // Serial.printf("SD Card Size: %lluMB\n", cardSize);
 
+  //Makes a test csv file to ensure SD card is working
   File file = SD.open("/test.csv");
   if(!file) {
     Serial.println("File doesn't exist");
@@ -260,6 +275,8 @@ void setupMicroSDcard() {
   else {
     // Serial.println("File already exists");  
   }
+
+  //Stop reading SD card
   file.close();
 }
 
